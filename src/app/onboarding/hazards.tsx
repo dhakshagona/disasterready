@@ -1,5 +1,5 @@
 import { router, type Href } from 'expo-router';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, Switch, View } from 'react-native';
 
 import { AppHeader } from '@/components/ui/app-header';
 import { AppText } from '@/components/ui/app-text';
@@ -50,9 +50,13 @@ export default function HazardSelectionScreen() {
                 />
               </View>
               <AppText variant="bodyStrong" style={styles.label}>{label}</AppText>
-              <View style={[styles.check, active && styles.checkActive]}>
-                {active ? <Icon name={{ ios: 'checkmark', android: 'check', web: 'check' }} color={colors.surface} size={14} /> : null}
-              </View>
+              <Switch
+                accessible={false}
+                style={styles.switchNoPointer}
+                value={active}
+                trackColor={{ false: colors.border, true: colors.primary }}
+                thumbColor={colors.surface}
+              />
             </Pressable>
           );
         })}
@@ -66,13 +70,12 @@ const styles = StyleSheet.create({
   progressFill: { height: '100%', borderRadius: 3, backgroundColor: colors.primary },
   oneThird: { width: '33%' },
   copy: { gap: spacing.sm },
-  grid: { gap: spacing.md },
-  hazard: { minHeight: 68, flexDirection: 'row', alignItems: 'center', gap: spacing.md, padding: spacing.md, borderRadius: radii.md, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface },
+  grid: { gap: spacing.sm },
+  hazard: { minHeight: 58, flexDirection: 'row', alignItems: 'center', gap: spacing.md, paddingHorizontal: spacing.md, paddingVertical: spacing.sm, borderRadius: radii.md, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface },
   hazardActive: { borderColor: colors.primary, backgroundColor: colors.primarySoft },
-  hazardIcon: { width: 42, height: 42, borderRadius: radii.md, backgroundColor: colors.surfaceMuted, alignItems: 'center', justifyContent: 'center' },
+  hazardIcon: { width: 38, height: 38, borderRadius: radii.md, backgroundColor: colors.surfaceMuted, alignItems: 'center', justifyContent: 'center' },
   hazardIconActive: { backgroundColor: colors.surface },
   label: { flex: 1 },
-  check: { width: 24, height: 24, borderRadius: 12, borderWidth: 2, borderColor: colors.border, alignItems: 'center', justifyContent: 'center' },
-  checkActive: { backgroundColor: colors.primary, borderColor: colors.primary },
+  switchNoPointer: { pointerEvents: 'none' },
   pressed: { opacity: 0.68 },
 });

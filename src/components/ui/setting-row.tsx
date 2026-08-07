@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet, Switch, View } from 'react-native';
 
 import { AppText } from '@/components/ui/app-text';
-import { colors, layout, spacing } from '@/constants/tokens';
+import { colors, spacing } from '@/constants/tokens';
 
 type SettingRowProps = {
   label: string;
@@ -24,7 +24,7 @@ export function SettingRow({ label, detail, value, onValueChange }: SettingRowPr
       </View>
       <Switch
         accessible={false}
-        pointerEvents="none"
+        style={styles.switchNoPointer}
         value={value}
         trackColor={{ false: colors.border, true: colors.primary }}
         thumbColor={colors.surface}
@@ -34,7 +34,8 @@ export function SettingRow({ label, detail, value, onValueChange }: SettingRowPr
 }
 
 const styles = StyleSheet.create({
-  row: { minHeight: layout.minTouchTarget, flexDirection: 'row', alignItems: 'center', gap: spacing.md, paddingVertical: spacing.md, borderBottomWidth: 1, borderBottomColor: colors.border },
+  row: { minHeight: 54, flexDirection: 'row', alignItems: 'center', gap: spacing.md, paddingVertical: spacing.sm, borderBottomWidth: 1, borderBottomColor: colors.border },
   copy: { flex: 1, gap: spacing.xs },
+  switchNoPointer: { pointerEvents: 'none' },
   pressed: { opacity: 0.68 },
 });

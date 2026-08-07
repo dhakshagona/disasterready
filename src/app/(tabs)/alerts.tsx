@@ -19,7 +19,7 @@ export default function AlertsScreen() {
   return (
     <Screen testID="alerts-screen">
       <AppHeader title="Alerts" subtitle="Austin, TX 78701" />
-      <DemoBanner label="Demo Mode — all alerts on this screen are simulated" />
+      <DemoBanner label="Demo · Simulated alerts" />
       <View accessibilityRole="tablist" style={styles.segmented}>
         {(['current', 'recent'] as Filter[]).map((value) => {
           const selected = filter === value;
@@ -31,7 +31,7 @@ export default function AlertsScreen() {
               onPress={() => setFilter(value)}
               style={[styles.segment, selected && styles.segmentSelected]}>
               <AppText variant="caption" color={selected ? colors.primary : colors.inkMuted}>
-                {value === 'current' ? 'Current' : 'Recent / expired'}
+                {value === 'current' ? 'Current' : 'Recent'}
               </AppText>
             </Pressable>
           );
@@ -39,21 +39,18 @@ export default function AlertsScreen() {
       </View>
       <View style={styles.resultsHeader}>
         <AppText variant="heading">{filter === 'current' ? 'Needs attention' : 'Recent history'}</AppText>
-        <AppText variant="caption" color={colors.inkMuted}>{alerts.length} simulated alert</AppText>
+        <AppText variant="caption" color={colors.inkMuted}>{alerts.length} alert</AppText>
       </View>
       {alerts.map((alert) => (
         <AlertCard key={alert.id} alert={alert} onPress={() => router.push(`/alert/${alert.id}` as Href)} />
       ))}
-      <AppText variant="caption" color={colors.inkSubtle}>
-        In Phase 2, alerts will be normalized from the National Weather Service and filtered by location and selected hazards.
-      </AppText>
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
   segmented: { flexDirection: 'row', backgroundColor: colors.surfaceMuted, padding: 4, borderRadius: radii.md },
-  segment: { flex: 1, minHeight: 44, alignItems: 'center', justifyContent: 'center', borderRadius: radii.sm },
+  segment: { flex: 1, minHeight: 40, alignItems: 'center', justifyContent: 'center', borderRadius: radii.sm },
   segmentSelected: { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border },
-  resultsHeader: { gap: spacing.xs },
+  resultsHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.sm },
 });

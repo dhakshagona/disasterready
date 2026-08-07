@@ -1,5 +1,5 @@
 import type { PropsWithChildren, ReactNode } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { colors, layout, spacing } from '@/constants/tokens';
@@ -32,23 +32,26 @@ export function Screen({ children, footer, scroll = true, testID }: ScreenProps)
 }
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: colors.canvas },
+  safeArea: { flex: 1, backgroundColor: Platform.OS === 'web' ? colors.webBackdrop : colors.canvas },
   shell: {
     flex: 1,
     width: '100%',
     maxWidth: layout.maxContentWidth,
     alignSelf: 'center',
     backgroundColor: colors.canvas,
+    ...(Platform.OS === 'web'
+      ? { borderLeftWidth: 1, borderRightWidth: 1, borderColor: colors.border, boxShadow: '0 0 30px rgba(24, 48, 76, 0.10)' }
+      : {}),
   },
   scroll: { flex: 1 },
   scrollContent: { flexGrow: 1 },
-  content: { paddingHorizontal: spacing.xl, paddingTop: spacing.lg, paddingBottom: spacing.xxxl, gap: spacing.xl },
+  content: { paddingHorizontal: spacing.lg, paddingTop: spacing.md, paddingBottom: spacing.xxl, gap: spacing.lg },
   fill: { flex: 1 },
   footer: {
-    paddingHorizontal: spacing.xl,
-    paddingTop: spacing.md,
-    paddingBottom: spacing.xl,
-    gap: spacing.md,
+    paddingHorizontal: spacing.lg,
+    paddingTop: spacing.sm,
+    paddingBottom: spacing.lg,
+    gap: spacing.sm,
     backgroundColor: colors.canvas,
     borderTopWidth: 1,
     borderTopColor: colors.border,

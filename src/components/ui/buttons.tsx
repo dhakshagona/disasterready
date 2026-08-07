@@ -2,7 +2,7 @@ import type { PropsWithChildren } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, View, type PressableProps } from 'react-native';
 
 import { AppText } from '@/components/ui/app-text';
-import { colors, layout, radii, spacing } from '@/constants/tokens';
+import { colors, radii, spacing } from '@/constants/tokens';
 
 type ButtonProps = PropsWithChildren<PressableProps> & {
   loading?: boolean;
@@ -54,9 +54,9 @@ export function SecondaryButton({ children, loading, disabled, style, ...props }
 
 const styles = StyleSheet.create({
   base: {
-    minHeight: layout.minTouchTarget,
     borderRadius: radii.md,
-    paddingHorizontal: spacing.xl,
+    minHeight: 50,
+    paddingHorizontal: spacing.lg,
     justifyContent: 'center',
   },
   primary: { backgroundColor: colors.primary },

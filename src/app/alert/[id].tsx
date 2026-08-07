@@ -1,3 +1,4 @@
+import { Image } from 'expo-image';
 import { router, useLocalSearchParams, type Href } from 'expo-router';
 import { Share, StyleSheet, View } from 'react-native';
 
@@ -13,13 +14,7 @@ import { colors, radii, spacing } from '@/constants/tokens';
 import { demoExpiredAlert, demoFloodAlert } from '@/data/mock-repositories';
 
 function formatDate(value: string) {
-  return new Intl.DateTimeFormat('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit',
-  }).format(new Date(value));
+  return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' }).format(new Date(value));
 }
 
 export default function AlertDetailScreen() {
@@ -37,36 +32,26 @@ export default function AlertDetailScreen() {
   }
 
   async function shareAlert() {
-    await Share.share({
-      message: `SIMULATED DISASTERREADY ALERT: ${alert?.headline} for ${alert?.areaDescription}. Open DisasterReady for the reviewed demo action plan.`,
-    });
+    await Share.share({ message: `SIMULATED DISASTERREADY ALERT: ${alert?.headline} for ${alert?.areaDescription}. Open DisasterReady for the safety checklist.` });
   }
 
   return (
     <Screen testID="alert-detail-screen">
       <AppHeader title="Alert details" back trailing={<StatusBadge label={alert.status === 'active' ? 'Active' : 'Expired'} tone={alert.status === 'active' ? 'danger' : 'info'} />} />
-      {alert.isDemo ? <DemoBanner label={`Demo Mode — Simulated ${alert.headline}`} /> : null}
-      <Card tone={alert.status === 'active' ? 'danger' : 'muted'} style={styles.hero}>
-        <View style={styles.heroTitleRow}>
-          <View style={styles.iconCircle}>
-            <Icon name={{ ios: 'exclamationmark.triangle.fill', android: 'warning', web: 'warning' }} color={colors.surface} size={25} />
-          </View>
-          <View style={styles.flex}>
-            <AppText variant="title" color={colors.dangerStrong}>{alert.headline}</AppText>
-            <AppText variant="caption" color={colors.dangerStrong}>{alert.areaDescription}</AppText>
-          </View>
-        </View>
-        <AppText color={colors.dangerStrong}>{alert.summary}</AppText>
-        <View style={styles.badges}>
-          <StatusBadge label={alert.severity} tone="danger" />
-          <StatusBadge label={alert.urgency} tone="warning" />
-          <StatusBadge label={alert.certainty} tone="info" />
-        </View>
-      </Card>
+      {alert.isDemo ? <DemoBanner label={`Demo · Simulated ${alert.headline}`} /> : null}
+
+      <View style={[styles.hero, alert.status !== 'active' && styles.heroMuted]}>
+        <Image source={require('@/assets/brand/lifebuoy.png')} style={styles.heroArt} contentFit="contain" />
+        <StatusBadge label={`${alert.severity} · ${alert.urgency}`} tone="danger" />
+        <AppText variant="title" color={colors.dangerStrong} style={styles.centerText}>{alert.headline}</AppText>
+        <AppText variant="caption" color={colors.dangerStrong} style={styles.centerText}>{alert.areaDescription}</AppText>
+        <AppText color={colors.dangerStrong} style={styles.centerText}>{alert.summary}</AppText>
+      </View>
+
       <Card style={styles.section}>
         <View style={styles.sectionHeading}>
-          <AppText variant="heading">Do now</AppText>
-          <AppText variant="caption" color={colors.inkMuted}>Reviewed prototype actions selected deterministically</AppText>
+          <AppText variant="heading">Do these now</AppText>
+          <AppText variant="caption" color={colors.inkMuted}>Follow these immediate safety actions in order.</AppText>
         </View>
         {alert.doNow.map((step) => (
           <View key={step.id} style={styles.actionRow}>
@@ -78,10 +63,19 @@ export default function AlertDetailScreen() {
           </View>
         ))}
         {alert.status === 'active' ? (
-          <PrimaryButton accessibilityLabel="Start full flood action plan" onPress={() => router.push('/action-plan/demo-flood-plan-001' as Href)}>Start full action plan</PrimaryButton>
+          <PrimaryButton accessibilityLabel="Open full flood safety checklist" onPress={() => router.push('/action-plan/demo-flood-plan-001' as Href)}>Open safety checklist</PrimaryButton>
         ) : null}
       </Card>
-      <SecondaryButton accessibilityLabel="Find verified safety resources" onPress={() => router.push('/shelters' as Href)}>Find verified safety resources</SecondaryButton>
+
+      <Card style={styles.resourceCard}>
+        <View style={styles.resourceIcon}><Icon name={{ ios: 'checkmark.shield.fill', android: 'verified_user', web: 'verified_user' }} color={colors.safe} size={22} /></View>
+        <View style={styles.flex}>
+          <AppText variant="bodyStrong">Verified safety resources</AppText>
+          <AppText variant="caption" color={colors.inkMuted}>No live shelter source is connected. Check source availability.</AppText>
+        </View>
+        <SecondaryButton accessibilityLabel="View verified safety resource status" onPress={() => router.push('/shelters' as Href)}>View</SecondaryButton>
+      </Card>
+
       <Card style={styles.section}>
         <View style={styles.sectionHeading}>
           <AppText variant="heading">Official alert text</AppText>
@@ -91,7 +85,7 @@ export default function AlertDetailScreen() {
         <View style={styles.metadata}>
           <View style={styles.metaItem}><AppText variant="eyebrow" color={colors.inkSubtle}>Issued</AppText><AppText variant="caption">{formatDate(alert.issuedAt)}</AppText></View>
           <View style={styles.metaItem}><AppText variant="eyebrow" color={colors.inkSubtle}>Expires</AppText><AppText variant="caption">{formatDate(alert.expiresAt)}</AppText></View>
-          <View style={styles.metaItem}><AppText variant="eyebrow" color={colors.inkSubtle}>Retrieved</AppText><AppText variant="caption">{formatDate(alert.retrievedAt)} • {alert.freshness}</AppText></View>
+          <View style={styles.metaItem}><AppText variant="eyebrow" color={colors.inkSubtle}>Retrieved</AppText><AppText variant="caption">{formatDate(alert.retrievedAt)} · {alert.freshness}</AppText></View>
         </View>
       </Card>
       <SecondaryButton accessibilityLabel="Share simulated alert status" onPress={shareAlert}>Share simulated status</SecondaryButton>
@@ -100,15 +94,17 @@ export default function AlertDetailScreen() {
 }
 
 const styles = StyleSheet.create({
-  hero: { gap: spacing.lg, borderColor: '#F2B8B2' },
-  heroTitleRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
-  iconCircle: { width: 52, height: 52, borderRadius: 26, backgroundColor: colors.danger, alignItems: 'center', justifyContent: 'center' },
+  centerText: { textAlign: 'center' },
   flex: { flex: 1, gap: spacing.xs },
-  badges: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
+  hero: { minHeight: 330, alignItems: 'center', justifyContent: 'center', gap: spacing.sm, padding: spacing.xl, borderRadius: radii.xl, backgroundColor: colors.dangerWash },
+  heroMuted: { backgroundColor: colors.surfaceMuted },
+  heroArt: { width: 142, height: 114 },
   section: { gap: spacing.md },
   sectionHeading: { gap: spacing.xs },
-  actionRow: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.md, paddingVertical: spacing.md, borderBottomWidth: 1, borderBottomColor: colors.border },
-  number: { width: 32, height: 32, borderRadius: radii.pill, backgroundColor: colors.primarySoft, alignItems: 'center', justifyContent: 'center' },
-  metadata: { gap: spacing.md, paddingTop: spacing.md, borderTopWidth: 1, borderTopColor: colors.border },
+  actionRow: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.md, paddingVertical: spacing.sm, borderBottomWidth: 1, borderBottomColor: colors.border },
+  number: { width: 28, height: 28, borderRadius: 14, backgroundColor: colors.primarySoft, alignItems: 'center', justifyContent: 'center' },
+  resourceCard: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
+  resourceIcon: { width: 42, height: 42, borderRadius: radii.md, backgroundColor: colors.safeSoft, alignItems: 'center', justifyContent: 'center' },
+  metadata: { gap: spacing.sm, paddingTop: spacing.md, borderTopWidth: 1, borderTopColor: colors.border },
   metaItem: { gap: spacing.xs },
 });

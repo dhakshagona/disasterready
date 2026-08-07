@@ -41,7 +41,7 @@ export function AlertCard({ alert, onPress }: AlertCardProps) {
           </View>
           <AppText variant="heading">{alert.headline}</AppText>
           <AppText variant="caption" color={colors.inkMuted}>{alert.areaDescription}</AppText>
-          <AppText color={colors.inkMuted} numberOfLines={3}>{alert.summary}</AppText>
+          <AppText variant="caption" color={colors.inkMuted} numberOfLines={2}>{alert.summary}</AppText>
           <AppText variant="caption" color={colors.inkSubtle}>
             {alert.status === 'active' ? 'Expires' : 'Ended'} {formatTime(alert.expiresAt)}
           </AppText>
@@ -54,10 +54,10 @@ export function AlertCard({ alert, onPress }: AlertCardProps) {
 
 const styles = StyleSheet.create({
   pressed: { opacity: 0.72 },
-  card: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.md },
-  iconBox: { width: 48, height: 48, borderRadius: radii.md, alignItems: 'center', justifyContent: 'center' },
+  card: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
+  iconBox: { width: 42, height: 42, borderRadius: radii.md, alignItems: 'center', justifyContent: 'center' },
   iconDanger: { backgroundColor: colors.dangerSoft },
   iconMuted: { backgroundColor: colors.surfaceMuted },
-  content: { flex: 1, gap: spacing.sm },
+  content: { flex: 1, gap: 5 },
   badges: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
 });

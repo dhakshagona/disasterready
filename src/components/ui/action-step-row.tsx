@@ -19,14 +19,12 @@ export function ActionStepRow({ step, completed, onToggle, compact = false }: Ac
       accessibilityRole="checkbox"
       accessibilityState={{ checked: completed }}
       onPress={onToggle}
-      style={({ pressed }) => [styles.row, compact && styles.compact, pressed && styles.pressed]}
+      style={({ pressed }) => [styles.row, compact && styles.compact, completed && styles.rowComplete, pressed && styles.pressed]}
       testID={`action-step-${step.id}`}>
       <View style={[styles.checkbox, completed && styles.checkboxComplete]}>
         {completed ? (
           <Icon name={{ ios: 'checkmark', android: 'check', web: 'check' }} color={colors.surface} size={16} />
-        ) : (
-          <AppText variant="caption" color={colors.primary}>{step.priority}</AppText>
-        )}
+        ) : null}
       </View>
       <View style={styles.copy}>
         <AppText variant="bodyStrong" style={completed && styles.completedText}>{step.title}</AppText>
@@ -38,27 +36,32 @@ export function ActionStepRow({ step, completed, onToggle, compact = false }: Ac
 
 const styles = StyleSheet.create({
   row: {
-    minHeight: 68,
+    minHeight: 62,
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     gap: spacing.md,
-    paddingVertical: spacing.md,
-    borderBottomWidth: 1,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    borderWidth: 1,
     borderBottomColor: colors.border,
+    borderColor: colors.border,
+    borderRadius: radii.md,
+    backgroundColor: colors.surface,
   },
   compact: { minHeight: layout.minTouchTarget, alignItems: 'center' },
+  rowComplete: { backgroundColor: colors.primarySoft, borderColor: '#BDD3FB' },
   pressed: { opacity: 0.66 },
   checkbox: {
-    width: 32,
-    height: 32,
-    borderRadius: radii.pill,
+    width: 28,
+    height: 28,
+    borderRadius: 7,
     borderWidth: 2,
     borderColor: colors.primary,
     backgroundColor: colors.surface,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  checkboxComplete: { backgroundColor: colors.safe, borderColor: colors.safe },
+  checkboxComplete: { backgroundColor: colors.primary, borderColor: colors.primary },
   copy: { flex: 1, gap: spacing.xs },
   completedText: { textDecorationLine: 'line-through', color: colors.inkMuted },
 });

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { AppHeader } from '@/components/ui/app-header';
 import { AppText } from '@/components/ui/app-text';
 import { Card } from '@/components/ui/card';
+import { Icon } from '@/components/ui/icon';
 import { Screen } from '@/components/ui/screen';
 import { SettingRow } from '@/components/ui/setting-row';
 import { DemoBanner, OfflineBanner } from '@/components/ui/state-messages';
@@ -19,61 +20,81 @@ export default function SettingsScreen() {
 
   return (
     <Screen testID="settings-screen">
-      <AppHeader title="Settings" subtitle="Guest profile • saved on this device later" />
+      <AppHeader title="Settings" subtitle="Guest profile" />
       {offlinePreview ? <OfflineBanner lastUpdated="3:02 PM" /> : null}
+
       <Card style={styles.profileCard}>
         <View style={styles.avatar}><AppText variant="heading" color={colors.primary}>G</AppText></View>
         <View style={styles.flex}>
           <AppText variant="bodyStrong">Guest mode</AppText>
-          <AppText variant="caption" color={colors.inkMuted}>Emergency information stays accessible without signing in.</AppText>
+          <AppText variant="caption" color={colors.inkMuted}>Use emergency information without signing in.</AppText>
         </View>
         <StatusBadge label="Local" tone="info" />
       </Card>
+
       <View style={styles.section}>
         <AppText variant="eyebrow" color={colors.inkMuted}>Location & hazards</AppText>
-        <Card>
-          <AppText variant="bodyStrong">{defaultPreferences.location.city}, {defaultPreferences.location.region} {defaultPreferences.location.postalCode}</AppText>
-          <AppText variant="caption" color={colors.inkMuted}>Saved location • prototype only</AppText>
+        <Card style={styles.locationCard}>
+          <View style={styles.locationRow}>
+            <View style={styles.iconBox}><Icon name={{ ios: 'location.fill', android: 'location_on', web: 'location_on' }} color={colors.primary} size={20} /></View>
+            <View style={styles.flex}>
+              <AppText variant="bodyStrong">{defaultPreferences.location.city}, {defaultPreferences.location.region} {defaultPreferences.location.postalCode}</AppText>
+              <AppText variant="caption" color={colors.inkMuted}>Your selected alert area</AppText>
+            </View>
+          </View>
           <View style={styles.chips}>
             {defaultPreferences.hazards.map((hazard) => <StatusBadge key={hazard} label={hazardLabels[hazard]} tone="info" />)}
           </View>
         </Card>
       </View>
+
       <View style={styles.section}>
         <AppText variant="eyebrow" color={colors.inkMuted}>Accessibility</AppText>
-        <Card>
+        <Card style={styles.settingCard}>
           <SettingRow label="Plain language" detail="Shorter, more direct summaries" value={plainLanguage} onValueChange={setPlainLanguage} />
           <SettingRow label="High contrast" detail="Stronger visual separation" value={highContrast} onValueChange={setHighContrast} />
           <SettingRow label="Larger text" detail="Use the larger reading preset" value={largeText} onValueChange={setLargeText} />
         </Card>
       </View>
+
       <View style={styles.section}>
         <AppText variant="eyebrow" color={colors.inkMuted}>Language</AppText>
-        <Card style={styles.row}>
+        <Card style={styles.languageRow}>
+          <View style={styles.iconBox}><Icon name={{ ios: 'globe', android: 'language', web: 'language' }} color={colors.primary} size={20} /></View>
           <AppText variant="bodyStrong" style={styles.flex}>English</AppText>
-          <AppText variant="caption" color={colors.inkMuted}>Spanish translation planned</AppText>
+          <Icon name={{ ios: 'chevron.right', android: 'chevron_right', web: 'chevron_right' }} color={colors.inkSubtle} />
         </Card>
       </View>
+
       <View style={styles.section}>
-        <AppText variant="eyebrow" color={colors.inkMuted}>Prototype tools</AppText>
-        <DemoBanner label="Demo alerts never count as real alerts or notifications" />
-        <Card>
-          <SettingRow label="Preview offline state" detail="Shows how cached-data freshness will be disclosed" value={offlinePreview} onValueChange={setOfflinePreview} />
+        <AppText variant="eyebrow" color={colors.inkMuted}>Demo & offline</AppText>
+        <DemoBanner label="Simulated alerts are always clearly labeled" />
+        <Card style={styles.settingCard}>
+          <SettingRow label="Preview offline state" detail="See cached-data freshness messaging" value={offlinePreview} onValueChange={setOfflinePreview} />
         </Card>
       </View>
-      <Card tone="muted">
-        <AppText variant="bodyStrong">Data & privacy</AppText>
-        <AppText variant="caption" color={colors.inkMuted}>No account, location history, push token, or cloud profile exists in Phase 1.</AppText>
+
+      <Card tone="muted" style={styles.privacyCard}>
+        <Icon name={{ ios: 'lock.shield.fill', android: 'privacy_tip', web: 'privacy_tip' }} color={colors.safe} size={22} />
+        <View style={styles.flex}>
+          <AppText variant="bodyStrong">Data & privacy</AppText>
+          <AppText variant="caption" color={colors.inkMuted}>Guest mode does not create a cloud profile.</AppText>
+        </View>
       </Card>
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  profileCard: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
-  avatar: { width: 52, height: 52, borderRadius: radii.pill, backgroundColor: colors.primarySoft, alignItems: 'center', justifyContent: 'center' },
   flex: { flex: 1 },
-  section: { gap: spacing.md },
-  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm, marginTop: spacing.lg },
-  row: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
+  profileCard: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
+  avatar: { width: 44, height: 44, borderRadius: 22, backgroundColor: colors.primarySoft, alignItems: 'center', justifyContent: 'center' },
+  section: { gap: spacing.sm },
+  locationCard: { gap: spacing.md },
+  locationRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
+  iconBox: { width: 38, height: 38, borderRadius: radii.md, backgroundColor: colors.primarySoft, alignItems: 'center', justifyContent: 'center' },
+  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
+  settingCard: { paddingTop: 0, paddingBottom: 0 },
+  languageRow: { minHeight: 66, flexDirection: 'row', alignItems: 'center', gap: spacing.md },
+  privacyCard: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
 });

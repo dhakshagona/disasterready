@@ -2,29 +2,54 @@ import { Image } from 'expo-image';
 import { router, useLocalSearchParams, type Href } from 'expo-router';
 import { Pressable, StyleSheet, View } from 'react-native';
 
-import { ActionStepRow } from '@/components/ui/action-step-row';
 import { AppText } from '@/components/ui/app-text';
-import { PrimaryButton, SecondaryButton } from '@/components/ui/buttons';
 import { Card } from '@/components/ui/card';
 import { Icon } from '@/components/ui/icon';
 import { Screen } from '@/components/ui/screen';
-import { DemoBanner, EmptyState } from '@/components/ui/state-messages';
-import { StatusBadge } from '@/components/ui/status-badge';
+import { DemoBanner } from '@/components/ui/state-messages';
 import { colors, radii, spacing } from '@/constants/tokens';
 import { defaultPreferences, demoFloodAlert } from '@/data/mock-repositories';
 
+type ShortcutProps = {
+  icon: 'checklist' | 'verified_user' | 'menu_book';
+  title: string;
+  detail: string;
+  tone?: 'primary' | 'safe';
+  onPress?: () => void;
+};
+
+function Shortcut({ icon, title, detail, tone = 'primary', onPress }: ShortcutProps) {
+  const accent = tone === 'safe' ? colors.safe : colors.primary;
+  return (
+    <Pressable
+      accessibilityRole={onPress ? 'button' : undefined}
+      accessibilityLabel={title}
+      disabled={!onPress}
+      onPress={onPress}
+      style={({ pressed }) => pressed && styles.pressed}>
+      <Card style={styles.shortcutCard}>
+        <View style={[styles.shortcutIcon, tone === 'safe' && styles.safeIcon]}>
+          <Icon name={{ ios: icon === 'verified_user' ? 'checkmark.shield.fill' : icon === 'menu_book' ? 'book.fill' : 'checklist', android: icon, web: icon }} color={accent} size={22} />
+        </View>
+        <View style={styles.flex}>
+          <AppText variant="bodyStrong">{title}</AppText>
+          <AppText variant="caption" color={colors.inkMuted}>{detail}</AppText>
+        </View>
+        {onPress ? <Icon name={{ ios: 'chevron.right', android: 'chevron_right', web: 'chevron_right' }} color={colors.inkSubtle} /> : null}
+      </Card>
+    </Pressable>
+  );
+}
+
 function LocationHeader() {
-  const location = defaultPreferences.location;
+  const { location } = defaultPreferences;
   return (
     <View style={styles.locationHeader}>
-      <View style={styles.brandMark}>
-        <Image source={require('@/assets/brand/lifebuoy.png')} style={styles.brandImage} />
+      <AppText variant="title" accessibilityRole="header">Good afternoon</AppText>
+      <View style={styles.locationLine}>
+        <Icon name={{ ios: 'location.fill', android: 'location_on', web: 'location_on' }} color={colors.primary} size={16} />
+        <AppText variant="caption" color={colors.inkMuted}>{location.city}, {location.region} {location.postalCode}</AppText>
       </View>
-      <View style={styles.headerCopy}>
-        <AppText variant="caption" color={colors.inkMuted}>Your location</AppText>
-        <AppText variant="bodyStrong">{location.city}, {location.region} {location.postalCode}</AppText>
-      </View>
-      <View accessibilityLabel="Guest profile" style={styles.avatar}><AppText variant="caption" color={colors.primary}>G</AppText></View>
     </View>
   );
 }
@@ -32,54 +57,40 @@ function LocationHeader() {
 function NoAlertHome() {
   return (
     <>
-      <EmptyState
-        title="No active alerts"
-        message="No simulated alerts are active for Austin right now. Live data is not connected in this phase."
-      />
-      <View style={styles.freshnessRow}>
-        <Icon name={{ ios: 'clock', android: 'schedule', web: 'schedule' }} color={colors.inkMuted} size={16} />
-        <AppText variant="caption" color={colors.inkMuted}>Prototype state • Last checked just now</AppText>
-        <Pressable accessibilityRole="button" accessibilityLabel="Refresh alert preview" style={styles.refresh}>
-          <AppText variant="caption" color={colors.primary}>Refresh</AppText>
-        </Pressable>
-      </View>
-      <Card style={styles.demoCallout}>
-        <View style={styles.demoIcon}><Icon name={{ ios: 'play.fill', android: 'play_arrow', web: 'play_arrow' }} color={colors.demo} /></View>
-        <View style={styles.headerCopy}>
-          <AppText variant="bodyStrong">See the complete emergency flow</AppText>
-          <AppText variant="caption" color={colors.inkMuted}>Try a clearly labeled simulated flood warning.</AppText>
-        </View>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel="Start flood warning demo"
-          onPress={() => router.setParams({ demo: '1' })}
-          style={styles.inlineButton}>
-          <AppText variant="caption" color={colors.demo}>Start demo</AppText>
-        </Pressable>
-      </Card>
-      <View style={styles.section}>
-        <View style={styles.sectionHeading}>
-          <AppText variant="heading">Prepare ahead</AppText>
-          <AppText variant="caption" color={colors.inkMuted}>Small steps, less stress later.</AppText>
-        </View>
-        <Card style={styles.shortcutCard}>
-          <View style={styles.shortcutIcon}><Icon name={{ ios: 'checklist', android: 'checklist', web: 'checklist' }} color={colors.primary} /></View>
-          <View style={styles.headerCopy}>
-            <AppText variant="bodyStrong">Flood preparedness checklist</AppText>
-            <AppText variant="caption" color={colors.inkMuted}>5 reviewed prototype steps</AppText>
+      <View style={[styles.scene, styles.safeScene]}>
+        <Image source={require('@/assets/brand/lifebuoy.png')} style={styles.sceneArt} contentFit="contain" />
+        <View style={styles.sceneCopy}>
+          <View style={styles.statusLine}>
+            <Icon name={{ ios: 'checkmark.circle.fill', android: 'check_circle', web: 'check_circle' }} color={colors.safeStrong} size={20} />
+            <AppText variant="heading" color={colors.safeStrong}>No active alerts</AppText>
           </View>
-          <Pressable accessibilityRole="button" accessibilityLabel="Open flood preparedness checklist" onPress={() => router.push('/action-plan/demo-flood-plan-001' as Href)}>
-            <Icon name={{ ios: 'chevron.right', android: 'chevron_right', web: 'chevron_right' }} color={colors.inkMuted} />
+          <AppText variant="caption" color={colors.safeStrong} style={styles.centerText}>All clear for your selected area.</AppText>
+          <Pressable accessibilityRole="button" accessibilityLabel="Refresh alert status" style={styles.refreshPill}>
+            <Icon name={{ ios: 'arrow.clockwise', android: 'refresh', web: 'refresh' }} color={colors.safeStrong} size={15} />
+            <AppText variant="caption" color={colors.safeStrong}>Checked just now · Refresh</AppText>
           </Pressable>
-        </Card>
-        <Card style={styles.shortcutCard}>
-          <View style={[styles.shortcutIcon, styles.safeIcon]}><Icon name={{ ios: 'person.2.fill', android: 'groups', web: 'groups' }} color={colors.safe} /></View>
-          <View style={styles.headerCopy}>
-            <AppText variant="bodyStrong">Plan a family check-in</AppText>
-            <AppText variant="caption" color={colors.inkMuted}>Feature planned for a later phase</AppText>
-          </View>
-        </Card>
+        </View>
       </View>
+
+      <View style={styles.section}>
+        <AppText variant="eyebrow" color={colors.inkMuted}>Ready when you need it</AppText>
+        <Shortcut
+          icon="checklist"
+          title="Emergency checklist"
+          detail="A quick 60-second flood preparation plan"
+          onPress={() => router.push('/action-plan/demo-flood-plan-001' as Href)}
+        />
+        <Shortcut icon="menu_book" title="Stay prepared & up to date" detail="Review practical safety guidance before an emergency" tone="safe" />
+      </View>
+
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Preview a simulated flood warning"
+        onPress={() => router.setParams({ demo: '1' })}
+        style={styles.demoLink}>
+        <Icon name={{ ios: 'play.circle', android: 'play_circle', web: 'play_circle' }} color={colors.demo} size={18} />
+        <AppText variant="caption" color={colors.demo}>Preview simulated flood warning</AppText>
+      </Pressable>
     </>
   );
 }
@@ -87,44 +98,51 @@ function NoAlertHome() {
 function DemoAlertHome() {
   return (
     <>
-      <DemoBanner label="Demo Mode — Simulated Flood Warning" />
-      <Card tone="danger" style={styles.alertHero}>
-        <View style={styles.alertTopline}>
-          <StatusBadge label="Severe • Immediate" tone="danger" />
-          <AppText variant="caption" color={colors.dangerStrong}>Expires 6:45 PM</AppText>
+      <DemoBanner label="Demo · Simulated Flood Warning" />
+      <View style={[styles.scene, styles.dangerScene]}>
+        <Image source={require('@/assets/brand/lifebuoy.png')} style={styles.sceneArtSmall} contentFit="contain" />
+        <View style={styles.sceneCopy}>
+          <AppText variant="title" color={colors.dangerStrong} style={styles.centerText}>{demoFloodAlert.headline}</AppText>
+          <AppText variant="caption" color={colors.dangerStrong} style={styles.centerText}>{demoFloodAlert.areaDescription}</AppText>
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel="View flood warning details"
+            onPress={() => router.push('/alert/demo-flood-001' as Href)}
+            style={styles.alertPill}>
+            <AppText variant="bodyStrong" color={colors.surface}>View alert</AppText>
+            <Icon name={{ ios: 'chevron.right', android: 'chevron_right', web: 'chevron_right' }} color={colors.surface} size={18} />
+          </Pressable>
         </View>
-        <View style={styles.alertTitleRow}>
-          <View style={styles.dangerIcon}>
-            <Icon name={{ ios: 'exclamationmark.triangle.fill', android: 'warning', web: 'warning' }} color={colors.surface} size={25} />
-          </View>
-          <View style={styles.headerCopy}>
-            <AppText variant="title" color={colors.dangerStrong}>{demoFloodAlert.headline}</AppText>
-            <AppText variant="caption" color={colors.dangerStrong}>{demoFloodAlert.areaDescription}</AppText>
-          </View>
-        </View>
-        <AppText color={colors.dangerStrong}>{demoFloodAlert.summary}</AppText>
-      </Card>
+      </View>
+
       <Card style={styles.doNowCard}>
         <View style={styles.sectionHeading}>
-          <AppText variant="heading">Do now</AppText>
-          <AppText variant="caption" color={colors.inkMuted}>Top actions from the reviewed demo plan</AppText>
+          <AppText variant="heading">Do these now</AppText>
+          <AppText variant="caption" color={colors.inkMuted}>Immediate actions from the safety plan</AppText>
         </View>
         {demoFloodAlert.doNow.map((step) => (
-          <ActionStepRow key={step.id} step={step} completed={false} compact onToggle={() => undefined} />
+          <View key={step.id} style={styles.actionRow}>
+            <View style={styles.actionNumber}><AppText variant="caption" color={colors.primary}>{step.priority}</AppText></View>
+            <AppText variant="caption" style={styles.flex}>{step.title}</AppText>
+          </View>
         ))}
-        <PrimaryButton accessibilityLabel="Start flood action plan" onPress={() => router.push('/action-plan/demo-flood-plan-001' as Href)}>
-          Start action plan
-        </PrimaryButton>
       </Card>
-      <SecondaryButton accessibilityLabel="Find verified safety resources" onPress={() => router.push('/shelters' as Href)}>
-        Find verified safety resources
-      </SecondaryButton>
-      <Pressable accessibilityRole="button" accessibilityLabel="View original simulated alert" onPress={() => router.push('/alert/demo-flood-001' as Href)} style={styles.textLink}>
-        <AppText variant="bodyStrong" color={colors.primary}>View alert details and original text</AppText>
-        <Icon name={{ ios: 'chevron.right', android: 'chevron_right', web: 'chevron_right' }} color={colors.primary} />
-      </Pressable>
-      <Pressable accessibilityRole="button" accessibilityLabel="End demo mode" onPress={() => router.setParams({ demo: undefined })} style={styles.endDemo}>
-        <AppText variant="caption" color={colors.demo}>End demo and return to no-alert state</AppText>
+
+      <Shortcut
+        icon="verified_user"
+        title="Verified safety resources"
+        detail="No live shelter source is connected; view source status"
+        tone="safe"
+        onPress={() => router.push('/shelters' as Href)}
+      />
+      <Shortcut
+        icon="checklist"
+        title="Emergency checklist"
+        detail="Open the full step-by-step flood action plan"
+        onPress={() => router.push('/action-plan/demo-flood-plan-001' as Href)}
+      />
+      <Pressable accessibilityRole="button" accessibilityLabel="End demo mode" onPress={() => router.setParams({ demo: undefined })} style={styles.demoLink}>
+        <AppText variant="caption" color={colors.demo}>End demo and return to all clear</AppText>
       </Pressable>
     </>
   );
@@ -135,37 +153,33 @@ export default function HomeScreen() {
   return (
     <Screen testID="home-screen">
       <LocationHeader />
-      <View style={styles.welcome}>
-        <AppText variant="title" accessibilityRole="header">Good afternoon</AppText>
-        <AppText color={colors.inkMuted}>{demo === '1' ? 'Here is what needs your attention.' : 'You are all clear in this prototype.'}</AppText>
-      </View>
       {demo === '1' ? <DemoAlertHome /> : <NoAlertHome />}
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  locationHeader: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
-  brandMark: { width: 48, height: 48, borderRadius: radii.md, backgroundColor: colors.canvasStrong, alignItems: 'center', justifyContent: 'center' },
-  brandImage: { width: 42, height: 34 },
-  headerCopy: { flex: 1, gap: spacing.xs },
-  avatar: { width: 42, height: 42, borderRadius: 21, backgroundColor: colors.primarySoft, borderWidth: 1, borderColor: '#B9D5F2', alignItems: 'center', justifyContent: 'center' },
-  welcome: { gap: spacing.xs, paddingTop: spacing.sm },
-  freshnessRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
-  refresh: { marginLeft: 'auto', minHeight: 44, justifyContent: 'center' },
-  demoCallout: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, borderColor: '#D8C8F2' },
-  demoIcon: { width: 42, height: 42, borderRadius: 21, backgroundColor: colors.demoSoft, alignItems: 'center', justifyContent: 'center' },
-  inlineButton: { minHeight: 44, justifyContent: 'center' },
-  section: { gap: spacing.md },
+  flex: { flex: 1 },
+  pressed: { opacity: 0.68 },
+  centerText: { textAlign: 'center' },
+  locationHeader: { alignItems: 'center', gap: spacing.xs, paddingTop: spacing.xs },
+  locationLine: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs },
+  scene: { minHeight: 318, borderRadius: radii.xl, alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: spacing.xl, gap: spacing.md },
+  safeScene: { backgroundColor: colors.safeWash },
+  dangerScene: { backgroundColor: colors.dangerWash },
+  sceneArt: { width: 178, height: 144 },
+  sceneArtSmall: { width: 154, height: 124 },
+  sceneCopy: { alignItems: 'center', gap: spacing.sm },
+  statusLine: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
+  refreshPill: { minHeight: 36, flexDirection: 'row', alignItems: 'center', gap: spacing.xs, paddingHorizontal: spacing.md, borderRadius: radii.pill, backgroundColor: 'rgba(255,255,255,0.72)' },
+  alertPill: { minHeight: 42, flexDirection: 'row', alignItems: 'center', gap: spacing.xs, paddingHorizontal: spacing.lg, borderRadius: radii.pill, backgroundColor: colors.danger },
+  section: { gap: spacing.sm },
   sectionHeading: { gap: spacing.xs },
-  shortcutCard: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
-  shortcutIcon: { width: 44, height: 44, borderRadius: radii.md, backgroundColor: colors.primarySoft, alignItems: 'center', justifyContent: 'center' },
+  shortcutCard: { minHeight: 76, flexDirection: 'row', alignItems: 'center', gap: spacing.md },
+  shortcutIcon: { width: 42, height: 42, borderRadius: radii.md, backgroundColor: colors.primarySoft, alignItems: 'center', justifyContent: 'center' },
   safeIcon: { backgroundColor: colors.safeSoft },
-  alertHero: { gap: spacing.lg, borderColor: '#F2B8B2' },
-  alertTopline: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', gap: spacing.sm },
-  alertTitleRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
-  dangerIcon: { width: 50, height: 50, borderRadius: 25, backgroundColor: colors.danger, alignItems: 'center', justifyContent: 'center' },
-  doNowCard: { gap: spacing.md },
-  textLink: { minHeight: 52, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: spacing.sm },
-  endDemo: { minHeight: 48, alignItems: 'center', justifyContent: 'center' },
+  demoLink: { minHeight: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: spacing.sm },
+  doNowCard: { gap: spacing.sm },
+  actionRow: { minHeight: 38, flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
+  actionNumber: { width: 26, height: 26, borderRadius: 13, backgroundColor: colors.primarySoft, alignItems: 'center', justifyContent: 'center' },
 });

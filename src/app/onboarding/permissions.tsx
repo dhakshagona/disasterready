@@ -19,7 +19,7 @@ const permissionItems = [
   {
     icon: { ios: 'bell.fill', android: 'notifications', web: 'notifications' } as const,
     title: 'Notifications',
-    body: 'Later, you can choose which verified alerts may notify you. This prototype does not request permission.',
+    body: 'Choose which verified emergency alerts may notify you. You can decide after setup.',
     action: 'Decide later',
   },
 ];
@@ -31,7 +31,7 @@ export default function PermissionsScreen() {
       <View style={styles.progressTrack}><View style={styles.progressFill} /></View>
       <View style={styles.copy}>
         <AppText variant="heading">Why we ask</AppText>
-        <AppText color={colors.inkMuted}>Emergency tools should explain permissions before the operating system prompt appears.</AppText>
+        <AppText color={colors.inkMuted}>You stay in control of how DisasterReady uses location and notifications.</AppText>
       </View>
       {permissionItems.map((item) => (
         <Card key={item.title} style={styles.card}>
@@ -43,11 +43,7 @@ export default function PermissionsScreen() {
           </View>
         </Card>
       ))}
-      <Card tone="muted">
-        <AppText variant="caption" color={colors.inkMuted}>
-          Guest mode works without an account. The first production build will allow a ZIP code or city instead of device location.
-        </AppText>
-      </Card>
+      <Card tone="muted"><AppText variant="caption" color={colors.inkMuted}>Guest mode works without an account. You can update these choices in Settings.</AppText></Card>
     </Screen>
   );
 }
@@ -56,8 +52,8 @@ const styles = StyleSheet.create({
   progressTrack: { height: 5, borderRadius: 3, backgroundColor: colors.border, overflow: 'hidden' },
   progressFill: { width: '66%', height: '100%', backgroundColor: colors.primary },
   copy: { gap: spacing.sm },
-  card: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.lg },
-  iconBox: { width: 48, height: 48, borderRadius: radii.md, backgroundColor: colors.primarySoft, alignItems: 'center', justifyContent: 'center' },
+  card: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.md },
+  iconBox: { width: 42, height: 42, borderRadius: radii.md, backgroundColor: colors.primarySoft, alignItems: 'center', justifyContent: 'center' },
   itemCopy: { flex: 1, gap: spacing.sm },
   choice: { alignSelf: 'flex-start', backgroundColor: colors.primarySoft, borderRadius: radii.pill, paddingHorizontal: spacing.md, paddingVertical: spacing.sm },
 });

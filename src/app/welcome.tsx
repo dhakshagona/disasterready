@@ -4,15 +4,14 @@ import { StyleSheet, View } from 'react-native';
 
 import { AppText } from '@/components/ui/app-text';
 import { PrimaryButton, SecondaryButton } from '@/components/ui/buttons';
-import { Card } from '@/components/ui/card';
 import { Icon } from '@/components/ui/icon';
 import { Screen } from '@/components/ui/screen';
 import { colors, radii, spacing } from '@/constants/tokens';
 
-const promises = [
-  ['Understand the alert', 'See a concise summary with the official alert always available.'],
-  ['Know what to do', 'Use reviewed, ordered steps—not improvised safety advice.'],
-  ['Find a safe place', 'See only safety resources whose source and status are clear.'],
+const features = [
+  ['warning', 'Clear alerts'],
+  ['checklist', 'Simple action plans'],
+  ['verified_user', 'Trusted guidance'],
 ] as const;
 
 export default function WelcomeScreen() {
@@ -23,46 +22,49 @@ export default function WelcomeScreen() {
           <PrimaryButton accessibilityLabel="Continue as guest" onPress={() => router.push('/onboarding/hazards' as Href)}>
             Continue as guest
           </PrimaryButton>
-          <SecondaryButton accessibilityLabel="Account sync is coming later" disabled>
-            Account sync coming later
+          <SecondaryButton accessibilityLabel="Sign in or create account unavailable" disabled>
+            Sign in or create account
           </SecondaryButton>
         </>
       }>
       <View style={styles.brandRow}>
-        <Image source={require('@/assets/brand/lifebuoy.png')} style={styles.mark} />
+        <Image source={require('@/assets/brand/lifebuoy.png')} style={styles.brandMark} contentFit="contain" />
         <AppText variant="bodyStrong">DisasterReady</AppText>
       </View>
-      <View style={styles.intro}>
-        <AppText variant="display" accessibilityRole="header">Stay calm.{`\n`}Know what comes next.</AppText>
-        <AppText color={colors.inkMuted}>
-          DisasterReady turns official emergency information into a clear, prioritized plan while keeping the source in reach.
-        </AppText>
+      <View style={styles.hero}>
+        <View style={styles.artworkHalo}>
+          <Image source={require('@/assets/brand/lifebuoy.png')} style={styles.artwork} contentFit="contain" />
+        </View>
+        <View style={styles.intro}>
+          <AppText variant="display" accessibilityRole="header" style={styles.centerText}>Be ready when it matters.</AppText>
+          <AppText color={colors.inkMuted} style={styles.centerText}>
+            Local alerts, clear next steps, and trusted safety guidance in one calm place.
+          </AppText>
+        </View>
       </View>
-      <Card style={styles.promiseCard}>
-        {promises.map(([title, detail], index) => (
-          <View key={title} style={styles.promiseRow}>
-            <View style={styles.number}><AppText variant="caption" color={colors.primary}>{index + 1}</AppText></View>
-            <View style={styles.promiseCopy}>
-              <AppText variant="bodyStrong">{title}</AppText>
-              <AppText variant="caption" color={colors.inkMuted}>{detail}</AppText>
+      <View style={styles.features}>
+        {features.map(([icon, label]) => (
+          <View key={label} style={styles.feature}>
+            <View style={styles.featureIcon}>
+              <Icon name={{ ios: icon === 'verified_user' ? 'checkmark.shield.fill' : icon === 'warning' ? 'exclamationmark.triangle.fill' : 'checklist', android: icon, web: icon }} color={colors.primary} size={19} />
             </View>
-            <Icon name={{ ios: 'checkmark', android: 'check', web: 'check' }} color={colors.safe} size={18} />
+            <AppText variant="caption" style={styles.centerText}>{label}</AppText>
           </View>
         ))}
-      </Card>
-      <AppText variant="caption" color={colors.inkSubtle}>
-        Phase 1 uses clearly labeled simulated alerts. Live data and notification permissions are not connected yet.
-      </AppText>
+      </View>
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  brandRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
-  mark: { width: 42, height: 34 },
-  intro: { gap: spacing.md, paddingTop: spacing.lg },
-  promiseCard: { gap: 0 },
-  promiseRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, paddingVertical: spacing.lg, borderBottomWidth: 1, borderBottomColor: colors.border },
-  number: { width: 32, height: 32, borderRadius: radii.pill, backgroundColor: colors.primarySoft, alignItems: 'center', justifyContent: 'center' },
-  promiseCopy: { flex: 1, gap: spacing.xs },
+  brandRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: spacing.sm },
+  brandMark: { width: 38, height: 31 },
+  hero: { flex: 1, minHeight: 390, alignItems: 'center', justifyContent: 'center', gap: spacing.xl },
+  artworkHalo: { width: 248, height: 210, borderRadius: radii.xl, backgroundColor: colors.canvasStrong, alignItems: 'center', justifyContent: 'center' },
+  artwork: { width: 222, height: 180 },
+  intro: { maxWidth: 340, alignItems: 'center', gap: spacing.sm },
+  centerText: { textAlign: 'center' },
+  features: { flexDirection: 'row', gap: spacing.sm },
+  feature: { flex: 1, minHeight: 90, alignItems: 'center', justifyContent: 'center', gap: spacing.sm, padding: spacing.sm, borderRadius: radii.md, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border },
+  featureIcon: { width: 38, height: 38, borderRadius: 19, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.primarySoft },
 });

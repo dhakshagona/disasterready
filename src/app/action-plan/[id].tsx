@@ -26,9 +26,8 @@ export default function ActionPlanScreen() {
     );
   }
 
-  const activePlan = plan;
   const completedCount = completedIds.size;
-  const percent = Math.round((completedCount / activePlan.steps.length) * 100);
+  const percent = Math.round((completedCount / plan.steps.length) * 100);
 
   function toggleStep(stepId: string) {
     setCompletedIds((current) => {
@@ -39,60 +38,59 @@ export default function ActionPlanScreen() {
     });
   }
 
-  function resetPlan() {
-    setCompletedIds(new Set());
+  function markAllDone() {
+    setCompletedIds(new Set(plan!.steps.map((step) => step.id)));
   }
 
   async function shareSummary() {
-    const completeSteps = activePlan.steps.filter((step) => completedIds.has(step.id));
+    const completeSteps = plan!.steps.filter((step) => completedIds.has(step.id));
     const summary = completeSteps.length
       ? completeSteps.map((step) => `✓ ${step.title}`).join('\n')
       : 'No steps marked complete yet.';
-    await Share.share({ message: `DisasterReady DEMO — ${activePlan.title}\n${completedCount}/${activePlan.steps.length} complete\n${summary}` });
+    await Share.share({ message: `DisasterReady DEMO · ${plan!.title}\n${completedCount}/${plan!.steps.length} complete\n${summary}` });
   }
 
   return (
     <Screen testID="action-plan-screen">
-      <AppHeader title="Action plan" subtitle="Progress is local to this screen in Phase 1" back />
-      <DemoBanner label="Demo Mode — reviewed prototype checklist" />
-      <Card style={styles.progressCard}>
+      <AppHeader title="Emergency checklist" subtitle="Flood preparation" back />
+      <DemoBanner label="Demo · Safety checklist" />
+      <View style={styles.progressSection}>
         <View style={styles.progressHeader}>
-          <View style={styles.progressCopy}>
-            <AppText variant="title">{activePlan.title}</AppText>
-            <AppText variant="caption" color={colors.inkMuted}>{completedCount} of {activePlan.steps.length} steps complete</AppText>
+          <View style={styles.flex}>
+            <AppText variant="title">{plan.title}</AppText>
+            <AppText variant="caption" color={colors.inkMuted}>Tap each step as you complete it.</AppText>
           </View>
-          <View style={[styles.percentCircle, completedCount === plan.steps.length && styles.completeCircle]}>
-            <AppText variant="bodyStrong" color={completedCount === plan.steps.length ? colors.safe : colors.primary}>{percent}%</AppText>
-          </View>
+          <AppText variant="bodyStrong" color={completedCount === plan.steps.length ? colors.safeStrong : colors.primary}>
+            {completedCount} of {plan.steps.length}
+          </AppText>
         </View>
         <View accessibilityLabel={`${percent} percent complete`} accessibilityRole="progressbar" style={styles.track}>
           <View style={[styles.fill, { width: `${percent}%` }]} />
         </View>
-        <AppText variant="caption" color={colors.inkMuted}>{activePlan.rationale}</AppText>
-      </Card>
-      <Card style={styles.stepsCard}>
-        {activePlan.steps.map((step) => (
-          <ActionStepRow
-            key={step.id}
-            step={step}
-            completed={completedIds.has(step.id)}
-            onToggle={() => toggleStep(step.id)}
-          />
-        ))}
-      </Card>
-      <View style={styles.actions}>
-        <PrimaryButton accessibilityLabel="Share checklist summary" onPress={shareSummary}>Share progress summary</PrimaryButton>
-        <SecondaryButton accessibilityLabel="Reset all checklist progress" disabled={completedCount === 0} onPress={resetPlan}>Reset checklist</SecondaryButton>
       </View>
+
+      <View style={styles.steps}>
+        {plan.steps.map((step) => (
+          <ActionStepRow key={step.id} step={step} completed={completedIds.has(step.id)} onToggle={() => toggleStep(step.id)} />
+        ))}
+      </View>
+
+      <View style={styles.actions}>
+        <PrimaryButton accessibilityLabel="Mark all checklist steps done" disabled={completedCount === plan.steps.length} onPress={markAllDone}>
+          {completedCount === plan.steps.length ? 'All steps completed' : 'Mark all done'}
+        </PrimaryButton>
+        <SecondaryButton accessibilityLabel="Share checklist summary" onPress={shareSummary}>Share progress summary</SecondaryButton>
+        {completedCount > 0 ? (
+          <SecondaryButton accessibilityLabel="Reset all checklist progress" onPress={() => setCompletedIds(new Set())}>Reset checklist</SecondaryButton>
+        ) : null}
+      </View>
+
       <Card tone="muted" style={styles.source}>
         <AppText variant="eyebrow" color={colors.inkMuted}>Guidance source</AppText>
-        <AppText variant="bodyStrong">{activePlan.sourceName}</AppText>
-        <AppText variant="caption" color={colors.inkMuted}>{activePlan.sourceNote}</AppText>
-        {activePlan.sourceReferences.map((reference) => (
-          <SecondaryButton
-            key={reference.url}
-            accessibilityLabel={`Open official source: ${reference.label}`}
-            onPress={() => Linking.openURL(reference.url)}>
+        <AppText variant="bodyStrong">{plan.sourceName}</AppText>
+        <AppText variant="caption" color={colors.inkMuted}>{plan.sourceNote}</AppText>
+        {plan.sourceReferences.map((reference) => (
+          <SecondaryButton key={reference.url} accessibilityLabel={`Open official source: ${reference.label}`} onPress={() => Linking.openURL(reference.url)}>
             {reference.label}
           </SecondaryButton>
         ))}
@@ -102,14 +100,12 @@ export default function ActionPlanScreen() {
 }
 
 const styles = StyleSheet.create({
-  progressCard: { gap: spacing.lg },
-  progressHeader: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
-  progressCopy: { flex: 1, gap: spacing.xs },
-  percentCircle: { width: 58, height: 58, borderRadius: 29, borderWidth: 4, borderColor: colors.primary, backgroundColor: colors.primarySoft, alignItems: 'center', justifyContent: 'center' },
-  completeCircle: { borderColor: colors.safe, backgroundColor: colors.safeSoft },
-  track: { height: 8, borderRadius: radii.pill, backgroundColor: colors.surfaceMuted, overflow: 'hidden' },
-  fill: { height: '100%', borderRadius: radii.pill, backgroundColor: colors.safe },
-  stepsCard: { paddingTop: spacing.sm, paddingBottom: spacing.sm },
-  actions: { gap: spacing.md },
+  flex: { flex: 1 },
+  progressSection: { gap: spacing.md },
+  progressHeader: { flexDirection: 'row', alignItems: 'flex-end', gap: spacing.md },
+  track: { height: 8, borderRadius: radii.pill, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, overflow: 'hidden' },
+  fill: { height: '100%', borderRadius: radii.pill, backgroundColor: colors.primary },
+  steps: { gap: spacing.sm },
+  actions: { gap: spacing.sm },
   source: { gap: spacing.sm },
 });

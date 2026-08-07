@@ -32,5 +32,5 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     ...(shadows.card ?? {}),
   },
-  padded: { padding: spacing.xl },
+  padded: { padding: spacing.lg },
 });

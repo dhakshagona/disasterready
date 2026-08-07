@@ -1,27 +1,30 @@
 import { Platform } from 'react-native';
 
 export const colors = {
-  canvas: '#F3F7FC',
-  canvasStrong: '#E8F1FB',
+  webBackdrop: '#DDE7F2',
+  canvas: '#EFF5FD',
+  canvasStrong: '#E4EEF9',
   surface: '#FFFFFF',
-  surfaceMuted: '#EDF3F8',
-  ink: '#10243E',
-  inkMuted: '#587087',
-  inkSubtle: '#7B8EA1',
-  border: '#D8E3EC',
-  primary: '#1766C2',
-  primaryPressed: '#0E4F9E',
-  primarySoft: '#E1EEFC',
-  danger: '#B42318',
-  dangerStrong: '#821B13',
-  dangerSoft: '#FCE9E7',
+  surfaceMuted: '#F3F7FB',
+  ink: '#101C2C',
+  inkMuted: '#5D6D82',
+  inkSubtle: '#8391A2',
+  border: '#D7E1EC',
+  primary: '#2F6FED',
+  primaryPressed: '#1E58C8',
+  primarySoft: '#E6F0FF',
+  danger: '#E5484D',
+  dangerStrong: '#A8222B',
+  dangerSoft: '#FFE8EA',
+  dangerWash: '#FFD7DC',
   warning: '#9A6700',
   warningSoft: '#FFF2CC',
-  safe: '#087A55',
-  safeStrong: '#055B40',
-  safeSoft: '#DDF4EA',
-  demo: '#6D3AC0',
-  demoSoft: '#EFE8FC',
+  safe: '#1F9D67',
+  safeStrong: '#08734B',
+  safeSoft: '#DFF7E9',
+  safeWash: '#CCFFD9',
+  demo: '#53667C',
+  demoSoft: '#EAF0F6',
   focus: '#0B5FFF',
   overlay: 'rgba(16, 36, 62, 0.52)',
 } as const;
@@ -38,36 +41,36 @@ export const spacing = {
 } as const;
 
 export const radii = {
-  sm: 10,
-  md: 14,
-  lg: 20,
-  xl: 28,
+  sm: 8,
+  md: 12,
+  lg: 16,
+  xl: 22,
   pill: 999,
 } as const;
 
 export const type = {
   eyebrow: 12,
   caption: 13,
-  body: 16,
-  bodyStrong: 16,
-  title: 24,
-  display: 32,
+  body: 15,
+  bodyStrong: 15,
+  title: 22,
+  display: 28,
 } as const;
 
 export const shadows = {
   card: Platform.select({
-    web: { boxShadow: '0 10px 30px rgba(31, 69, 104, 0.08)' },
+    web: { boxShadow: '0 3px 12px rgba(31, 69, 104, 0.06)' },
     default: {
       shadowColor: '#173653',
-      shadowOffset: { width: 0, height: 8 },
-      shadowOpacity: 0.08,
-      shadowRadius: 18,
-      elevation: 2,
+      shadowOffset: { width: 0, height: 3 },
+      shadowOpacity: 0.06,
+      shadowRadius: 10,
+      elevation: 1,
     },
   }),
 } as const;
 
 export const layout = {
-  maxContentWidth: 720,
-  minTouchTarget: 48,
+  maxContentWidth: 460,
+  minTouchTarget: 44,
 } as const;

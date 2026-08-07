@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { AppText } from '@/components/ui/app-text';
 import { Icon } from '@/components/ui/icon';
-import { colors, layout, radii, spacing } from '@/constants/tokens';
+import { colors, radii, spacing } from '@/constants/tokens';
 
 type AppHeaderProps = {
   title: string;
@@ -35,11 +35,11 @@ export function AppHeader({ title, subtitle, back, trailing }: AppHeaderProps) {
 }
 
 const styles = StyleSheet.create({
-  row: { minHeight: 56, flexDirection: 'row', alignItems: 'center', gap: spacing.md },
+  row: { minHeight: 48, flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   copy: { flex: 1, gap: spacing.xs },
   back: {
-    width: layout.minTouchTarget,
-    height: layout.minTouchTarget,
+    width: 40,
+    height: 40,
     borderRadius: radii.pill,
     backgroundColor: colors.surface,
     alignItems: 'center',

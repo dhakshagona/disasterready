@@ -5,10 +5,10 @@ import { Card } from '@/components/ui/card';
 import { Icon } from '@/components/ui/icon';
 import { colors, spacing } from '@/constants/tokens';
 
-export function DemoBanner({ label = 'Demo Mode — Simulated alert' }: { label?: string }) {
+export function DemoBanner({ label = 'Demo · Simulated alert' }: { label?: string }) {
   return (
     <View accessibilityRole="alert" style={[styles.banner, styles.demo]} testID="demo-banner">
-      <Icon name={{ ios: 'sparkles', android: 'science', web: 'science' }} color={colors.demo} size={18} />
+      <Icon name={{ ios: 'sparkles', android: 'science', web: 'science' }} color={colors.demo} size={16} />
       <AppText variant="caption" color={colors.demo} style={styles.flex}>{label}</AppText>
     </View>
   );
@@ -57,8 +57,8 @@ export function ErrorState({ message }: { message: string }) {
 }
 
 const styles = StyleSheet.create({
-  banner: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, padding: spacing.lg, borderRadius: 14 },
-  demo: { backgroundColor: colors.demoSoft, borderWidth: 1, borderColor: '#D8C8F2' },
+  banner: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, paddingHorizontal: spacing.md, paddingVertical: spacing.sm, borderRadius: 12 },
+  demo: { backgroundColor: colors.demoSoft, borderWidth: 1, borderColor: colors.border },
   offline: { backgroundColor: colors.warningSoft, borderWidth: 1, borderColor: '#E8CF81' },
   flex: { flex: 1 },
   centered: { alignItems: 'center', gap: spacing.md, paddingVertical: spacing.xxxl },

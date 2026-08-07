@@ -2,7 +2,7 @@ import { Tabs } from 'expo-router';
 import { Platform } from 'react-native';
 
 import { Icon } from '@/components/ui/icon';
-import { colors } from '@/constants/tokens';
+import { colors, layout } from '@/constants/tokens';
 
 const tabIcons = {
   home: { ios: 'house.fill', android: 'home', web: 'home' },
@@ -20,6 +20,9 @@ export default function TabsLayout() {
         tabBarLabelStyle: { fontSize: 12, fontWeight: '700', paddingBottom: Platform.OS === 'android' ? 8 : 0 },
         tabBarStyle: {
           height: Platform.select({ ios: 84, android: 72, web: 70 }),
+          width: '100%',
+          maxWidth: layout.maxContentWidth,
+          alignSelf: 'center',
           paddingTop: 8,
           backgroundColor: colors.surface,
           borderTopColor: colors.border,
