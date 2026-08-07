@@ -1,6 +1,7 @@
 import { router, type Href } from 'expo-router';
 import { Pressable, StyleSheet, Switch, View } from 'react-native';
 
+import { useDisasterReady } from '@/application/app-context';
 import { AppHeader } from '@/components/ui/app-header';
 import { AppText } from '@/components/ui/app-text';
 import { PrimaryButton } from '@/components/ui/buttons';
@@ -11,10 +12,11 @@ import { hazardLabels } from '@/data/mock-repositories';
 import type { HazardType } from '@/domain/models';
 import { useState } from 'react';
 
-const hazards = Object.entries(hazardLabels) as [HazardType, string][];
+const hazards = (Object.entries(hazardLabels) as [HazardType, string][]).filter(([hazard]) => hazard !== 'other');
 
 export default function HazardSelectionScreen() {
-  const [selected, setSelected] = useState<HazardType[]>(['flood', 'tornado', 'hurricane']);
+  const { preferences, updatePreferences } = useDisasterReady();
+  const [selected, setSelected] = useState<HazardType[]>(preferences.hazards);
 
   function toggleHazard(hazard: HazardType) {
     setSelected((current) =>
@@ -24,7 +26,7 @@ export default function HazardSelectionScreen() {
 
   return (
     <Screen
-      footer={<PrimaryButton accessibilityLabel="Continue to location and permissions" onPress={() => router.push('/onboarding/permissions' as Href)}>Continue</PrimaryButton>}>
+      footer={<PrimaryButton accessibilityLabel="Continue to location and permissions" onPress={() => void updatePreferences({ ...preferences, hazards: selected }).then(() => router.push('/onboarding/permissions' as Href))}>Continue</PrimaryButton>}>
       <AppHeader title="Choose hazards" subtitle="Step 1 of 3" back />
       <View style={styles.progressTrack}><View style={[styles.progressFill, styles.oneThird]} /></View>
       <View style={styles.copy}>

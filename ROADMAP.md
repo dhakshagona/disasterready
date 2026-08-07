@@ -12,24 +12,25 @@ This roadmap is intentionally explicit about what is real, what is simulated, an
 - [x] Build Home in no-alert and clearly labeled demo-alert states
 - [x] Build alert detail, action plan, alerts list, shelter state, and settings screens
 - [x] Add lint, strict typecheck, and component tests
-- [ ] Complete visual review checkpoint 1
+- [x] Complete visual review checkpoint 1
 
-Phase 1 contains no live alert feed, authentication, remote storage, push notifications, or real shelter lookup.
+Phase 1 established the visual and navigational foundation. Live alerts and local persistence were added in Phase 2; authentication, push notifications, and real shelter lookup remain deferred.
 
 ## Phase 2 — Local-first product core
 
-- [ ] Persist onboarding, preferences, selected location, and checklist progress locally
-- [ ] Add reviewed, source-linked deterministic action-plan templates
-- [ ] Add the National Weather Service adapter, validation, normalization, and filtering
-- [ ] Add current, cached, expired, stale, offline, and failure behavior
-- [ ] Replace static timestamps and demo-only controls with application services
-- [ ] Add integration tests around the alert-to-plan flow
+- [x] Persist onboarding, preferences, selected location, and checklist progress locally
+- [x] Add reviewed, source-linked deterministic action-plan templates
+- [x] Add the National Weather Service adapter, validation, normalization, and filtering
+- [x] Add current, cached, expired, stale, offline, and failure behavior
+- [x] Replace static timestamps and demo-only controls with application services
+- [x] Add integration tests around the alert-to-plan flow
+- [ ] Complete visual review checkpoint 2
 
 ## Phase 3 — Safety resources and native capabilities
 
 - [ ] Select and document a verifiable shelter/safety-resource source
 - [ ] Implement shelter normalization, freshness, and explicit unknown/open/closed states
-- [ ] Add Apple Maps and Google Maps deep links without in-app turn-by-turn navigation
+- [x] Add Apple Maps and Google Maps deep links without in-app turn-by-turn navigation
 - [ ] Add native notification permissions and development-build setup
 - [ ] Add device-token registration, alert deduplication, matching, and severity rules
 

@@ -32,7 +32,8 @@
           "image": "./assets/brand/lifebuoy.png",
           "imageWidth": 220
         }
-      ]
+      ],
+      "expo-sqlite"
     ],
     "experiments": {
       "typedRoutes": true,

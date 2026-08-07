@@ -94,6 +94,8 @@ export const defaultPreferences: UserPreferences = {
     city: 'Austin',
     region: 'TX',
     postalCode: '78701',
+    latitude: 30.2672,
+    longitude: -97.7431,
   },
   notificationsEnabled: false,
   language: 'en',
@@ -111,6 +113,7 @@ export const hazardLabels: Record<HazardType, string> = {
   'air-quality': 'Air quality',
   'winter-storm': 'Winter storm',
   earthquake: 'Earthquake',
+  other: 'Other weather alert',
 };
 
 export interface AlertRepository {

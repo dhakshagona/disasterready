@@ -20,4 +20,12 @@ describe('AlertCard', () => {
     const expiredScreen = await render(<AlertCard alert={demoExpiredAlert} />);
     expect(expiredScreen.getByText('Expired')).toBeTruthy();
   });
+
+  it('discloses when alert data is saved or stale', async () => {
+    const savedScreen = await render(<AlertCard alert={{ ...demoFloodAlert, isDemo: false, freshness: 'cached' }} />);
+    expect(savedScreen.getByText('Saved')).toBeTruthy();
+
+    const staleScreen = await render(<AlertCard alert={{ ...demoFloodAlert, isDemo: false, freshness: 'stale' }} />);
+    expect(staleScreen.getByText('Stale')).toBeTruthy();
+  });
 });

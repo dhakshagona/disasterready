@@ -38,6 +38,8 @@ export function AlertCard({ alert, onPress }: AlertCardProps) {
           <View style={styles.badges}>
             <StatusBadge label={alert.status === 'active' ? alert.severity : 'Expired'} tone={alert.status === 'active' ? 'danger' : 'info'} />
             {alert.isDemo ? <StatusBadge label="Demo" tone="demo" /> : null}
+            {!alert.isDemo && alert.freshness === 'cached' ? <StatusBadge label="Saved" tone="info" /> : null}
+            {!alert.isDemo && alert.freshness === 'stale' ? <StatusBadge label="Stale" tone="warning" /> : null}
           </View>
           <AppText variant="heading">{alert.headline}</AppText>
           <AppText variant="caption" color={colors.inkMuted}>{alert.areaDescription}</AppText>

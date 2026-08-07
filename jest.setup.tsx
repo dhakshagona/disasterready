@@ -8,3 +8,12 @@ jest.mock('expo-symbols', () => {
     SymbolView: ({ testID }: { testID?: string }) => React.createElement(Text, { testID }, 'icon'),
   };
 });
+
+jest.mock('expo-image', () => {
+  const React = jest.requireActual<typeof import('react')>('react');
+  const { View } = jest.requireActual<typeof import('react-native')>('react-native');
+
+  return {
+    Image: (props: object) => React.createElement(View, props),
+  };
+});

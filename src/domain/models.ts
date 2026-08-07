@@ -5,7 +5,8 @@ export type HazardType =
   | 'wildfire'
   | 'air-quality'
   | 'winter-storm'
-  | 'earthquake';
+  | 'earthquake'
+  | 'other';
 
 export type AlertSeverity = 'minor' | 'moderate' | 'severe' | 'extreme' | 'unknown';
 export type AlertUrgency = 'past' | 'future' | 'expected' | 'immediate' | 'unknown';
@@ -75,6 +76,8 @@ export type SavedLocation = {
   city: string;
   region: string;
   postalCode: string;
+  latitude: number;
+  longitude: number;
 };
 
 export type UserPreferences = {

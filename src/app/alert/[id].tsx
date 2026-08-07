@@ -1,14 +1,15 @@
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams, type Href } from 'expo-router';
-import { Share, StyleSheet, View } from 'react-native';
+import { Linking, Share, StyleSheet, View } from 'react-native';
 
+import { useDisasterReady } from '@/application/app-context';
 import { AppHeader } from '@/components/ui/app-header';
 import { AppText } from '@/components/ui/app-text';
 import { PrimaryButton, SecondaryButton } from '@/components/ui/buttons';
 import { Card } from '@/components/ui/card';
 import { Icon } from '@/components/ui/icon';
 import { Screen } from '@/components/ui/screen';
-import { DemoBanner, ErrorState } from '@/components/ui/state-messages';
+import { DemoBanner, ErrorState, LoadingState, OfflineBanner } from '@/components/ui/state-messages';
 import { StatusBadge } from '@/components/ui/status-badge';
 import { colors, radii, spacing } from '@/constants/tokens';
 import { demoExpiredAlert, demoFloodAlert } from '@/data/mock-repositories';
@@ -19,26 +20,28 @@ function formatDate(value: string) {
 
 export default function AlertDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const alert = [demoFloodAlert, demoExpiredAlert].find((item) => item.id === id);
+  const { getAlertById, isLoading } = useDisasterReady();
+  const alert = [demoFloodAlert, demoExpiredAlert].find((item) => item.id === id) ?? getAlertById(id);
 
   if (!alert) {
     return (
       <Screen>
         <AppHeader title="Alert details" back />
-        <ErrorState message="This local demo alert could not be found." />
+        {isLoading ? <LoadingState label="Loading alert details…" /> : <ErrorState message="This alert is no longer available in the live or saved alert feed." />}
         <SecondaryButton onPress={() => router.back()}>Return</SecondaryButton>
       </Screen>
     );
   }
 
   async function shareAlert() {
-    await Share.share({ message: `SIMULATED DISASTERREADY ALERT: ${alert?.headline} for ${alert?.areaDescription}. Open DisasterReady for the safety checklist.` });
+    await Share.share({ message: `${alert?.isDemo ? 'SIMULATED ' : ''}DISASTERREADY ALERT: ${alert?.headline} for ${alert?.areaDescription}. Source: ${alert?.source}.` });
   }
 
   return (
     <Screen testID="alert-detail-screen">
       <AppHeader title="Alert details" back trailing={<StatusBadge label={alert.status === 'active' ? 'Active' : 'Expired'} tone={alert.status === 'active' ? 'danger' : 'info'} />} />
       {alert.isDemo ? <DemoBanner label={`Demo · Simulated ${alert.headline}`} /> : null}
+      {!alert.isDemo && alert.freshness !== 'current' ? <OfflineBanner lastUpdated={formatDate(alert.retrievedAt)} /> : null}
 
       <View style={[styles.hero, alert.status !== 'active' && styles.heroMuted]}>
         <Image source={require('@/assets/brand/lifebuoy.png')} style={styles.heroArt} contentFit="contain" />
@@ -62,8 +65,9 @@ export default function AlertDetailScreen() {
             </View>
           </View>
         ))}
-        {alert.status === 'active' ? (
-          <PrimaryButton accessibilityLabel="Open full flood safety checklist" onPress={() => router.push('/action-plan/demo-flood-plan-001' as Href)}>Open safety checklist</PrimaryButton>
+        {!alert.doNow.length ? <AppText variant="caption" color={colors.inkMuted}>No reviewed action-plan template matches this alert. Use the original official instructions below.</AppText> : null}
+        {alert.status === 'active' && alert.doNow.length ? (
+          <PrimaryButton accessibilityLabel={`Open ${alert.hazard} safety checklist`} onPress={() => router.push(`/action-plan/${alert.id}` as Href)}>Open safety checklist</PrimaryButton>
         ) : null}
       </Card>
 
@@ -82,13 +86,14 @@ export default function AlertDetailScreen() {
           <AppText variant="caption" color={colors.inkMuted}>{alert.source}</AppText>
         </View>
         <AppText>{alert.originalText}</AppText>
+        {alert.sourceUrl ? <SecondaryButton accessibilityLabel="Open original National Weather Service alert" onPress={() => Linking.openURL(alert.sourceUrl!)}>Open original NWS alert</SecondaryButton> : null}
         <View style={styles.metadata}>
           <View style={styles.metaItem}><AppText variant="eyebrow" color={colors.inkSubtle}>Issued</AppText><AppText variant="caption">{formatDate(alert.issuedAt)}</AppText></View>
           <View style={styles.metaItem}><AppText variant="eyebrow" color={colors.inkSubtle}>Expires</AppText><AppText variant="caption">{formatDate(alert.expiresAt)}</AppText></View>
           <View style={styles.metaItem}><AppText variant="eyebrow" color={colors.inkSubtle}>Retrieved</AppText><AppText variant="caption">{formatDate(alert.retrievedAt)} · {alert.freshness}</AppText></View>
         </View>
       </Card>
-      <SecondaryButton accessibilityLabel="Share simulated alert status" onPress={shareAlert}>Share simulated status</SecondaryButton>
+      <SecondaryButton accessibilityLabel={`Share ${alert.isDemo ? 'simulated ' : ''}alert status`} onPress={shareAlert}>Share alert status</SecondaryButton>
     </Screen>
   );
 }

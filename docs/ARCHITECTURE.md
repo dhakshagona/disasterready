@@ -1,18 +1,27 @@
 # DisasterReady Architecture
 
-## Phase 1 architecture
+## Current local-first architecture
 
-Phase 1 is frontend-only and local-data-only.
+The iPhone-first Expo application shares domain and application code across iOS, Android, and web. Provider, storage, and routing differences stay behind adapters.
 
 ```text
-Expo application
-  -> typed mock repositories
-  -> domain models
-  -> feature components
-  -> screens
+Expo Router screens and feature components
+  -> DisasterReady application context
+      -> LiveAlertService
+          -> NwsAlertSource -> NwsAlertClient -> api.weather.gov
+          -> LocalAlertCache
+          -> deterministic action-plan selector
+      -> LocalPreferencesRepository
+      -> LocalChecklistProgressRepository
+  -> platform adapters
+      -> iOS/Android: expo-sqlite key-value store
+      -> web: localStorage
+      -> iOS: Apple Maps preferred, Apple Maps web fallback
+      -> Android: Google Maps navigation preferred, Google Maps web fallback
+      -> web: Google Maps universal URL
 ```
 
-This lets the team validate navigation, usability, accessibility, and the action flow before introducing network uncertainty.
+The centered web shell remains a demonstration surface. The primary interaction reference is an iPhone-sized viewport around 390x844.
 
 ## Target architecture
 
@@ -71,15 +80,19 @@ Examples:
 
 ### Infrastructure
 
-Examples:
+Implemented:
 
-- NwsAlertAdapter
-- ShelterApiAdapter
-- LocalAlertRepository
-- LocalPreferencesRepository
-- SupabaseProfileRepository
-- AppleMapsAdapter
-- GoogleMapsAdapter
+- `NwsAlertClient` and `NwsAlertSource`
+- provider-boundary validation and normalization
+- native SQLite and browser localStorage adapters
+- local alert, preference, and checklist repositories
+- platform-aware external map routing
+
+Deferred:
+
+- verified shelter-source adapter
+- notification adapter and backend delivery
+- optional Supabase profile sync
 
 ## Alert normalization
 
@@ -131,18 +144,16 @@ A language model may later simplify wording, but it must not add or remove safet
 
 ## Offline strategy
 
-Cache:
+The current implementation caches:
 
 - Preferences
-- Saved locations
 - Last successful alert results
-- Active action plan
 - Checklist progress
-- Preparedness templates
-- Recently retrieved verified shelters
 - Last update timestamps
 
-Every cached object needs a retrieval timestamp. The UI must disclose stale data.
+Alert responses older than one hour are marked stale. If the live request fails, the UI either discloses the saved response and its retrieval time or shows an explicit unavailable state. It never converts a failed request into an all-clear.
+
+NWS requests are limited to one request per saved location within a 30-second window. Network, HTTP, timeout, malformed-payload, cache-read, and cache-write failures have explicit tested behavior.
 
 ## Initial Supabase tables
 
@@ -188,6 +199,8 @@ The app selects a destination and opens:
 - Google Maps on Android
 
 Fallback behavior must be defined when the preferred app is unavailable.
+
+`MapRoutingService` implements this handoff without embedding turn-by-turn navigation. It is ready for a verified destination once a shelter or safety-resource source is selected.
 
 ## Push notifications
 

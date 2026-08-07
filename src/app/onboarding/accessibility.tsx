@@ -2,6 +2,7 @@ import { router, type Href } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 import { useState } from 'react';
 
+import { useDisasterReady } from '@/application/app-context';
 import { AppHeader } from '@/components/ui/app-header';
 import { AppText } from '@/components/ui/app-text';
 import { PrimaryButton } from '@/components/ui/buttons';
@@ -11,12 +12,19 @@ import { SettingRow } from '@/components/ui/setting-row';
 import { colors, radii, spacing } from '@/constants/tokens';
 
 export default function AccessibilityScreen() {
-  const [plainLanguage, setPlainLanguage] = useState(true);
-  const [highContrast, setHighContrast] = useState(false);
-  const [reducedMotion, setReducedMotion] = useState(false);
+  const { preferences, updatePreferences } = useDisasterReady();
+  const [draft, setDraft] = useState<Partial<Pick<typeof preferences, 'plainLanguage' | 'highContrast' | 'reducedMotion'>>>({});
+  const plainLanguage = draft.plainLanguage ?? preferences.plainLanguage;
+  const highContrast = draft.highContrast ?? preferences.highContrast;
+  const reducedMotion = draft.reducedMotion ?? preferences.reducedMotion;
+
+  const finishSetup = async () => {
+    await updatePreferences({ ...preferences, plainLanguage, highContrast, reducedMotion });
+    router.replace('/(tabs)/home' as Href);
+  };
 
   return (
-    <Screen footer={<PrimaryButton accessibilityLabel="Finish setup and open home" onPress={() => router.replace('/(tabs)/home' as Href)}>Finish setup</PrimaryButton>}>
+    <Screen footer={<PrimaryButton accessibilityLabel="Finish setup and open home" onPress={() => void finishSetup()}>Finish setup</PrimaryButton>}>
       <AppHeader title="Make it work for you" subtitle="Step 3 of 3" back />
       <View style={styles.progressTrack}><View style={styles.progressFill} /></View>
       <View style={styles.copy}>
@@ -31,9 +39,9 @@ export default function AccessibilityScreen() {
         </View>
       </Card>
       <Card style={styles.settingsCard}>
-        <SettingRow label="Plain language" detail="Prefer shorter, more direct wording" value={plainLanguage} onValueChange={setPlainLanguage} />
-        <SettingRow label="High contrast" detail="Increase separation between text and controls" value={highContrast} onValueChange={setHighContrast} />
-        <SettingRow label="Reduce motion" detail="Minimize non-essential movement" value={reducedMotion} onValueChange={setReducedMotion} />
+        <SettingRow label="Plain language" detail="Prefer shorter, more direct wording" value={plainLanguage} onValueChange={(value) => setDraft((current) => ({ ...current, plainLanguage: value }))} />
+        <SettingRow label="High contrast" detail="Increase separation between text and controls" value={highContrast} onValueChange={(value) => setDraft((current) => ({ ...current, highContrast: value }))} />
+        <SettingRow label="Reduce motion" detail="Minimize non-essential movement" value={reducedMotion} onValueChange={(value) => setDraft((current) => ({ ...current, reducedMotion: value }))} />
       </Card>
       <Card tone="safe">
         <AppText variant="bodyStrong" color={colors.safeStrong}>Readable by default</AppText>
