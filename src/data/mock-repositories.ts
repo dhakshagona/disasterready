@@ -46,7 +46,7 @@ export const demoFloodAlert: Alert = {
   areaDescription: 'Austin, Texas 78701',
   issuedAt: '2026-08-07T15:00:00-05:00',
   expiresAt: '2026-08-07T18:45:00-05:00',
-  source: 'National Weather Service — simulated example',
+  source: 'National Weather Service (simulated example)',
   originalText:
     'SIMULATED ALERT. Flooding caused by heavy rainfall is possible in low-lying areas. Move to higher ground and follow instructions from local officials. Do not drive through flooded roadways.',
   retrievedAt: '2026-08-07T15:02:00-05:00',

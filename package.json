@@ -45,6 +45,7 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "lint": "expo lint",
+    "check:style": "jest __tests__/repository-style.test.ts --runInBand",
     "typecheck": "tsc --noEmit",
     "test": "jest --runInBand"
   },

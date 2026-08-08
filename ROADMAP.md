@@ -2,7 +2,7 @@
 
 This roadmap is intentionally explicit about what is real, what is simulated, and what remains.
 
-## Phase 1 — Frontend foundation (current milestone)
+## Phase 1: Frontend foundation (current milestone)
 
 - [x] Review the product, architecture, phase brief, Expo SDK 57 docs, and prototype references
 - [x] Establish a restrained emergency-response design system
@@ -16,7 +16,7 @@ This roadmap is intentionally explicit about what is real, what is simulated, an
 
 Phase 1 established the visual and navigational foundation. Live alerts and local persistence were added in Phase 2; authentication, push notifications, and real shelter lookup remain deferred.
 
-## Phase 2 — Local-first product core
+## Phase 2: Local-first product core
 
 - [x] Persist onboarding, preferences, selected location, and checklist progress locally
 - [x] Add reviewed, source-linked deterministic action-plan templates
@@ -26,7 +26,7 @@ Phase 1 established the visual and navigational foundation. Live alerts and loca
 - [x] Add integration tests around the alert-to-plan flow
 - [ ] Complete visual review checkpoint 2
 
-## Phase 3 — Safety resources and native capabilities
+## Phase 3: Safety resources and native capabilities
 
 - [ ] Select and document a verifiable shelter/safety-resource source
 - [ ] Implement shelter normalization, freshness, and explicit unknown/open/closed states
@@ -34,7 +34,7 @@ Phase 1 established the visual and navigational foundation. Live alerts and loca
 - [ ] Add native notification permissions and development-build setup
 - [ ] Add device-token registration, alert deduplication, matching, and severity rules
 
-## Phase 4 — Optional cloud sync and constrained AI
+## Phase 4: Optional cloud sync and constrained AI
 
 - [ ] Add optional Supabase authentication and guest-safe migration
 - [ ] Add PostgreSQL schema, migrations, and Row Level Security
@@ -42,7 +42,7 @@ Phase 1 established the visual and navigational foundation. Live alerts and loca
 - [ ] Add a server-side, schema-validated plain-language transformation layer
 - [ ] Guarantee deterministic fallback for timeout, malformed output, unsupported alerts, and AI unavailability
 
-## Phase 5 — Evidence, hardening, and release
+## Phase 5: Evidence, hardening, and release
 
 - [ ] Accessibility and reduced-motion audit on native and web
 - [ ] Failure-state, offline, and stale-data test matrix

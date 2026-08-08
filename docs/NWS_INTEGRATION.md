@@ -21,7 +21,7 @@ The normalized alert keeps the provider ID, source URL, official text, severity,
 - Each request times out after 10 seconds.
 - The last successful response is stored locally with its retrieval timestamp.
 - Saved data up to one hour old is labeled saved; older data is labeled stale.
-- If live and saved data are both unavailable, the product shows an unavailable state—not an all-clear.
+- If live and saved data are both unavailable, the product shows an unavailable state. It does not show an all-clear.
 - Alerts that disappear from the active response remain in recent history for up to seven days.
 
 ## Action plans
