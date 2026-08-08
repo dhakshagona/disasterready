@@ -1,5 +1,6 @@
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams, type Href } from 'expo-router';
+import { useEffect } from 'react';
 import { Linking, Share, StyleSheet, View } from 'react-native';
 
 import { useDisasterReady } from '@/application/app-context';
@@ -20,8 +21,21 @@ function formatDate(value: string) {
 
 export default function AlertDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { getAlertById, isLoading } = useDisasterReady();
+  const {
+    getAlertById,
+    isLoading,
+    loadPlainLanguageSummary,
+    plainLanguageResults,
+    preferences,
+  } = useDisasterReady();
   const alert = [demoFloodAlert, demoExpiredAlert].find((item) => item.id === id) ?? getAlertById(id);
+  const plainLanguageResult = alert ? plainLanguageResults[alert.id] : undefined;
+
+  useEffect(() => {
+    if (alert && !alert.isDemo && preferences.plainLanguage) {
+      void loadPlainLanguageSummary(alert);
+    }
+  }, [alert, loadPlainLanguageSummary, preferences.plainLanguage]);
 
   if (!alert) {
     return (
@@ -44,11 +58,20 @@ export default function AlertDetailScreen() {
       {!alert.isDemo && alert.freshness !== 'current' ? <OfflineBanner lastUpdated={formatDate(alert.retrievedAt)} /> : null}
 
       <View style={[styles.hero, alert.status !== 'active' && styles.heroMuted]}>
-        <Image source={require('@/assets/brand/lifebuoy.png')} style={styles.heroArt} contentFit="contain" />
+        <Image source={require('../../../assets/brand/lifebuoy.png')} style={styles.heroArt} contentFit="contain" />
         <StatusBadge label={`${alert.severity} · ${alert.urgency}`} tone="danger" />
         <AppText variant="title" color={colors.dangerStrong} style={styles.centerText}>{alert.headline}</AppText>
         <AppText variant="caption" color={colors.dangerStrong} style={styles.centerText}>{alert.areaDescription}</AppText>
         <AppText color={colors.dangerStrong} style={styles.centerText}>{alert.summary}</AppText>
+        {plainLanguageResult?.source === 'ai' ? (
+          <View style={styles.plainLanguageCard}>
+            <StatusBadge label="AI simplified" tone="info" />
+            <AppText variant="bodyStrong" style={styles.centerText}>{plainLanguageResult.summary}</AppText>
+            <AppText variant="caption" color={colors.inkMuted} style={styles.centerText}>
+              Optional wording only. Official alert text and reviewed actions remain authoritative.
+            </AppText>
+          </View>
+        ) : null}
       </View>
 
       <Card style={styles.section}>
@@ -75,7 +98,7 @@ export default function AlertDetailScreen() {
         <View style={styles.resourceIcon}><Icon name={{ ios: 'checkmark.shield.fill', android: 'verified_user', web: 'verified_user' }} color={colors.safe} size={22} /></View>
         <View style={styles.flex}>
           <AppText variant="bodyStrong">Verified safety resources</AppText>
-          <AppText variant="caption" color={colors.inkMuted}>No live shelter source is connected. Check source availability.</AppText>
+          <AppText variant="caption" color={colors.inkMuted}>Check FEMA-reported shelter availability and routing.</AppText>
         </View>
         <SecondaryButton accessibilityLabel="View verified safety resource status" onPress={() => router.push('/shelters' as Href)}>View</SecondaryButton>
       </Card>
@@ -104,6 +127,7 @@ const styles = StyleSheet.create({
   hero: { minHeight: 330, alignItems: 'center', justifyContent: 'center', gap: spacing.sm, padding: spacing.xl, borderRadius: radii.xl, backgroundColor: colors.dangerWash },
   heroMuted: { backgroundColor: colors.surfaceMuted },
   heroArt: { width: 142, height: 114 },
+  plainLanguageCard: { alignItems: 'center', gap: spacing.sm, padding: spacing.md, borderRadius: radii.lg, backgroundColor: colors.surface },
   section: { gap: spacing.md },
   sectionHeading: { gap: spacing.xs },
   actionRow: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.md, paddingVertical: spacing.sm, borderBottomWidth: 1, borderBottomColor: colors.border },

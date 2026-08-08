@@ -14,6 +14,8 @@ function runtimeFor(feed: ShelterFeed, openDestination = jest.fn(async () => und
     safetyResourceService: { getFeed: async () => feed },
     mapRoutingService: { openDestination },
     notificationPermissionService: { getStatus: async () => 'unsupported', request: async () => 'unsupported' },
+    analyticsService: { track: async () => undefined },
+    plainLanguageService: { simplify: async (alert) => ({ summary: alert.summary, source: 'deterministic', reason: 'not-configured' }) },
     preferencesRepository: { get: async () => defaultPreferences, save: async () => undefined },
     checklistRepository: { getCompleted: async () => new Set(), setCompleted: async () => undefined },
   };

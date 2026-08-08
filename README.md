@@ -1,56 +1,130 @@
-# Welcome to your Expo app 👋
+# DisasterReady
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+DisasterReady is an iPhone-first emergency companion that turns live public alerts into clear, reviewed next steps. It combines National Weather Service warnings, FEMA shelter reporting, deterministic action plans, offline-aware local storage, native map handoff, and an optional safety-constrained plain-language layer.
 
-## Get started
+The primary product target is iOS at approximately 390x844. Android shares the same application and domain code. Web remains a centered mobile demonstration surface for public review.
 
-1. Install dependencies
+> Safety note: DisasterReady supports situational awareness. It does not replace instructions from emergency officials, the National Weather Service, FEMA, or 911. Demo alerts are always labeled and never enter native notification rules.
 
-   ```bash
-   npm install
-   ```
+## Product tour
 
-2. Start the app
+| Live or demo alert | Reviewed action plan | FEMA safety resources |
+| --- | --- | --- |
+| ![Alert home](docs/screenshots/visual-checkpoint-2/alert-home.png) | ![Action plan](docs/screenshots/visual-checkpoint-2/action-plan.png) | ![Alert detail](docs/screenshots/visual-checkpoint-2/alert-detail.png) |
 
-   ```bash
-   npx expo start
-   ```
+- Public web demo: deployment pending. See [deployment instructions](docs/DEPLOYMENT.md).
+- Original prototype video: [reference/disastereadyuiux.mp4](reference/disastereadyuiux.mp4)
+- Demo route after starting the app: `http://localhost:8081/home?demo=1`
 
-In the output, you'll find options to open the app in a
+## What is implemented
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- Live point-based NWS active alert retrieval with provider validation and internal normalization
+- Clear current, cached, stale, offline, unavailable, active, and expired states
+- Reviewed FEMA and Ready.gov action-plan templates selected by deterministic rules
+- Checklist progress saved locally without requiring an account
+- Live FEMA National Shelter System lookup with source, freshness, distance, and status disclosure
+- Apple Maps handoff on iOS, Google Maps handoff on Android, and a universal web fallback
+- Native notification permission adapters and deterministic eligibility and duplicate rules
+- Explicit web fallback for native-only notification capability
+- Anonymous aggregate analytics with real and demo activity stored as different modes
+- Optional server-side plain-language simplification with strict schema and safety checks
+- Deterministic fallback whenever AI is absent, slow, malformed, refused, or safety-invalid
+- Accessible labels, large touch targets, plain-language settings, and a centered mobile web shell
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Quick start
 
-## Get a fresh project
+Requirements:
 
-When you're ready, run:
+- Node.js 20 or later
+- npm
+- A browser for the web demo
+- Xcode or Android Studio only when running native builds
 
 ```bash
-npm run reset-project
+npm install
+npx expo start --web
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Open the localhost URL printed by Expo. Use the simulated flood preview to exercise the full emergency flow without waiting for a live alert.
 
-### Other setup steps
+Optional public backend configuration belongs in a local `.env` file:
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+```dotenv
+EXPO_PUBLIC_SUPABASE_URL=https://YOUR_PROJECT.supabase.co
+EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY=YOUR_PUBLISHABLE_KEY
+```
 
-## Learn more
+Copy `.env.example` as a starting point. Never put an OpenAI key or Supabase service-role key in an `EXPO_PUBLIC_` variable.
 
-To learn more about developing your project with Expo, look at the following resources:
+## Commands
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+npm run web
+npm run build:web
+npm run lint
+npm run typecheck
+npm test
+npm run check:style
+```
 
-## Join the community
+`npm run check:style` fails when a project-authored text file contains the prohibited Unicode punctuation code point documented in `AGENTS.md`. Third-party, generated, and external reference directories are excluded.
 
-Join our community of developers creating universal apps.
+## Architecture
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```mermaid
+flowchart TD
+  UI["Expo Router mobile screens"] --> APP["Application context and services"]
+  APP --> DOMAIN["Typed domain models and deterministic rules"]
+  APP --> LOCAL["SQLite on native or localStorage on web"]
+  APP --> NWS["National Weather Service API"]
+  APP --> FEMA["FEMA shelter service"]
+  APP --> MAPS["Platform map adapter"]
+  APP --> EDGE["Supabase Edge Functions, optional"]
+  EDGE --> EVENTS["PostgreSQL aggregate analytics"]
+  EDGE --> OPENAI["OpenAI Responses API, optional"]
+  OPENAI --> VALIDATE["Schema and safety validation"]
+  VALIDATE --> APP
+  DOMAIN --> FALLBACK["Deterministic summary and reviewed actions"]
+  FALLBACK --> UI
+```
+
+Presentation code depends on application ports, not provider payloads. NWS and FEMA responses are validated and normalized at infrastructure boundaries. Native storage, web storage, notifications, and map behavior are isolated behind adapters. See [the full architecture](docs/ARCHITECTURE.md) and [technical decisions](docs/DECISIONS.md).
+
+## Safety model
+
+Action plans are never generated by a language model. Hazard, severity, urgency, alert status, and reviewed templates determine the actions shown to a user.
+
+When configured, the AI path receives only the official alert text, hazard category, and existing deterministic summary. The Edge Function requires structured JSON, then rejects output that removes a critical phrase, changes a number, or invents a directive. The client runs the same safety check again. The official alert and original source link always remain available.
+
+See [AI safety](docs/AI_SAFETY.md), [NWS integration](docs/NWS_INTEGRATION.md), and [safety resources](docs/SAFETY_RESOURCES.md).
+
+## Truthful analytics
+
+Analytics are operational evidence, not fabricated product traction. Events are anonymous, locally queued, bounded, and delivered only when Supabase is configured. The server accepts an event-specific property allowlist and rejects contact, precise location, postal code, and arbitrary data. Every event is labeled `real` or `demo`.
+
+No production totals or user-study outcomes are claimed in this repository. See [the metric glossary](docs/ANALYTICS.md) and [user-testing package](docs/USER_TESTING.md).
+
+## Deployment
+
+The web build exports one Expo Router SPA and includes fallbacks for direct routes such as `/alerts`, `/shelters`, and `/alert/:id`. `vercel.json` and `public/_redirects` cover Vercel and Netlify-style hosts.
+
+Supabase and OpenAI are optional. Without them, live NWS data, FEMA shelter lookup, deterministic action plans, local persistence, maps, and the web demo continue to work. Exact account and secret setup is in [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
+
+## Project history
+
+DisasterReady began as a Congressional App Challenge UI and UX prototype. Creator-provided project context records an honorable mention or fifth-place result. A public citation is still required before presenting that recognition as independently verified. External review details are intentionally not claimed without a source.
+
+The current repository is a ground-up flagship implementation based on that product direction, with live public data, deterministic safety logic, platform adapters, tests, and explicit operational limitations.
+
+## Current limitations
+
+- Live alerts use the saved point rather than polygon-based user geofencing.
+- FEMA shelter records are reporting data. A listed status is not a guarantee of space or accessibility.
+- Remote push delivery still requires an EAS project, native credentials, device-token registration, and a backend delivery job.
+- AI simplification and remote analytics require Supabase deployment and server secrets.
+- No real user-study results or production analytics exist yet.
+- A public demo URL has not been provisioned.
+
+See [ROADMAP.md](ROADMAP.md) for completed work and credential-gated next steps.
+
+Security boundaries and the current upstream dependency audit are documented in [SECURITY.md](SECURITY.md).

@@ -1,4 +1,5 @@
 import type { AlertCache, AlertCacheEntry } from '@/application/alerts/live-alert-service';
+import type { AnalyticsEvent, AnalyticsOutbox } from '@/application/analytics/analytics-service';
 import type { NotificationReceiptRepository } from '@/application/notifications/notification-decision-service';
 import type { ShelterCache, ShelterCacheEntry } from '@/application/safety-resources/safety-resource-service';
 import type { ActionStep, Alert, Shelter, UserPreferences } from '@/domain/models';
@@ -9,6 +10,11 @@ const supportedSeverities = new Set(['minor', 'moderate', 'severe', 'extreme', '
 const supportedUrgencies = new Set(['past', 'future', 'expected', 'immediate', 'unknown']);
 const supportedCertainties = new Set(['unlikely', 'possible', 'likely', 'observed', 'unknown']);
 const supportedFreshness = new Set(['current', 'cached', 'stale']);
+const supportedAnalyticsEvents = new Set([
+  'session_started', 'alerts_fetched', 'alerts_normalized', 'action_plan_opened',
+  'checklist_started', 'checklist_completed', 'shelter_lookup', 'demo_session_started',
+  'ai_simplification_requested', 'ai_simplification_used', 'ai_simplification_fallback',
+]);
 
 function parseJson(value: string | null): unknown {
   if (!value) return null;
@@ -73,6 +79,22 @@ function isStoredShelter(value: unknown): value is Shelter {
     (value.accessibilityNotes === undefined || typeof value.accessibilityNotes === 'string') &&
     typeof value.isVerified === 'boolean'
   );
+}
+
+function isAnalyticsProperty(value: unknown): boolean {
+  return typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean'
+    || (Array.isArray(value) && value.every((item) => typeof item === 'string'));
+}
+
+function isStoredAnalyticsEvent(value: unknown): value is AnalyticsEvent {
+  return isRecord(value)
+    && typeof value.id === 'string'
+    && typeof value.sessionId === 'string'
+    && typeof value.name === 'string' && supportedAnalyticsEvents.has(value.name)
+    && typeof value.occurredAt === 'string'
+    && (value.mode === 'real' || value.mode === 'demo')
+    && isRecord(value.properties)
+    && Object.values(value.properties).every(isAnalyticsProperty);
 }
 
 function isShelterCacheEntry(value: unknown): value is ShelterCacheEntry {
@@ -158,6 +180,33 @@ export class LocalNotificationReceiptRepository implements NotificationReceiptRe
     const receipts = (await this.read()).filter((item) => item !== fingerprint);
     receipts.push(fingerprint);
     await this.storage.setItem(this.key, JSON.stringify(receipts.slice(-this.limit)));
+  }
+}
+
+export class LocalAnalyticsOutbox implements AnalyticsOutbox {
+  private readonly key = 'analytics:outbox';
+
+  constructor(private readonly storage: KeyValueStorage, private readonly limit = 500) {}
+
+  private async read(): Promise<AnalyticsEvent[]> {
+    const value = parseJson(await this.storage.getItem(this.key));
+    return Array.isArray(value) ? value.filter(isStoredAnalyticsEvent) : [];
+  }
+
+  async append(event: AnalyticsEvent): Promise<void> {
+    const events = await this.read();
+    events.push(event);
+    await this.storage.setItem(this.key, JSON.stringify(events.slice(-this.limit)));
+  }
+
+  async list(limit: number): Promise<AnalyticsEvent[]> {
+    return (await this.read()).slice(0, Math.max(0, limit));
+  }
+
+  async remove(ids: string[]): Promise<void> {
+    const removed = new Set(ids);
+    const events = (await this.read()).filter((event) => !removed.has(event.id));
+    await this.storage.setItem(this.key, JSON.stringify(events));
   }
 }
 

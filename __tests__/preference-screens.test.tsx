@@ -29,6 +29,8 @@ function makeRuntime(
     safetyResourceService: { getFeed: async () => ({ shelters: [], source: 'live', isOffline: false, isStale: false, retrievedAt: '2026-08-08T00:00:00.000Z', radiusMiles: 100 }) },
     mapRoutingService: { openDestination: async () => undefined },
     notificationPermissionService,
+    analyticsService: { track: async () => undefined },
+    plainLanguageService: { simplify: async (alert) => ({ summary: alert.summary, source: 'deterministic', reason: 'not-configured' }) },
     preferencesRepository: {
       get: async () => ({
         ...defaultPreferences,

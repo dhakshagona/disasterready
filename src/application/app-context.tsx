@@ -1,7 +1,9 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type PropsWithChildren } from 'react';
 
 import type { AlertFeed } from '@/application/alerts/live-alert-service';
+import type { AnalyticsEventName, AnalyticsService, AnalyticsTrackOptions } from '@/application/analytics/analytics-service';
 import type { NotificationPermissionService, NotificationPermissionState } from '@/application/notifications/notification-permission-service';
+import type { PlainLanguageResult, PlainLanguageService } from '@/application/plain-language/plain-language-service';
 import type { ShelterFeed } from '@/application/safety-resources/safety-resource-service';
 import { defaultPreferences } from '@/data/mock-repositories';
 import type { Alert, Shelter, UserPreferences } from '@/domain/models';
@@ -21,6 +23,8 @@ export type AppRuntime = {
   safetyResourceService: { getFeed(location: UserPreferences['location']): Promise<ShelterFeed> };
   mapRoutingService: { openDestination(destination: { latitude: number; longitude: number; label: string }): Promise<void> };
   notificationPermissionService: Pick<NotificationPermissionService, 'getStatus' | 'request'>;
+  analyticsService: Pick<AnalyticsService, 'track'>;
+  plainLanguageService: Pick<PlainLanguageService, 'simplify'>;
   preferencesRepository: PreferencesRepositoryPort;
   checklistRepository: ChecklistRepositoryPort;
 };
@@ -34,10 +38,13 @@ type AppContextValue = {
   isShelterLoading: boolean;
   notificationPermissionState: NotificationPermissionState | null;
   isNotificationPermissionLoading: boolean;
+  plainLanguageResults: Record<string, PlainLanguageResult>;
   refreshAlerts(): Promise<void>;
   loadSafetyResources(): Promise<void>;
   openShelterMap(shelter: Shelter): Promise<void>;
   requestNotificationPermission(): Promise<void>;
+  loadPlainLanguageSummary(alert: Alert): Promise<void>;
+  trackEvent(name: AnalyticsEventName, options: AnalyticsTrackOptions): Promise<void>;
   updatePreferences(preferences: UserPreferences): Promise<void>;
   getAlertById(id: string): Alert | null;
   checklistRepository: ChecklistRepositoryPort;
@@ -64,17 +71,32 @@ export function DisasterReadyProvider({ children, runtime }: PropsWithChildren<{
   const [isShelterLoading, setIsShelterLoading] = useState(false);
   const [notificationPermissionState, setNotificationPermissionState] = useState<NotificationPermissionState | null>(null);
   const [isNotificationPermissionLoading, setIsNotificationPermissionLoading] = useState(true);
+  const [plainLanguageResults, setPlainLanguageResults] = useState<Record<string, PlainLanguageResult>>({});
+  const plainLanguageResultsRef = useRef<Record<string, PlainLanguageResult>>({});
+  const plainLanguageRequestsRef = useRef(new Set<string>());
 
   useEffect(() => {
     let mounted = true;
     async function initialize() {
       try {
+        void runtimeRef.current.analyticsService.track('session_started', { mode: 'real' }).catch(() => undefined);
         const saved = (await runtimeRef.current.preferencesRepository.get().catch(() => null)) ?? defaultPreferences;
         if (!mounted) return;
         preferencesRef.current = saved;
         setPreferences(saved);
         const nextFeed = await runtimeRef.current.alertService.getFeed(saved);
-        if (mounted) setFeed(nextFeed);
+        if (mounted) {
+          setFeed(nextFeed);
+          void runtimeRef.current.analyticsService.track('alerts_fetched', {
+            mode: 'real',
+            properties: {
+              source: nextFeed.source,
+              activeCount: nextFeed.active.length,
+              recentCount: nextFeed.recent.length,
+              hazards: [...new Set([...nextFeed.active, ...nextFeed.recent].map((alert) => alert.hazard))].sort(),
+            },
+          }).catch(() => undefined);
+        }
       } finally {
         if (mounted) setIsLoading(false);
       }
@@ -95,7 +117,17 @@ export function DisasterReadyProvider({ children, runtime }: PropsWithChildren<{
   const refreshAlerts = useCallback(async () => {
     setIsRefreshing(true);
     try {
-      setFeed(await runtimeRef.current.alertService.getFeed(preferencesRef.current));
+      const nextFeed = await runtimeRef.current.alertService.getFeed(preferencesRef.current);
+      setFeed(nextFeed);
+      void runtimeRef.current.analyticsService.track('alerts_fetched', {
+        mode: 'real',
+        properties: {
+          source: nextFeed.source,
+          activeCount: nextFeed.active.length,
+          recentCount: nextFeed.recent.length,
+          hazards: [...new Set([...nextFeed.active, ...nextFeed.recent].map((alert) => alert.hazard))].sort(),
+        },
+      }).catch(() => undefined);
     } finally {
       setIsRefreshing(false);
     }
@@ -111,7 +143,12 @@ export function DisasterReadyProvider({ children, runtime }: PropsWithChildren<{
   const loadSafetyResources = useCallback(async () => {
     setIsShelterLoading(true);
     try {
-      setShelterFeed(await runtimeRef.current.safetyResourceService.getFeed(preferencesRef.current.location));
+      const nextFeed = await runtimeRef.current.safetyResourceService.getFeed(preferencesRef.current.location);
+      setShelterFeed(nextFeed);
+      void runtimeRef.current.analyticsService.track('shelter_lookup', {
+        mode: 'real',
+        properties: { source: nextFeed.source, count: nextFeed.shelters.length, stale: nextFeed.isStale },
+      }).catch(() => undefined);
     } finally {
       setIsShelterLoading(false);
     }
@@ -139,6 +176,28 @@ export function DisasterReadyProvider({ children, runtime }: PropsWithChildren<{
     }
   }, [updatePreferences]);
 
+  const trackEvent = useCallback(async (name: AnalyticsEventName, options: AnalyticsTrackOptions) => {
+    await runtimeRef.current.analyticsService.track(name, options).catch(() => undefined);
+  }, []);
+
+  const loadPlainLanguageSummary = useCallback(async (alert: Alert) => {
+    if (plainLanguageResultsRef.current[alert.id] || plainLanguageRequestsRef.current.has(alert.id)) return;
+    plainLanguageRequestsRef.current.add(alert.id);
+    const mode = alert.isDemo ? 'demo' : 'real';
+    await trackEvent('ai_simplification_requested', { mode, properties: { hazard: alert.hazard } });
+    try {
+      const result = await runtimeRef.current.plainLanguageService.simplify(alert);
+      plainLanguageResultsRef.current = { ...plainLanguageResultsRef.current, [alert.id]: result };
+      setPlainLanguageResults(plainLanguageResultsRef.current);
+      await trackEvent(result.source === 'ai' ? 'ai_simplification_used' : 'ai_simplification_fallback', {
+        mode,
+        properties: { hazard: alert.hazard, ...(result.source === 'deterministic' ? { reason: result.reason } : {}) },
+      });
+    } finally {
+      plainLanguageRequestsRef.current.delete(alert.id);
+    }
+  }, [trackEvent]);
+
   const value = useMemo<AppContextValue>(() => ({
     feed,
     preferences,
@@ -148,14 +207,17 @@ export function DisasterReadyProvider({ children, runtime }: PropsWithChildren<{
     isShelterLoading,
     notificationPermissionState,
     isNotificationPermissionLoading,
+    plainLanguageResults,
     refreshAlerts,
     loadSafetyResources,
     openShelterMap,
     requestNotificationPermission,
+    loadPlainLanguageSummary,
+    trackEvent,
     updatePreferences,
     getAlertById: (id) => [...feed.active, ...feed.recent].find((alert) => alert.id === id) ?? null,
     checklistRepository: runtime.checklistRepository,
-  }), [feed, isLoading, isNotificationPermissionLoading, isRefreshing, isShelterLoading, loadSafetyResources, notificationPermissionState, openShelterMap, preferences, refreshAlerts, requestNotificationPermission, runtime.checklistRepository, shelterFeed, updatePreferences]);
+  }), [feed, isLoading, isNotificationPermissionLoading, isRefreshing, isShelterLoading, loadPlainLanguageSummary, loadSafetyResources, notificationPermissionState, openShelterMap, plainLanguageResults, preferences, refreshAlerts, requestNotificationPermission, runtime.checklistRepository, shelterFeed, trackEvent, updatePreferences]);
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 }

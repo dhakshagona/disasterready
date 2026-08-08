@@ -1,63 +1,56 @@
-# DisasterReady Engineering Roadmap
+# DisasterReady engineering roadmap
 
-This roadmap is intentionally explicit about what is real, what is simulated, and what remains.
+This roadmap separates verified implementation from credential-gated and research-gated work.
 
-## Phase 1: Frontend foundation (current milestone)
+## Phase 1: mobile product foundation
 
-- [x] Review the product, architecture, phase brief, Expo SDK 57 docs, and prototype references
-- [x] Establish a restrained emergency-response design system
-- [x] Define typed domain models and local mock repositories
-- [x] Build reusable, accessible UI primitives
-- [x] Build guest onboarding and accessibility setup
-- [x] Build Home in no-alert and clearly labeled demo-alert states
-- [x] Build alert detail, action plan, alerts list, shelter state, and settings screens
-- [x] Add lint, strict typecheck, and component tests
-- [x] Complete visual review checkpoint 1
+- [x] Establish the iPhone-first design system and centered web shell
+- [x] Build guest onboarding, accessibility settings, home, alerts, detail, checklist, shelters, and settings
+- [x] Add typed domain models and accessible UI primitives
+- [x] Add lint, strict typecheck, component tests, and Visual Checkpoint 1
 
-Phase 1 established the visual and navigational foundation. Live alerts and local persistence were added in Phase 2; authentication, push notifications, and real shelter lookup remain deferred.
+## Phase 2: live alerts and deterministic plans
 
-## Phase 2: Local-first product core
+- [x] Add NWS retrieval, provider validation, normalization, filtering, caching, and failure behavior
+- [x] Add reviewed FEMA and Ready.gov action-plan templates
+- [x] Persist preferences and checklist progress locally
+- [x] Verify alert-to-plan behavior and Visual Checkpoint 2
 
-- [x] Persist onboarding, preferences, selected location, and checklist progress locally
-- [x] Add reviewed, source-linked deterministic action-plan templates
-- [x] Add the National Weather Service adapter, validation, normalization, and filtering
-- [x] Add current, cached, expired, stale, offline, and failure behavior
-- [x] Replace static timestamps and demo-only controls with application services
-- [x] Add integration tests around the alert-to-plan flow
-- [x] Complete visual review checkpoint 2
+## Phase 3: safety resources and native adapters
 
-## Phase 3: Safety resources and native capabilities
+- [x] Add FEMA shelter normalization, freshness, status, empty, and failure states
+- [x] Add Apple Maps, Google Maps, and web routing behavior
+- [x] Add native notification permission adapters and deterministic eligibility rules
+- [x] Verify the mobile UX and complete Visual Checkpoint 3
 
-- [x] Select and document a verifiable shelter/safety-resource source
-- [x] Implement shelter normalization, freshness, and explicit unknown/open/closed states
-- [x] Add Apple Maps and Google Maps deep links without in-app turn-by-turn navigation
-- [x] Add native notification permissions and development-build setup
-- [x] Add deterministic alert deduplication, hazard matching, and severity rules
-- [ ] Configure the EAS project, push credentials, backend token registration, and delivery
-- [ ] Complete visual review checkpoint 3
+## Phase 4: useful optional backend
 
-## Phase 4: Optional cloud sync and constrained AI
+- [x] Add a minimal analytics schema with Row Level Security and no public table access
+- [x] Add a bounded local analytics outbox and server allowlist
+- [x] Separate every demo event from real activity
+- [x] Add server-side OpenAI Responses API integration with strict structured output
+- [x] Share schema and safety checks across the server and client
+- [x] Guarantee deterministic fallback for missing configuration, timeout, provider failure, malformed output, refusal, and safety mismatch
+- [x] Keep accounts, profile sync, and public alert mirroring out of scope until they solve a demonstrated need
 
-- [ ] Add optional Supabase authentication and guest-safe migration
-- [ ] Add PostgreSQL schema, migrations, and Row Level Security
-- [ ] Sync saved locations and preferences without making emergency access account-dependent
-- [ ] Add a server-side, schema-validated plain-language transformation layer
-- [ ] Guarantee deterministic fallback for timeout, malformed output, unsupported alerts, and AI unavailability
+## Phase 5: flagship evidence and release preparation
 
-## Phase 5: Evidence, hardening, and release
+- [x] Add SPA export and direct-route host fallbacks
+- [x] Replace the starter README with a product and engineering overview
+- [x] Add Mermaid architecture, decision records, AI safety, metric glossary, and technical challenge write-up
+- [x] Add a structured user-testing protocol with no invented outcomes
+- [ ] Run the full native accessibility and reduced-motion audit on devices
+- [ ] Conduct the user test and record only observed findings
+- [ ] Create Supabase and OpenAI accounts, deploy functions, and validate production limits
+- [ ] Create the Vercel project and publish the public demo URL
+- [ ] Configure EAS and remote push delivery
+- [ ] Final GitHub and deployment approval
 
-- [ ] Accessibility and reduced-motion audit on native and web
-- [ ] Failure-state, offline, and stale-data test matrix
-- [ ] Small structured user test; record only observed results
-- [ ] Truthful analytics with demo activity separated from real activity
-- [ ] Architecture diagram, screenshots/GIF, and technical challenge write-up
-- [ ] Production README and web deployment
-- [ ] Final visual/product approval
+## External requirements
 
-## External requirements not yet available
-
-- Supabase project configuration
-- Any private AI provider credential (server-side only)
-- EAS project ID, native push credentials, and a token-registration backend
-- Deployment account/project
-- Real user-testing results and production metrics
+- Supabase project and CLI authentication
+- OpenAI project key stored only as an Edge Function secret
+- Vercel or equivalent hosting account
+- EAS project ID and native push credentials for remote delivery
+- Representative participants for user testing
+- Public source for historical recognition wording

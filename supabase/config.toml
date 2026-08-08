@@ -1,0 +1,7 @@
+project_id = "disasterready"
+
+[functions.record-events]
+verify_jwt = false
+
+[functions.simplify-alert]
+verify_jwt = false

@@ -1,4 +1,5 @@
 import { router, useLocalSearchParams, type Href } from 'expo-router';
+import { useEffect, useRef } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { useDisasterReady } from '@/application/app-context';
@@ -61,12 +62,21 @@ const demoFeed: AlertFeed = {
 
 export default function HomeScreen() {
   const { demo } = useLocalSearchParams<{ demo?: string }>();
-  const { feed, preferences, isLoading, isRefreshing, refreshAlerts } = useDisasterReady();
+  const { feed, preferences, isLoading, isRefreshing, refreshAlerts, trackEvent } = useDisasterReady();
   const isDemo = demo === '1';
+  const demoTrackedRef = useRef(false);
   const shownFeed = isDemo ? demoFeed : feed;
   const openAlert = (alert: Alert) => router.push(`/alert/${alert.id}` as Href);
   const openPlan = (alert: Alert) => router.push(`/action-plan/${alert.id}` as Href);
   const showPreparedness = !isDemo && !isLoading && feed.source !== 'unavailable' && feed.active.length === 0;
+
+  useEffect(() => {
+    if (isDemo && !demoTrackedRef.current) {
+      demoTrackedRef.current = true;
+      void trackEvent('demo_session_started', { mode: 'demo', properties: { hazard: 'flood', entry: 'home' } });
+    }
+    if (!isDemo) demoTrackedRef.current = false;
+  }, [isDemo, trackEvent]);
 
   return (
     <Screen testID="home-screen">

@@ -1,4 +1,4 @@
-import { LocalAlertCache, LocalChecklistProgressRepository, LocalNotificationReceiptRepository, LocalPreferencesRepository, LocalShelterCache } from '@/infrastructure/storage/local-repositories';
+import { LocalAlertCache, LocalAnalyticsOutbox, LocalChecklistProgressRepository, LocalNotificationReceiptRepository, LocalPreferencesRepository, LocalShelterCache } from '@/infrastructure/storage/local-repositories';
 import type { KeyValueStorage } from '@/infrastructure/storage/storage-port';
 import { defaultPreferences, demoFloodAlert } from '@/data/mock-repositories';
 import type { UserPreferences } from '@/domain/models';
@@ -85,6 +85,25 @@ describe('local-first repositories', () => {
     await expect(repository.has('provider-1:sent-1')).resolves.toBe(false);
     await expect(repository.has('provider-2:sent-2')).resolves.toBe(true);
     await expect(repository.has('provider-3:sent-3')).resolves.toBe(true);
+  });
+
+  it('keeps a bounded analytics outbox and removes only delivered events', async () => {
+    const outbox = new LocalAnalyticsOutbox(new MemoryStorage(), 2);
+    const event = (id: string) => ({
+      id,
+      sessionId: 'session-1',
+      name: 'session_started' as const,
+      occurredAt: '2026-08-08T02:00:00.000Z',
+      mode: 'real' as const,
+      properties: {},
+    });
+
+    await outbox.append(event('event-1'));
+    await outbox.append(event('event-2'));
+    await outbox.append(event('event-3'));
+    await outbox.remove(['event-2']);
+
+    await expect(outbox.list(10)).resolves.toEqual([event('event-3')]);
   });
 
   it('fails closed when stored JSON is malformed', async () => {

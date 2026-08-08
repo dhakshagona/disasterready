@@ -1,6 +1,6 @@
 import { useLocalSearchParams } from 'expo-router';
 import { Linking, Share, StyleSheet, View } from 'react-native';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { useDisasterReady } from '@/application/app-context';
 import { ActionStepRow } from '@/components/ui/action-step-row';
@@ -16,12 +16,24 @@ import { selectActionPlan } from '@/domain/action-plans/select-action-plan';
 
 export default function ActionPlanScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { checklistRepository, getAlertById, isLoading } = useDisasterReady();
+  const { checklistRepository, getAlertById, isLoading, trackEvent } = useDisasterReady();
   const alert = id === demoFloodAlert.id || id === demoFloodPlan.id ? demoFloodAlert : getAlertById(id);
   const plan = useMemo(() => alert ? selectActionPlan(alert) : null, [alert]);
   const [completedIds, setCompletedIds] = useState<Set<string>>(new Set());
   const [loadedPlanId, setLoadedPlanId] = useState<string | null>(null);
+  const openedPlanIdRef = useRef<string | null>(null);
+  const checklistStartedRef = useRef(false);
+  const checklistCompletedRef = useRef(false);
   const isProgressLoading = Boolean(plan && loadedPlanId !== plan.id);
+
+  useEffect(() => {
+    if (!plan || openedPlanIdRef.current === plan.id) return;
+    openedPlanIdRef.current = plan.id;
+    void trackEvent('action_plan_opened', {
+      mode: plan.isDemo ? 'demo' : 'real',
+      properties: { hazard: plan.hazard, stepCount: plan.steps.length },
+    });
+  }, [plan, trackEvent]);
 
   useEffect(() => {
     let mounted = true;
@@ -50,6 +62,18 @@ export default function ActionPlanScreen() {
   const percent = Math.round((completedCount / plan.steps.length) * 100);
 
   function saveProgress(next: Set<string>) {
+    const eventOptions = {
+      mode: plan!.isDemo ? 'demo' as const : 'real' as const,
+      properties: { hazard: plan!.hazard, stepCount: plan!.steps.length },
+    };
+    if (completedIds.size === 0 && next.size > 0 && !checklistStartedRef.current) {
+      checklistStartedRef.current = true;
+      void trackEvent('checklist_started', eventOptions);
+    }
+    if (completedIds.size < plan!.steps.length && next.size === plan!.steps.length && !checklistCompletedRef.current) {
+      checklistCompletedRef.current = true;
+      void trackEvent('checklist_completed', eventOptions);
+    }
     setCompletedIds(next);
     void checklistRepository.setCompleted(plan!.id, next);
   }

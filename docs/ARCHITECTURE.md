@@ -1,223 +1,118 @@
-# DisasterReady Architecture
+# DisasterReady architecture
 
-## Current local-first architecture
+## Product boundary
 
-The iPhone-first Expo application shares domain and application code across iOS, Android, and web. Provider, storage, and routing differences stay behind adapters.
+DisasterReady is a mobile application first. The primary reference is an iPhone viewport near 390x844. Android uses the same presentation, application, and domain layers where practical. Desktop web centers the mobile shell and exists as a public demonstration surface, not as a dashboard variant.
 
-```text
-Expo Router screens and feature components
-  -> DisasterReady application context
-      -> LiveAlertService
-          -> NwsAlertSource -> NwsAlertClient -> api.weather.gov
-          -> LocalAlertCache
-          -> deterministic action-plan selector
-      -> SafetyResourceService
-          -> FemaShelterSource -> FemaShelterClient -> FEMA NSS FeatureServer
-          -> LocalShelterCache
-      -> NotificationPermissionService
-          -> iOS/Android: expo-notifications
-          -> web: explicit unsupported adapter
-      -> NotificationDecisionService
-          -> deterministic eligibility and duplicate rules
-          -> LocalNotificationReceiptRepository
-      -> LocalPreferencesRepository
-      -> LocalChecklistProgressRepository
-  -> platform adapters
-      -> iOS/Android: expo-sqlite key-value store
-      -> web: localStorage
-      -> iOS: Apple Maps preferred, Apple Maps web fallback
-      -> Android: Google Maps navigation preferred, Google Maps web fallback
-      -> web: Google Maps universal URL
+## System diagram
+
+```mermaid
+flowchart TD
+  subgraph Client["Expo SDK 57 client"]
+    ROUTER["Expo Router screens"] --> CONTEXT["DisasterReady application context"]
+    CONTEXT --> ALERTS["LiveAlertService"]
+    CONTEXT --> RESOURCES["SafetyResourceService"]
+    CONTEXT --> PLANS["Deterministic action-plan selector"]
+    CONTEXT --> ANALYTICS["AnalyticsService"]
+    CONTEXT --> PLAIN["PlainLanguageService"]
+    CONTEXT --> PORTS["Storage, maps, and notification ports"]
+    PORTS --> NATIVE["SQLite, Apple Maps or Google Maps, native permissions"]
+    PORTS --> WEB["localStorage, universal map URL, explicit notification fallback"]
+  end
+
+  ALERTS --> NWS["api.weather.gov"]
+  RESOURCES --> FEMA["FEMA National Shelter System"]
+  ANALYTICS --> OUTBOX["Bounded local event outbox"]
+  PLAIN --> DETERMINISTIC["Deterministic fallback"]
+  OUTBOX --> RECORD["record-events Edge Function, optional"]
+  PLAIN --> SIMPLIFY["simplify-alert Edge Function, optional"]
+  RECORD --> POSTGRES["Supabase PostgreSQL"]
+  SIMPLIFY --> OPENAI["OpenAI Responses API"]
+  OPENAI --> CONTRACT["Strict JSON schema plus safety contract"]
+  CONTRACT --> PLAIN
 ```
 
-The centered web shell remains a demonstration surface. The primary interaction reference is an iPhone-sized viewport around 390x844.
-
-## Target architecture
-
-```text
-Mobile app
-  -> local storage/cache
-  -> application services
-  -> external API adapters
-      -> National Weather Service alerts
-      -> FEMA National Shelter System
-      -> map deep links
-  -> Supabase
-      -> optional auth
-      -> PostgreSQL
-      -> edge functions
-      -> scheduled ingestion jobs
-      -> push-token management
-```
-
-## Mobile layers
+## Layer responsibilities
 
 ### Presentation
 
-- Expo Router screens
-- Feature components
-- Design-system components
-- Accessibility behavior
-- Loading, stale, offline, empty, and error states
+- Expo Router screens and mobile navigation
+- Reusable UI primitives and design tokens
+- Accessible names, roles, states, and minimum touch targets
+- Loading, empty, offline, stale, demo, expired, and error disclosures
+- No direct knowledge of NWS, FEMA, Supabase, or OpenAI response shapes
 
 ### Domain
 
-Core models:
+- Normalized `Alert`, `ActionPlan`, `ActionStep`, `Shelter`, and `UserPreferences` models
+- Reviewed action-plan templates
+- Deterministic template selection
+- Alert freshness and status concepts
+- Notification eligibility and duplicate rules
 
-- HazardType
-- Alert
-- AlertSeverity
-- AlertStatus
-- SavedLocation
-- ActionPlanTemplate
-- ActionPlan
-- ActionStep
-- Shelter
-- UserPreferences
-- DataFreshness
+### Application
 
-### Application services
-
-Examples:
-
-- AlertService
-- ActionPlanService
-- ShelterService
-- RoutingService
-- NotificationService
-- PreferencesService
+- Alert retrieval and fallback orchestration
+- Shelter retrieval and fallback orchestration
+- Checklist and preference workflows
+- Anonymous analytics event definitions
+- Optional plain-language workflow with deterministic fallback
 
 ### Infrastructure
 
-Implemented:
+- NWS and FEMA clients, validators, and normalizers
+- Native SQLite and browser localStorage adapters
+- Platform notification adapters
+- Apple Maps, Google Maps, and web routing adapters
+- Supabase analytics and plain-language transports
+- Supabase Edge Functions and migration
 
-- `NwsAlertClient` and `NwsAlertSource`
-- `FemaShelterClient` and `FemaShelterSource`
-- provider-boundary validation and normalization
-- native SQLite and browser localStorage adapters
-- local alert, shelter, notification-receipt, preference, and checklist repositories
-- platform-aware external map routing
-- native notification permission adapter with a graceful web fallback
-- deterministic notification hazard, status, severity, urgency, demo, and duplicate rules
+## Live alert flow
 
-Deferred:
+1. The saved location supplies a latitude and longitude point.
+2. `NwsAlertClient` requests active alerts for that point with timeout and request throttling.
+3. The normalizer rejects malformed features and maps supported hazards into internal models.
+4. `LiveAlertService` filters status and hazard preferences, then writes the successful result to the local cache.
+5. If live retrieval fails, the service returns saved data with its original retrieval time and a cached or stale label.
+6. If neither source exists, the UI says data is unavailable. It does not imply an all-clear.
 
-- EAS project and native push credentials
-- backend device-token registration and notification delivery
-- optional Supabase profile sync
+## Action-plan authority
 
-## Alert normalization
+The deterministic action-plan selector is the safety authority. It uses alert hazard and status to select reviewed, source-linked instructions. The language model does not select, reorder, add, or remove actions.
 
-Raw provider data must be converted into an internal `Alert` model.
+## Optional cloud boundary
 
-The app should not expose provider-specific response structures to components.
+Supabase is used only where it adds clear value:
 
-A normalized alert should include:
+- Store anonymous, aggregate product events after a strict allowlist check
+- Keep the OpenAI credential off the client
+- Apply a schema and safety check before AI wording reaches the app
 
-- Internal ID
-- Provider ID
-- Hazard type
-- Headline
-- Plain-language summary
-- Severity
-- Urgency
-- Certainty
-- Status
-- Geographic description
-- Issue time
-- Effective time
-- Expiration time
-- Instruction text
-- Original source URL or identifier
-- Retrieval time
-- Data freshness state
-- Demo flag
+Authentication, profile sync, saved-location sync, and server-side alert mirroring are deliberately not included. Guest access and local emergency readiness do not benefit enough from those dependencies at this stage.
 
-## Action-plan selection
+## Data and trust boundaries
 
-Action plans are deterministic.
-
-Input:
-
-- Hazard type
-- Severity
-- Urgency
-- Alert status
-- Optional structured conditions
-
-Output:
-
-- Reviewed action-plan template
-- Ordered steps
-- Source references
-- Explanation of why the template was selected
-
-A language model may later simplify wording, but it must not add or remove safety actions without a reviewed rule.
-
-## Offline strategy
-
-The current implementation caches:
-
-- Preferences
-- Last successful alert results
-- Last successful shelter results
-- Notification receipt fingerprints
-- Checklist progress
-- Last update timestamps
-
-Alert responses older than one hour are marked stale. If the live request fails, the UI either discloses the saved response and its retrieval time or shows an explicit unavailable state. It never converts a failed request into an all-clear.
-
-NWS requests are limited to one request per saved location within a 30-second window. Network, HTTP, timeout, malformed-payload, cache-read, and cache-write failures have explicit tested behavior. FEMA shelter results become stale after 30 minutes and retain their retrieval time when served from the local cache.
-
-## Initial Supabase tables
-
-Introduce only after local flows work:
-
-- profiles
-- saved_locations
-- user_preferences
-- device_tokens
-- alerts
-- alert_areas
-- action_plan_templates
-- action_plan_steps
-- user_action_plans
-- user_action_step_status
-- shelters
-
-Row-level security is mandatory for user-specific rows.
-
-## Security boundaries
-
-Client-safe:
+Client-safe configuration:
 
 - Supabase project URL
-- Supabase publishable/anon key when protected by RLS
-- Public alert endpoints
-- Public shelter endpoints
+- Supabase publishable key
+- Public NWS and FEMA endpoints
 
-Server-only:
+Server-only configuration:
 
-- Supabase service-role key
-- Notification provider credentials
-- Administrative ingestion credentials
-- Any private third-party key
+- OpenAI API key
+- Supabase service-role key supplied by the Edge Function environment
 
-## Routing
+The analytics table contains random event and session identifiers, event name, event time, real or demo mode, and allowlisted aggregate properties. It does not accept contact data, saved coordinates, city, or postal code.
 
-Do not implement turn-by-turn navigation.
+## Offline behavior
 
-The app selects a destination and opens:
+- Preferences, checklist state, alerts, shelters, and the analytics outbox remain local.
+- Alert results older than one hour are stale.
+- Shelter results older than 30 minutes are stale.
+- Failed cache reads or writes do not turn network failure into an all-clear.
+- Analytics and AI failures never block the emergency flow.
 
-- Apple Maps on iOS
-- Google Maps on Android
+## Direct web routes
 
-Fallback behavior must be defined when the preferred app is unavailable.
-
-`MapRoutingService` implements this handoff without embedding turn-by-turn navigation. It is ready for a verified destination once a shelter or safety-resource source is selected.
-
-## Push notifications
-
-Native permission requests and deterministic eligibility rules are implemented. A real alert is eligible only when notifications are enabled, the alert is active, its hazard is selected, and it is severe, extreme, or immediate. Demo alerts never qualify. The provider ID and issue time form the duplicate fingerprint.
-
-Remote delivery remains configuration-gated. It requires an EAS project ID, native push credentials, a real-device development build, and a backend token-registration and delivery service. The web adapter reports that native permission is unsupported. The product does not imply that it can override operating-system restrictions.
+The Expo web output uses single-page export mode. Hosting rewrites route unknown paths to `index.html`, allowing direct loads of mobile routes. Native-only capabilities expose explicit web fallbacks.

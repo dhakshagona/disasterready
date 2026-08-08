@@ -1,23 +1,25 @@
 import { execFileSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { extname } from 'node:path';
 
 import { describe, expect, it } from '@jest/globals';
 
 const textExtensions = new Set([
   '.cjs', '.css', '.html', '.js', '.jsx', '.json', '.md', '.mjs', '.scss',
-  '.ts', '.tsx', '.txt', '.xml', '.yaml', '.yml',
+  '.sql', '.toml', '.ts', '.tsx', '.txt', '.xml', '.yaml', '.yml',
 ]);
 const excludedPaths = ['package-lock.json'];
-const excludedPrefixes = ['.expo/', 'coverage/', 'dist/', 'node_modules/'];
+const includedNames = ['.env.example'];
+const excludedPrefixes = ['.expo/', 'android/', 'coverage/', 'dist/', 'ios/', 'node_modules/', 'reference/', 'web-build/'];
 
 function projectAuthoredTextFiles(): string[] {
-  return execFileSync('git', ['ls-files', '-z'], { encoding: 'utf8' })
+  return execFileSync('git', ['ls-files', '-co', '--exclude-standard', '-z'], { encoding: 'utf8' })
     .split('\0')
     .filter(Boolean)
+    .filter((file) => existsSync(file))
     .filter((file) => !excludedPaths.includes(file))
     .filter((file) => !excludedPrefixes.some((prefix) => file.startsWith(prefix)))
-    .filter((file) => textExtensions.has(extname(file)));
+    .filter((file) => includedNames.includes(file) || textExtensions.has(extname(file)));
 }
 
 describe('repository style', () => {
