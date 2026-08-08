@@ -1,8 +1,10 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type PropsWithChildren } from 'react';
 
 import type { AlertFeed } from '@/application/alerts/live-alert-service';
+import type { NotificationPermissionService, NotificationPermissionState } from '@/application/notifications/notification-permission-service';
+import type { ShelterFeed } from '@/application/safety-resources/safety-resource-service';
 import { defaultPreferences } from '@/data/mock-repositories';
-import type { Alert, UserPreferences } from '@/domain/models';
+import type { Alert, Shelter, UserPreferences } from '@/domain/models';
 
 export interface PreferencesRepositoryPort {
   get(): Promise<UserPreferences | null>;
@@ -16,6 +18,9 @@ export interface ChecklistRepositoryPort {
 
 export type AppRuntime = {
   alertService: { getFeed(preferences: UserPreferences): Promise<AlertFeed> };
+  safetyResourceService: { getFeed(location: UserPreferences['location']): Promise<ShelterFeed> };
+  mapRoutingService: { openDestination(destination: { latitude: number; longitude: number; label: string }): Promise<void> };
+  notificationPermissionService: Pick<NotificationPermissionService, 'getStatus' | 'request'>;
   preferencesRepository: PreferencesRepositoryPort;
   checklistRepository: ChecklistRepositoryPort;
 };
@@ -25,7 +30,14 @@ type AppContextValue = {
   preferences: UserPreferences;
   isLoading: boolean;
   isRefreshing: boolean;
+  shelterFeed: ShelterFeed | null;
+  isShelterLoading: boolean;
+  notificationPermissionState: NotificationPermissionState | null;
+  isNotificationPermissionLoading: boolean;
   refreshAlerts(): Promise<void>;
+  loadSafetyResources(): Promise<void>;
+  openShelterMap(shelter: Shelter): Promise<void>;
+  requestNotificationPermission(): Promise<void>;
   updatePreferences(preferences: UserPreferences): Promise<void>;
   getAlertById(id: string): Alert | null;
   checklistRepository: ChecklistRepositoryPort;
@@ -48,6 +60,10 @@ export function DisasterReadyProvider({ children, runtime }: PropsWithChildren<{
   const [feed, setFeed] = useState<AlertFeed>(initialFeed);
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [shelterFeed, setShelterFeed] = useState<ShelterFeed | null>(null);
+  const [isShelterLoading, setIsShelterLoading] = useState(false);
+  const [notificationPermissionState, setNotificationPermissionState] = useState<NotificationPermissionState | null>(null);
+  const [isNotificationPermissionLoading, setIsNotificationPermissionLoading] = useState(true);
 
   useEffect(() => {
     let mounted = true;
@@ -63,7 +79,16 @@ export function DisasterReadyProvider({ children, runtime }: PropsWithChildren<{
         if (mounted) setIsLoading(false);
       }
     }
+    async function initializeNotificationPermission() {
+      try {
+        const status = await runtimeRef.current.notificationPermissionService.getStatus();
+        if (mounted) setNotificationPermissionState(status);
+      } finally {
+        if (mounted) setIsNotificationPermissionLoading(false);
+      }
+    }
     void initialize();
+    void initializeNotificationPermission();
     return () => { mounted = false; };
   }, []);
 
@@ -77,21 +102,60 @@ export function DisasterReadyProvider({ children, runtime }: PropsWithChildren<{
   }, []);
 
   const updatePreferences = useCallback(async (nextPreferences: UserPreferences) => {
+    if (preferencesRef.current.location.id !== nextPreferences.location.id) setShelterFeed(null);
     preferencesRef.current = nextPreferences;
     setPreferences(nextPreferences);
     await runtimeRef.current.preferencesRepository.save(nextPreferences);
   }, []);
+
+  const loadSafetyResources = useCallback(async () => {
+    setIsShelterLoading(true);
+    try {
+      setShelterFeed(await runtimeRef.current.safetyResourceService.getFeed(preferencesRef.current.location));
+    } finally {
+      setIsShelterLoading(false);
+    }
+  }, []);
+
+  const openShelterMap = useCallback(async (shelter: Shelter) => {
+    await runtimeRef.current.mapRoutingService.openDestination({
+      latitude: shelter.latitude,
+      longitude: shelter.longitude,
+      label: shelter.name,
+    });
+  }, []);
+
+  const requestNotificationPermission = useCallback(async () => {
+    setIsNotificationPermissionLoading(true);
+    try {
+      const status = await runtimeRef.current.notificationPermissionService.request();
+      setNotificationPermissionState(status);
+      const enabled = status === 'granted' || status === 'provisional' || status === 'ephemeral';
+      if (preferencesRef.current.notificationsEnabled !== enabled) {
+        await updatePreferences({ ...preferencesRef.current, notificationsEnabled: enabled });
+      }
+    } finally {
+      setIsNotificationPermissionLoading(false);
+    }
+  }, [updatePreferences]);
 
   const value = useMemo<AppContextValue>(() => ({
     feed,
     preferences,
     isLoading,
     isRefreshing,
+    shelterFeed,
+    isShelterLoading,
+    notificationPermissionState,
+    isNotificationPermissionLoading,
     refreshAlerts,
+    loadSafetyResources,
+    openShelterMap,
+    requestNotificationPermission,
     updatePreferences,
     getAlertById: (id) => [...feed.active, ...feed.recent].find((alert) => alert.id === id) ?? null,
     checklistRepository: runtime.checklistRepository,
-  }), [feed, isLoading, isRefreshing, preferences, refreshAlerts, runtime.checklistRepository, updatePreferences]);
+  }), [feed, isLoading, isNotificationPermissionLoading, isRefreshing, isShelterLoading, loadSafetyResources, notificationPermissionState, openShelterMap, preferences, refreshAlerts, requestNotificationPermission, runtime.checklistRepository, shelterFeed, updatePreferences]);
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 }

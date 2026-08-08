@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useDisasterReady } from '@/application/app-context';
 import { AppHeader } from '@/components/ui/app-header';
 import { AppText } from '@/components/ui/app-text';
+import { PrimaryButton } from '@/components/ui/buttons';
 import { Card } from '@/components/ui/card';
 import { Icon } from '@/components/ui/icon';
 import { Screen } from '@/components/ui/screen';
@@ -14,7 +15,14 @@ import { colors, radii, spacing } from '@/constants/tokens';
 import { hazardLabels } from '@/data/mock-repositories';
 
 export default function SettingsScreen() {
-  const { feed, preferences, updatePreferences } = useDisasterReady();
+  const {
+    feed,
+    isNotificationPermissionLoading,
+    notificationPermissionState,
+    preferences,
+    requestNotificationPermission,
+    updatePreferences,
+  } = useDisasterReady();
   const [offlinePreview, setOfflinePreview] = useState(false);
   const location = preferences.location;
   const showOffline = offlinePreview || (feed.isOffline && Boolean(feed.retrievedAt));
@@ -25,6 +33,23 @@ export default function SettingsScreen() {
   const save = <Key extends keyof typeof preferences>(key: Key, value: (typeof preferences)[Key]) => {
     void updatePreferences({ ...preferences, [key]: value });
   };
+
+  const notificationStatus = {
+    unsupported: 'Unavailable on web',
+    'not-determined': 'Not requested',
+    denied: 'Denied',
+    granted: 'Allowed',
+    provisional: 'Provisional',
+    ephemeral: 'Temporary',
+    error: 'Status unavailable',
+  }[notificationPermissionState ?? 'error'];
+  const notificationTone = notificationPermissionState === 'granted'
+    || notificationPermissionState === 'provisional'
+    || notificationPermissionState === 'ephemeral'
+    ? 'safe'
+    : notificationPermissionState === 'denied' || notificationPermissionState === 'error'
+      ? 'danger'
+      : 'info';
 
   return (
     <Screen testID="settings-screen">
@@ -66,6 +91,35 @@ export default function SettingsScreen() {
       </View>
 
       <View style={styles.section}>
+        <AppText variant="eyebrow" color={colors.inkMuted}>Emergency notifications</AppText>
+        <Card style={styles.notificationCard}>
+          <View style={styles.notificationHeader}>
+            <View style={styles.iconBox}><Icon name={{ ios: 'bell.badge.fill', android: 'notifications_active', web: 'notifications_active' }} color={colors.primary} size={20} /></View>
+            <View style={styles.flex}>
+              <AppText variant="bodyStrong">System alert permission</AppText>
+              <AppText variant="caption" color={colors.inkMuted}>Controls whether this device can display DisasterReady alerts.</AppText>
+            </View>
+            <StatusBadge label={isNotificationPermissionLoading ? 'Checking' : notificationStatus} tone={notificationTone} />
+          </View>
+          {notificationPermissionState === 'unsupported' ? (
+            <AppText variant="caption" color={colors.inkMuted}>Install the iOS or Android development build to request system notification permission.</AppText>
+          ) : null}
+          {notificationPermissionState === 'not-determined' ? (
+            <PrimaryButton
+              accessibilityLabel="Enable emergency notifications"
+              loading={isNotificationPermissionLoading}
+              onPress={() => void requestNotificationPermission()}>
+              Enable notifications
+            </PrimaryButton>
+          ) : null}
+          {notificationPermissionState === 'denied' ? (
+            <AppText variant="caption" color={colors.inkMuted}>Permission is denied. You can allow notifications from the device Settings app.</AppText>
+          ) : null}
+          <AppText variant="caption" color={colors.inkSubtle}>Remote alert delivery requires the project notification service to be configured.</AppText>
+        </Card>
+      </View>
+
+      <View style={styles.section}>
         <AppText variant="eyebrow" color={colors.inkMuted}>Language</AppText>
         <Card style={styles.languageRow}>
           <View style={styles.iconBox}><Icon name={{ ios: 'globe', android: 'language', web: 'language' }} color={colors.primary} size={20} /></View>
@@ -103,6 +157,8 @@ const styles = StyleSheet.create({
   iconBox: { width: 38, height: 38, borderRadius: radii.md, backgroundColor: colors.primarySoft, alignItems: 'center', justifyContent: 'center' },
   chips: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   settingCard: { paddingTop: 0, paddingBottom: 0 },
+  notificationCard: { gap: spacing.md },
+  notificationHeader: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   languageRow: { minHeight: 66, flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   privacyCard: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
 });

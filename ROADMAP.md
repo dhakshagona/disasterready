@@ -24,15 +24,17 @@ Phase 1 established the visual and navigational foundation. Live alerts and loca
 - [x] Add current, cached, expired, stale, offline, and failure behavior
 - [x] Replace static timestamps and demo-only controls with application services
 - [x] Add integration tests around the alert-to-plan flow
-- [ ] Complete visual review checkpoint 2
+- [x] Complete visual review checkpoint 2
 
 ## Phase 3: Safety resources and native capabilities
 
-- [ ] Select and document a verifiable shelter/safety-resource source
-- [ ] Implement shelter normalization, freshness, and explicit unknown/open/closed states
+- [x] Select and document a verifiable shelter/safety-resource source
+- [x] Implement shelter normalization, freshness, and explicit unknown/open/closed states
 - [x] Add Apple Maps and Google Maps deep links without in-app turn-by-turn navigation
-- [ ] Add native notification permissions and development-build setup
-- [ ] Add device-token registration, alert deduplication, matching, and severity rules
+- [x] Add native notification permissions and development-build setup
+- [x] Add deterministic alert deduplication, hazard matching, and severity rules
+- [ ] Configure the EAS project, push credentials, backend token registration, and delivery
+- [ ] Complete visual review checkpoint 3
 
 ## Phase 4: Optional cloud sync and constrained AI
 
@@ -56,6 +58,6 @@ Phase 1 established the visual and navigational foundation. Live alerts and loca
 
 - Supabase project configuration
 - Any private AI provider credential (server-side only)
-- A verified shelter data provider and its terms
+- EAS project ID, native push credentials, and a token-registration backend
 - Deployment account/project
 - Real user-testing results and production metrics

@@ -11,6 +11,15 @@ Expo Router screens and feature components
           -> NwsAlertSource -> NwsAlertClient -> api.weather.gov
           -> LocalAlertCache
           -> deterministic action-plan selector
+      -> SafetyResourceService
+          -> FemaShelterSource -> FemaShelterClient -> FEMA NSS FeatureServer
+          -> LocalShelterCache
+      -> NotificationPermissionService
+          -> iOS/Android: expo-notifications
+          -> web: explicit unsupported adapter
+      -> NotificationDecisionService
+          -> deterministic eligibility and duplicate rules
+          -> LocalNotificationReceiptRepository
       -> LocalPreferencesRepository
       -> LocalChecklistProgressRepository
   -> platform adapters
@@ -31,7 +40,7 @@ Mobile app
   -> application services
   -> external API adapters
       -> National Weather Service alerts
-      -> verified shelter source
+      -> FEMA National Shelter System
       -> map deep links
   -> Supabase
       -> optional auth
@@ -83,15 +92,18 @@ Examples:
 Implemented:
 
 - `NwsAlertClient` and `NwsAlertSource`
+- `FemaShelterClient` and `FemaShelterSource`
 - provider-boundary validation and normalization
 - native SQLite and browser localStorage adapters
-- local alert, preference, and checklist repositories
+- local alert, shelter, notification-receipt, preference, and checklist repositories
 - platform-aware external map routing
+- native notification permission adapter with a graceful web fallback
+- deterministic notification hazard, status, severity, urgency, demo, and duplicate rules
 
 Deferred:
 
-- verified shelter-source adapter
-- notification adapter and backend delivery
+- EAS project and native push credentials
+- backend device-token registration and notification delivery
 - optional Supabase profile sync
 
 ## Alert normalization
@@ -148,12 +160,14 @@ The current implementation caches:
 
 - Preferences
 - Last successful alert results
+- Last successful shelter results
+- Notification receipt fingerprints
 - Checklist progress
 - Last update timestamps
 
 Alert responses older than one hour are marked stale. If the live request fails, the UI either discloses the saved response and its retrieval time or shows an explicit unavailable state. It never converts a failed request into an all-clear.
 
-NWS requests are limited to one request per saved location within a 30-second window. Network, HTTP, timeout, malformed-payload, cache-read, and cache-write failures have explicit tested behavior.
+NWS requests are limited to one request per saved location within a 30-second window. Network, HTTP, timeout, malformed-payload, cache-read, and cache-write failures have explicit tested behavior. FEMA shelter results become stale after 30 minutes and retain their retrieval time when served from the local cache.
 
 ## Initial Supabase tables
 
@@ -204,15 +218,6 @@ Fallback behavior must be defined when the preferred app is unavailable.
 
 ## Push notifications
 
-Push is a later phase because it depends on:
+Native permission requests and deterministic eligibility rules are implemented. A real alert is eligible only when notifications are enabled, the alert is active, its hazard is selected, and it is severe, extreme, or immediate. Demo alerts never qualify. The provider ID and issue time form the duplicate fingerprint.
 
-- Permissions
-- Device token registration
-- Location matching
-- Hazard matching
-- Alert deduplication
-- Severity rules
-- Backend delivery
-- Real-device development builds
-
-Critical notifications must bypass application quiet-hour preferences where platform and policy allow. The product must not imply that it can override operating-system restrictions when it cannot.
+Remote delivery remains configuration-gated. It requires an EAS project ID, native push credentials, a real-device development build, and a backend token-registration and delivery service. The web adapter reports that native permission is unsupported. The product does not imply that it can override operating-system restrictions.

@@ -63,9 +63,15 @@ export type Shelter = {
   name: string;
   status: ShelterStatus;
   address: string;
+  latitude: number;
+  longitude: number;
   distanceMiles?: number;
+  capacity?: number;
+  phone?: string;
+  petNotes?: string;
   lastUpdatedAt: string;
   source: string;
+  sourceUrl: string;
   accessibilityNotes?: string;
   isVerified: boolean;
 };

@@ -1,8 +1,9 @@
-import { fireEvent, render, waitFor } from '@testing-library/react-native';
+import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
 import { describe, expect, it, jest } from '@jest/globals';
 import { router } from 'expo-router';
 
 import { DisasterReadyProvider, type AppRuntime } from '@/application/app-context';
+import type { NotificationPermissionAdapter } from '@/application/notifications/notification-permission-service';
 import AccessibilityScreen from '@/app/onboarding/accessibility';
 import SettingsScreen from '@/app/(tabs)/settings';
 import { defaultPreferences } from '@/data/mock-repositories';
@@ -11,7 +12,10 @@ jest.mock('expo-router', () => ({
   router: { back: jest.fn(), replace: jest.fn() },
 }));
 
-function makeRuntime(save: (preferences: typeof defaultPreferences) => Promise<void>): AppRuntime {
+function makeRuntime(
+  save: (preferences: typeof defaultPreferences) => Promise<void>,
+  notificationPermissionService: NotificationPermissionAdapter = { getStatus: async () => 'unsupported', request: async () => 'unsupported' },
+): AppRuntime {
   return {
     alertService: {
       getFeed: async () => ({
@@ -22,6 +26,9 @@ function makeRuntime(save: (preferences: typeof defaultPreferences) => Promise<v
         retrievedAt: '2026-08-07T20:05:00.000Z',
       }),
     },
+    safetyResourceService: { getFeed: async () => ({ shelters: [], source: 'live', isOffline: false, isStale: false, retrievedAt: '2026-08-08T00:00:00.000Z', radiusMiles: 100 }) },
+    mapRoutingService: { openDestination: async () => undefined },
+    notificationPermissionService,
     preferencesRepository: {
       get: async () => ({
         ...defaultPreferences,
@@ -87,5 +94,37 @@ describe('preference screens', () => {
 
     await waitFor(() => expect(screen.queryByText('Houston, TX 77002')).not.toBeNull());
     expect(screen.queryByText(/Showing cached data/)).toBeNull();
+  });
+
+  it('shows the explicit web fallback for notification permissions', async () => {
+    const screen = await render(
+      <DisasterReadyProvider runtime={makeRuntime(async () => undefined)}>
+        <SettingsScreen />
+      </DisasterReadyProvider>,
+    );
+
+    await waitFor(() => expect(screen.getByText('Unavailable on web')).toBeTruthy());
+    expect(screen.getByText('Install the iOS or Android development build to request system notification permission.')).toBeTruthy();
+  });
+
+  it('requests native notification permission and persists the granted preference', async () => {
+    const save = jest.fn(async () => undefined);
+    const permissionService = {
+      getStatus: async () => 'not-determined' as const,
+      request: async () => 'granted' as const,
+    };
+    const screen = await render(
+      <DisasterReadyProvider runtime={makeRuntime(save, permissionService)}>
+        <SettingsScreen />
+      </DisasterReadyProvider>,
+    );
+
+    await waitFor(() => expect(screen.getByText('Not requested')).toBeTruthy());
+    await act(async () => {
+      fireEvent.press(screen.getByRole('button', { name: 'Enable emergency notifications' }));
+    });
+
+    await waitFor(() => expect(screen.getByText('Allowed')).toBeTruthy());
+    expect(save).toHaveBeenCalledWith(expect.objectContaining({ notificationsEnabled: true }));
   });
 });
