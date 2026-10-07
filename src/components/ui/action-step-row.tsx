@@ -2,7 +2,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { AppText } from '@/components/ui/app-text';
 import { Icon } from '@/components/ui/icon';
-import { colors, layout, radii, spacing } from '@/constants/tokens';
+import { colors, radii, spacing } from '@/constants/tokens';
 import type { ActionStep } from '@/domain/models';
 
 type ActionStepRowProps = {
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
     borderRadius: radii.md,
     backgroundColor: colors.surface,
   },
-  compact: { minHeight: layout.minTouchTarget, alignItems: 'center' },
+  compact: { minHeight: 52, alignItems: 'center', paddingVertical: 6 },
   rowComplete: { backgroundColor: colors.primarySoft, borderColor: '#BDD3FB' },
   pressed: { opacity: 0.66 },
   checkbox: {

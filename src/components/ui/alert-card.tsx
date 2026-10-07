@@ -26,7 +26,7 @@ export function AlertCard({ alert, onPress }: AlertCardProps) {
       onPress={onPress}
       style={({ pressed }) => pressed && styles.pressed}
       testID={`alert-card-${alert.id}`}>
-      <Card style={styles.card}>
+      <Card style={[styles.card, alert.status === 'active' && styles.activeCard]}>
         <View style={[styles.iconBox, alert.status === 'active' ? styles.iconDanger : styles.iconMuted]}>
           <Icon
             name={{ ios: 'exclamationmark.triangle.fill', android: 'warning', web: 'warning' }}
@@ -56,8 +56,9 @@ export function AlertCard({ alert, onPress }: AlertCardProps) {
 
 const styles = StyleSheet.create({
   pressed: { opacity: 0.72 },
-  card: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
-  iconBox: { width: 42, height: 42, borderRadius: radii.md, alignItems: 'center', justifyContent: 'center' },
+  card: { minHeight: 132, flexDirection: 'row', alignItems: 'center', gap: spacing.md },
+  activeCard: { borderColor: '#F3C4CB' },
+  iconBox: { width: 44, height: 44, borderRadius: radii.md, alignItems: 'center', justifyContent: 'center' },
   iconDanger: { backgroundColor: colors.dangerSoft },
   iconMuted: { backgroundColor: colors.surfaceMuted },
   content: { flex: 1, gap: 5 },

@@ -1,0 +1,71 @@
+import type { EvidenceHazard } from './shared';
+
+const exactEvents: Record<string, EvidenceHazard> = {
+  'Air Quality Alert': 'air-quality',
+  'Ashfall Advisory': 'air-quality',
+  'Blizzard Warning': 'winter-storm',
+  'Blizzard Watch': 'winter-storm',
+  'Coastal Flood Advisory': 'flood',
+  'Coastal Flood Statement': 'flood',
+  'Coastal Flood Warning': 'flood',
+  'Coastal Flood Watch': 'flood',
+  'Cold Weather Advisory': 'winter-storm',
+  'Extreme Cold Warning': 'winter-storm',
+  'Extreme Cold Watch': 'winter-storm',
+  'Extreme Fire Danger': 'wildfire',
+  'Fire Warning': 'wildfire',
+  'Fire Weather Watch': 'wildfire',
+  'Flash Flood Statement': 'flood',
+  'Flash Flood Warning': 'flood',
+  'Flash Flood Watch': 'flood',
+  'Flood Advisory': 'flood',
+  'Flood Statement': 'flood',
+  'Flood Warning': 'flood',
+  'Flood Watch': 'flood',
+  'Freeze Warning': 'winter-storm',
+  'Freeze Watch': 'winter-storm',
+  'Freezing Fog Advisory': 'winter-storm',
+  'Frost Advisory': 'winter-storm',
+  'Hard Freeze Warning': 'winter-storm',
+  'Hard Freeze Watch': 'winter-storm',
+  'Heavy Freezing Spray Warning': 'winter-storm',
+  'Heavy Freezing Spray Watch': 'winter-storm',
+  'Hurricane Force Wind Warning': 'hurricane',
+  'Hurricane Force Wind Watch': 'hurricane',
+  'Hurricane Local Statement': 'hurricane',
+  'Hurricane Statement': 'hurricane',
+  'Hurricane Warning': 'hurricane',
+  'Hurricane Watch': 'hurricane',
+  'Hydrologic Outlook': 'flood',
+  'Ice Storm Warning': 'winter-storm',
+  'Lakeshore Flood Advisory': 'flood',
+  'Lakeshore Flood Statement': 'flood',
+  'Lakeshore Flood Warning': 'flood',
+  'Lakeshore Flood Watch': 'flood',
+  'Lake Effect Snow Warning': 'winter-storm',
+  'Lake Effect Snow Watch': 'winter-storm',
+  'Red Flag Warning': 'wildfire',
+  'Snow Squall Warning': 'winter-storm',
+  'Storm Surge Warning': 'hurricane',
+  'Storm Surge Watch': 'hurricane',
+  'Tornado Warning': 'tornado',
+  'Tornado Watch': 'tornado',
+  'Tropical Cyclone Local Statement': 'hurricane',
+  'Tropical Depression Local Statement': 'hurricane',
+  'Tropical Storm Local Statement': 'hurricane',
+  'Tropical Storm Warning': 'hurricane',
+  'Tropical Storm Watch': 'hurricane',
+  'Wildfire Daily Air Quality Alert': 'air-quality',
+  'Winter Storm Warning': 'winter-storm',
+  'Winter Storm Watch': 'winter-storm',
+  'Winter Weather Advisory': 'winter-storm',
+};
+
+export function expectedHazardForEvent(event: string): EvidenceHazard {
+  return exactEvents[event.trim()] ?? 'other';
+}
+
+export function reviewedEvents(): string[] {
+  return Object.keys(exactEvents).sort();
+}
+

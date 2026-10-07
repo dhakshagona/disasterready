@@ -10,7 +10,7 @@ const input: PlainLanguageInput = {
 };
 
 describe('Supabase plain-language provider', () => {
-  it('calls the server-side simplifier without exposing an OpenAI credential', async () => {
+  it('calls the server-side simplifier without exposing a model-provider credential', async () => {
     const fetcher = jest.fn(async () => new Response(JSON.stringify({
       status: 'ok',
       output: { plainSummary: 'Move to higher ground immediately. Do not drive through floodwater.' },
@@ -65,5 +65,18 @@ describe('Supabase plain-language provider', () => {
     });
 
     await expect(provider.simplify(input)).rejects.toThrow('Plain-language request failed with status 503');
+  });
+
+  it('uses only the public apikey for modern Supabase publishable keys', async () => {
+    const fetcher = jest.fn<(input: string, init?: RequestInit) => Promise<Response>>(async () => new Response(JSON.stringify({ status: 'fallback', reason: 'rate-limited' }), { status: 200 }));
+    const provider = new SupabasePlainLanguageProvider({
+      projectUrl: 'https://project.supabase.co',
+      publishableKey: 'sb_publishable_test',
+      fetcher,
+    });
+
+    await expect(provider.simplify(input)).rejects.toEqual(expect.objectContaining({ reason: 'rate-limited' }));
+    const options = fetcher.mock.calls[0]?.[1];
+    expect(options?.headers).not.toHaveProperty('Authorization');
   });
 });

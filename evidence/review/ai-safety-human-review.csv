@@ -1,0 +1,660 @@
+evaluation_id,provider_id,hazard,pipeline_status,fallback_reason,official_text,model_summary,critical_actions_preserved,unsupported_instructions,hazard_accuracy,clarity_1_to_5,dangerous_contradiction,reviewer_notes
+"ai-eval-0001","urn:oid:2.49.0.1.840.0.0ef51a0df0c41327cf2d6ff8bf1f6d2da9ff9d8f.001.1","air-quality","not-attempted","","To protect your health, if you smell or see smoke:
+
+* Remain indoors with windows and doors closed
+* Avoid intense outdoor physical activity
+* Run your air conditioner and/or an air purifier
+* If you must be outdoors, keep the time brief and wear a well-
+fitting N-95 mask
+* Do not use whole house fans or swamp coolers that bring in
+outside air if you have other methods to stay cool
+* Avoid other sources of pollution such as fireplaces, candles,
+incense, grilling, and gasoline-powered lawn and garden
+equipment","","","","","","",""
+"ai-eval-0002","urn:oid:2.49.0.1.840.0.00623be375c575c2b7d7bbaf1556f791a70b5f54.001.1","flood","not-attempted","","The Flood Advisory has been cancelled and is no longer in effect.","","","","","","",""
+"ai-eval-0003","urn:oid:2.49.0.1.840.0.11e03cad364d50ed08e080132b94b5e3b11e5b94.029.1","hurricane","not-attempted","","Coastal Waters Forecast for Southwest Alaska+Bristol Bay+The
+Alaska Peninsula Waters and the Aleutian Islands up to 100 nm out.
+
+Wind forecasts reflect the predominant speed and direction
+expected. Sea forecasts represent an average of the highest
+one-third of the combined wind wave and swell height.
+
+.TODAY...SW wind 20 kt becoming S 35 kt in the afternoon. Seas 8
+ft. Rain.
+.TONIGHT...S wind 45 kt. Seas 19 ft. Rain.
+.WED...S wind 45 kt increasing to 65 kt in the afternoon. Seas 21
+ft building to 27 ft in the afternoon. Rain.
+.WED NIGHT...W wind 50 kt. Seas 30 ft.
+.THU...SW wind 45 kt. Seas 31 ft.
+.FRI...W wind 40 kt. Seas 30 ft.
+.SAT...W wind 30 kt. Seas 19 ft.","","","","","","",""
+"ai-eval-0005","urn:oid:2.49.0.1.840.0.0ccf5f3d490508c8c611504566c076683dec766f.001.1","tornado","not-attempted","","Move to an interior room on the lowest floor of a well-built building
+away from windows. If you are outdoors, in a mobile home, or in a
+vehicle, move to the closest substantial shelter and protect yourself
+from flying debris.
+
+Heavy rainfall is hiding this tornado. Do not wait to see or hear the
+tornado. Take cover now!
+
+Report severe weather to your nearest law enforcement agency or the
+National Weather Service office in Hastings NE.","","","","","","",""
+"ai-eval-0006","urn:oid:2.49.0.1.840.0.1924840fde1643ff350dd822b8cd2942c0951206.001.1","wildfire","not-attempted","","...RED FLAG WARNING REMAINS IN EFFECT FROM NOON TO 6 PM MDT MONDAY
+DUE TO WIND AND LOW RELATIVE HUMIDITY FOR A PORTION OF WY...
+
+* AFFECTED AREA...Portions of southeast Wyoming.
+
+* TIMING...From noon to 6 PM MDT Monday.
+
+* WINDS...West winds 10 to 20 mph with gusts up to 35 mph.
+
+* RELATIVE HUMIDITY...Relative Humidity between 10 to 15 percent.
+
+* IMPACTS...Any fires that develop will spread rapidly. Outdoor
+burning is not recommended.","","","","","","",""
+"ai-eval-0007","urn:oid:2.49.0.1.840.0.00b592bdf075f15b36c7f704791f0c797300c8cb.001.1","winter-storm","not-attempted","","Take steps now to protect tender plants from the cold.","","","","","","",""
+"ai-eval-0008","urn:oid:2.49.0.1.840.0.2f61bc5a50a02bbb4db4898cc18b1ec29c225e3c.001.1","air-quality","not-attempted","","To protect your health, check air quality levels and act as needed:
+
+* When Air Quality Index (AQI) levels are ""Unhealthy for
+Sensitive Groups"" (orange), sensitive groups as specified
+above should limit extended or intense outdoor activity.
+* When AQI is ""Unhealthy"" (red), everyone may experience health
+impacts. Sensitive groups should avoid extended time outdoors.
+* When AQI is ""Very Unhealthy"" (purple), sensitive groups should
+avoid all outdoor physical activity. Everyone else should
+avoid extended or intense outdoor activity.
+* When AQI is ""Hazardous"" (maroon), everyone should avoid all
+outdoor physical activity.
+
+* ADDITIONAL DETAILS...
+
+To help keep indoor air clean when air quality is poor:
+
+* Keep windows and doors closed
+* Run your air conditioner and/or an air purifier
+* Do not use whole house fans or swamp coolers that bring in
+outside air if you have other methods to stay cool
+* Avoid other sources of pollution such as fireplaces, candles,
+incense, grilling, and gasoline-powered lawn and garden
+equipment
+
+To help minimize outdoor particle pollution levels:
+
+* Carpool, telecommute, reduce trips, or take public
+transportation
+* Slow down if driving on dirt roads
+* Stabilize loose soils","","","","","","",""
+"ai-eval-0009","urn:oid:2.49.0.1.840.0.00ab0dd27d4558e6a7c8b9f4ee0412d1ac51c363.001.1","flood","not-attempted","","The Flood Advisory has been cancelled and is no longer in effect.","","","","","","",""
+"ai-eval-0010","urn:oid:2.49.0.1.840.0.20876e6fcb096d6d7bd4691a232b1fd6dba11824.001.1","hurricane","not-attempted","","Stay indoors during heavy rain and tropical storm-force wind
+conditions associated with Tropical Storm Choi-wan (26W). Heed the
+advice of your local emergency managers and officials, and
+continue to monitor forecasts by the National Weather Service
+office in Tiyan, Guam. Remain in sturdy shelter until the all-
+clear is given.
+
+Preparations for Tropical Storm Choi-wan should be complete, or
+rapidly rushed to completion. Take small loose object indoors.
+Remain in suitable shelter. If no concrete shelter is available,
+look for a cave or something similar. Shelter in place until the
+all-clear is given.
+
+.WIND INFORMATION...
+North to northeast winds of 15 to 25 mph will turn toward the
+southeast and increase through Friday as Choi-wan moves west
+across the northern CNMI and strengthens, potentially becoming a
+typhoon Friday night to the west of Alamagan and Pagan as it turns
+to the north. Tropical storm force winds of 39 to 50 mph look to
+continue through Sunday. Depending on the track and intensity,
+winds may increase to strong tropical storm-force of 58 to 65 mph
+early Saturday morning. Typhoon force winds greater than 74 mph
+look to remain possible during closest passage.
+
+.COASTAL INUNDATION AND SURF INFORMATION...
+Surf will initially build to 8 to 12 feet along east-facing reefs
+through Friday morning, then spread along north and west-facing
+reefs as the center moves north-northeast west of the northern
+CNMI Friday night through Saturday night, increasing by several
+feet during this time. As Choi-wan continues to strengthen, surf
+will continue to increase, likely becoming dangerous by early next
+week. Significant coastal erosion and some coastal inundation is
+expected during Choi-wan's passage.
+
+.OTHER STORM EFFECTS...
+Periods of rain, widespread heavy showers and scattered thunderstorms
+could produce rainfall totals of 10 to 16 inches by early Monday
+morning, with up to 20 inches of rainfall possible near the center of
+the system.","","","","","","",""
+"ai-eval-0012","urn:oid:2.49.0.1.840.0.28483804906e392b8b6635dbfcda1b61ed3bcae1.001.1","tornado","not-attempted","","The Tornado Watch has been cancelled and is no longer in effect.","","","","","","",""
+"ai-eval-0013","urn:oid:2.49.0.1.840.0.1b96fa1e984193f6c5f148f3ac0710ed28d8f13f.001.1","wildfire","not-attempted","","A Red Flag Warning means that critical fire weather conditions are
+either occurring now....or will shortly. A combination of strong
+winds...low relative humidity...and warm temperatures can
+contribute to extreme fire behavior.","","","","","","",""
+"ai-eval-0014","urn:oid:2.49.0.1.840.0.00d4c7414fbc62493b4405917ea3da3919fa0224.001.1","winter-storm","not-attempted","","Take steps now to protect tender plants from the cold.","","","","","","",""
+"ai-eval-0015","urn:oid:2.49.0.1.840.0.5032f341cefbbdd59fb6b91038b3407f8ad5617f.001.1","air-quality","not-attempted","","To protect your health, check air quality levels and act as needed:
+
+* When Air Quality Index (AQI) levels are ""Unhealthy for
+Sensitive Groups"" (orange), sensitive groups as specified
+above should limit extended or intense outdoor activity.
+* When AQI is ""Unhealthy"" (red), everyone may experience health
+impacts. Sensitive groups should avoid extended time outdoors.
+* When AQI is ""Very Unhealthy"" (purple), sensitive groups should
+avoid all outdoor physical activity. Everyone else should
+avoid extended or intense outdoor activity.
+* When AQI is ""Hazardous"" (maroon), everyone should avoid all
+outdoor physical activity.
+
+* ADDITIONAL DETAILS...
+
+To help keep indoor air clean when air quality is poor:
+
+* Keep windows and doors closed
+* Run your air conditioner and/or an air purifier
+* Do not use whole house fans or swamp coolers that bring in
+outside air if you have other methods to stay cool
+* Avoid other sources of pollution such as fireplaces, candles,
+incense, grilling, and gasoline-powered lawn and garden
+equipment
+
+To help minimize outdoor particle pollution levels:
+
+* Carpool, telecommute, reduce trips, or take public
+transportation
+* Slow down if driving on dirt roads
+* Stabilize loose soils","","","","","","",""
+"ai-eval-0016","urn:oid:2.49.0.1.840.0.00f396c75edc76293c894aa053c5498386ab8dab.001.1","flood","not-attempted","","Turn around, don't drown when encountering flooded roads. Most flood
+deaths occur in vehicles.
+
+This product, along with additional weather and stream information,
+is available at https://water.noaa.gov/wfo/lsx","","","","","","",""
+"ai-eval-0017","urn:oid:2.49.0.1.840.0.33b02d8fb5fd13dc886fd869faddba525f648e20.002.1","hurricane","not-attempted","","A tropical storm warning means sustained winds of 34 to 63 kt are
+expected due to a tropical storm within 36 hours.","","","","","","",""
+"ai-eval-0019","urn:oid:2.49.0.1.840.0.28483804906e392b8b6635dbfcda1b61ed3bcae1.002.1","tornado","not-attempted","","TORNADO WATCH 675 REMAINS VALID UNTIL 11 PM CDT THIS EVENING FOR
+THE FOLLOWING AREAS
+
+IN KANSAS THIS WATCH INCLUDES 1 COUNTY
+
+IN NORTH CENTRAL KANSAS
+
+CLOUD
+
+THIS INCLUDES THE CITIES OF CONCORDIA.","","","","","","",""
+"ai-eval-0020","urn:oid:2.49.0.1.840.0.1b96fa1e984193f6c5f148f3ac0710ed28d8f13f.001.2","wildfire","not-attempted","","A Red Flag Warning means that critical fire weather conditions are
+either occurring now....or will shortly. A combination of strong
+winds...low relative humidity...and warm temperatures can
+contribute to extreme fire behavior.","","","","","","",""
+"ai-eval-0021","urn:oid:2.49.0.1.840.0.02f33c5e342e4c57bdda1f615315510a7450750e.001.1","winter-storm","not-attempted","","Take steps now to protect tender plants from the cold.","","","","","","",""
+"ai-eval-0022","urn:oid:2.49.0.1.840.0.6a61a5e4ce0c1771a6306d7717882f688d00e5e4.001.1","air-quality","not-attempted","","AQAFWDThe Texas Commission on Environmental Quality (TCEQ) has issued an Ozone Action Day for the Dallas-Fort Worth area for Wednesday, October 7, 2026.  Atmospheric conditions are expected to be favorable for producing high levels of ozone air pollution in the Dallas-Fort Worth area on Wednesday. You can help prevent ozone pollution by sharing a ride, walking, riding a bicycle, taking your lunch to work, avoiding drive-through lanes, conserving energy, and keeping your vehicle properly tuned.  For more information on ozone:  Ozone: The Facts (www.tceq.texas.gov/goto/ozonefacts)  Air North Texas: (www.airnorthtexas.org)  EPA Air Now (www.airnow.gov/index.cfm?action.local_state&STATEID=45&TAB=0)  Take care of Texas (www.takecareoftexas.org)  North Central Texas Council of Governments Air Quality (www.nctcog.org/trans/air/index.asp)","","","","","","",""
+"ai-eval-0023","urn:oid:2.49.0.1.840.0.0177bb252e360c1750fdebd78ea6cc74980dc5af.001.1","flood","not-attempted","","Turn around, don't drown when encountering flooded roads. Most flood
+deaths occur in vehicles.","","","","","","",""
+"ai-eval-0024","urn:oid:2.49.0.1.840.0.4a8ac29cd8f5b7da8ee8216006d836b7275b48d9.001.1","hurricane","not-attempted","","Stay indoors during heavy rain and tropical storm-force wind conditions
+associated with Tropical Storm Choi-wan (26W). Heed the advice of
+your local emergency managers and officials, and continue to monitor
+forecasts by the National Weather Service office in Tiyan, Guam.
+Remain in sturdy shelter until the all-clear is given.
+
+Take small loose object indoors. Identify suitable shelter. Stock up
+a few days worth of food and water. If no concrete shelter is
+available, look for a cave or something similar. Take action to
+protect food crops or other possessions as appropriate.
+
+.WIND INFORMATION...
+Northerly winds of 10 to 15 mph will turn toward the northeast, then
+southeast and increase through Friday as Choi-wan moves into the
+northern CNMI and strengthens, potentially becoming a typhoon Friday
+afternoon as it approaches Agrihan from the south-southwest.
+Tropical storm force winds of 39 to 50 mph may begin by Friday.
+Depending on the track and intensity, winds may increase to strong
+tropical storm-force of 58 to 65 mph early Saturday morning. Typhoon
+force winds greater than 74 mph now look to remain just west of
+Agrihan at this time.
+
+.COASTAL INUNDATION AND SURF INFORMATION...
+Surf will initially build to 8 to 11 feet along east-facing reefs
+through Friday morning, then spread along north and west-facing reefs
+as the center moves north-northeast through the northern CNMI Friday
+night through Saturday night, increasing by several feet during this
+time. As Choi-wan continues to strengthen, surf will continue to
+increase, likely becoming hazardous during the weekend and then
+dangerous by early next week. Significant coastal erosion and some
+coastal inundation is expected during Choi-wan's passage.
+
+.OTHER STORM EFFECTS...
+Periods of rain, widespread heavy showers and scattered thunderstorms
+could produce rainfall totals of 8 to 14 inches by early Monday
+morning, with up to 20 inches of rainfall possible near the center of
+the system.
+
+Take small loose object indoors. Identify suitable shelter. Stock up
+a few days worth of food and water. If no concrete shelter is
+available, look for a cave or something similar. Take action to
+protect food crops or other possessions as appropriate.
+
+.WIND INFORMATION...
+Northerly winds of 10 to 15 mph will turn toward the northeast, then
+southeast and increase through Friday as Choi-wan moves into the
+northern CNMI and strengthens, potentially becoming a typhoon Friday
+afternoon as it approaches Alamagan and Pagan from the south-
+southwest. Tropical storm force winds of 39 to 50 mph may begin by
+Friday. Depending on the track and intensity, winds may increase to
+strong tropical storm-force of 58 to 65 mph early Saturday morning.
+Typhoon force winds greater than 74 mph look to remain possible
+during closest passage.
+
+.COASTAL INUNDATION AND SURF INFORMATION...
+Surf will initially build to 8 to 11 feet along east-facing reefs
+through Friday morning, then spread along north and west-facing reefs
+as the center moves north-northeast through the northern CNMI Friday
+night through Saturday night, increasing by several feet during this
+time. As Choi-wan continues to strengthen, surf will continue to
+increase, likely becoming hazardous during the weekend and then
+dangerous by early next week. Significant coastal erosion and some
+coastal inundation is expected during Choi-wan's passage.
+
+.OTHER STORM EFFECTS...
+Periods of rain, widespread heavy showers and scattered thunderstorms
+could produce rainfall totals of 10 to 16 inches by early Monday
+morning, with up to 20 inches of rainfall possible near the center of
+the system.","","","","","","",""
+"ai-eval-0026","urn:oid:2.49.0.1.840.0.2eb07ea88355501a77bb3d2569dcd8f78bb0c0a6.001.1","tornado","not-attempted","","The Tornado Warning has been cancelled and is no longer in effect.","","","","","","",""
+"ai-eval-0027","urn:oid:2.49.0.1.840.0.2a96c404fb7c38a834fc86f7f533374e5ed6978a.001.1","wildfire","not-attempted","","A Red Flag Warning means that critical fire weather conditions are
+either occurring now, or will shortly. A combination of strong
+winds, low relative humidity, and warm temperatures can contribute
+to extreme fire behavior.","","","","","","",""
+"ai-eval-0028","urn:oid:2.49.0.1.840.0.0938fb89dcec4c9763e272983a52dca2084e45fc.001.1","winter-storm","not-attempted","","Take steps now to protect tender plants from the cold.","","","","","","",""
+"ai-eval-0029","urn:oid:2.49.0.1.840.0.01995f1c2749e12142be08462f9abe59f7988587.001.1","flood","not-attempted","","Turn around, don't drown when encountering flooded roads. Most flood
+deaths occur in vehicles.","","","","","","",""
+"ai-eval-0030","urn:oid:2.49.0.1.840.0.4bbd4d93b2f994fe75c34c3c325cb3ca539d7f8b.023.1","hurricane","not-attempted","","Coastal Waters Forecast for Southwest Alaska+Bristol Bay+The Alaska Peninsula Waters and the Aleutian Islands up to 100 nm out.  Wind forecasts reflect the predominant speed and direction expected. Sea forecasts represent an average of the highest one-third of the combined wind wave and swell height..TONIGHT...Variable wind 10 kt becoming S 20 kt after midnight. Seas 6 ft. .WED...S wind 40 kt. Seas 6 ft building to 16 ft in the afternoon. .WED NIGHT...S wind 65 kt becoming SW 50 kt after midnight. Seas 27 ft. Rain. .THU AND THU NIGHT...SW wind 30 kt. Seas 15 ft. .FRI...SW wind 40 kt. Seas 18 ft. .SAT THROUGH SUN...W wind 30 kt. Seas 14 ft.","","","","","","",""
+"ai-eval-0032","urn:oid:2.49.0.1.840.0.30cc78e9183ceb541a20e589f3bebfb7337911e0.001.1","tornado","not-attempted","","The Tornado Watch has been cancelled and is no longer in effect.","","","","","","",""
+"ai-eval-0033","urn:oid:2.49.0.1.840.0.45d2e070a2c5a90bc14e8116cb84b3297dd8840a.001.1","wildfire","not-attempted","","The Red Flag Warning has been cancelled and is no longer in effect.","","","","","","",""
+"ai-eval-0034","urn:oid:2.49.0.1.840.0.0938fb89dcec4c9763e272983a52dca2084e45fc.002.1","winter-storm","not-attempted","","Take steps now to protect tender plants from the cold.","","","","","","",""
+"ai-eval-0035","urn:oid:2.49.0.1.840.0.01c3b93387983a84e9b6041577e83f2d50dda480.001.1","flood","not-attempted","","Persons with interests along this river need to remain aware of the
+latest forecasts and associated flood risk for their area. Stay tuned
+for further updates on this flooding situation.
+
+Additional information is available at www.weather.gov.
+
+The next statement will be issued this evening at 830 PM CDT.","","","","","","",""
+"ai-eval-0036","urn:oid:2.49.0.1.840.0.4bbd4d93b2f994fe75c34c3c325cb3ca539d7f8b.026.1","hurricane","not-attempted","","Coastal Waters Forecast for Southwest Alaska+Bristol Bay+The Alaska Peninsula Waters and the Aleutian Islands up to 100 nm out.  Wind forecasts reflect the predominant speed and direction expected. Sea forecasts represent an average of the highest one-third of the combined wind wave and swell height..TONIGHT...SW wind 25 kt becoming S 40 kt after midnight. Seas 5 ft building to 9 ft after midnight. Rain. .WED...S wind 45 kt increasing to 55 kt in the afternoon. Seas 16 ft building to 24 ft in the afternoon. Rain. .WED NIGHT...S wind 70 kt becoming W 40 kt after midnight. Seas 30 ft subsiding to 21 ft after midnight. Rain. .THU AND THU NIGHT...SW wind 40 kt. Seas 22 ft. .FRI...SW wind 40 kt. Seas 23 ft. .SAT THROUGH SUN...W wind 30 kt. Seas 14 ft.","","","","","","",""
+"ai-eval-0038","urn:oid:2.49.0.1.840.0.30cc78e9183ceb541a20e589f3bebfb7337911e0.002.1","tornado","not-attempted","","TORNADO WATCH 675 REMAINS VALID UNTIL 11 PM CDT THIS EVENING FOR
+THE FOLLOWING AREAS
+
+IN KANSAS THIS WATCH INCLUDES 2 COUNTIES
+
+IN NORTH CENTRAL KANSAS
+
+CLOUD                 OTTAWA
+
+THIS INCLUDES THE CITIES OF BENNINGTON, CONCORDIA,
+AND MINNEAPOLIS.","","","","","","",""
+"ai-eval-0039","urn:oid:2.49.0.1.840.0.75c78f793d94b56b66d572d099303ad68cd2c79e.001.1","wildfire","not-attempted","","A Red Flag Warning means that critical fire weather conditions are
+either occurring now, or will shortly. A combination of strong
+winds, low relative humidity, and warm temperatures can contribute
+to extreme fire behavior.","","","","","","",""
+"ai-eval-0040","urn:oid:2.49.0.1.840.0.0938fb89dcec4c9763e272983a52dca2084e45fc.003.1","winter-storm","not-attempted","","Take steps now to protect tender plants from the cold.","","","","","","",""
+"ai-eval-0041","urn:oid:2.49.0.1.840.0.01c47cf2dccc8f29694ac6577b0dda535f861d3d.001.1","flood","not-attempted","","Turn around, don't drown when encountering flooded roads. Most flood
+deaths occur in vehicles.
+
+In hilly terrain there are hundreds of low water crossings which are
+potentially dangerous in heavy rain. Do not attempt to cross flooded
+roads. Find an alternate route.","","","","","","",""
+"ai-eval-0042","urn:oid:2.49.0.1.840.0.4bbd4d93b2f994fe75c34c3c325cb3ca539d7f8b.027.1","hurricane","not-attempted","","Coastal Waters Forecast for Southwest Alaska+Bristol Bay+The Alaska Peninsula Waters and the Aleutian Islands up to 100 nm out.  Wind forecasts reflect the predominant speed and direction expected. Sea forecasts represent an average of the highest one-third of the combined wind wave and swell height..TONIGHT...SW wind 20 kt becoming S 40 kt after midnight. Seas 8 ft. Rain. .WED...S wind 45 kt increasing to 55 kt in the afternoon. Seas 14 ft building to 27 ft in the afternoon. Rain. .WED NIGHT...S wind 65 kt becoming W 35 kt after midnight. Seas 29 ft subsiding to 21 ft after midnight. Rain. .THU...SW wind 35 kt. Seas 20 ft. .THU NIGHT...SW wind 40 kt. Seas 22 ft. .FRI...SW wind 40 kt. Seas 22 ft. .SAT...W wind 30 kt. Seas 19 ft. .SUN...W wind 25 kt. Seas 15 ft.","","","","","","",""
+"ai-eval-0044","urn:oid:2.49.0.1.840.0.6c7d559f484cab98548d2389561c5f505ac29294.001.1","tornado","not-attempted","","THE NATIONAL WEATHER SERVICE WILL ALLOW TORNADO WATCH 675 TO
+EXPIRE AT 11 PM CDT THIS EVENING FOR THE FOLLOWING AREAS
+
+IN KANSAS THIS ALLOWS TO EXPIRE 1 COUNTY
+
+IN NORTH CENTRAL KANSAS
+
+CLOUD
+
+THIS INCLUDES THE CITIES OF CONCORDIA.","","","","","","",""
+"ai-eval-0045","urn:oid:2.49.0.1.840.0.75c78f793d94b56b66d572d099303ad68cd2c79e.001.2","wildfire","not-attempted","","A Red Flag Warning means that critical fire weather conditions are
+either occurring now, or will shortly. A combination of strong
+winds, low relative humidity, and warm temperatures can contribute
+to extreme fire behavior.","","","","","","",""
+"ai-eval-0046","urn:oid:2.49.0.1.840.0.0938fb89dcec4c9763e272983a52dca2084e45fc.004.1","winter-storm","not-attempted","","Take steps now to protect tender plants from the cold.","","","","","","",""
+"ai-eval-0047","urn:oid:2.49.0.1.840.0.0216c1f2c05d084ad9537d25d4f4dc933c582680.001.1","flood","not-attempted","","Turn around, don't drown when encountering flooded roads. Most flood
+deaths occur in vehicles.
+
+Be especially cautious at night when it is harder to recognize the
+dangers of flooding.
+
+This product along with additional weather and stream information is
+available at www.weather.gov/kc/.","","","","","","",""
+"ai-eval-0048","urn:oid:2.49.0.1.840.0.4bbd4d93b2f994fe75c34c3c325cb3ca539d7f8b.029.1","hurricane","not-attempted","","Coastal Waters Forecast for Southwest Alaska+Bristol Bay+The Alaska Peninsula Waters and the Aleutian Islands up to 100 nm out.  Wind forecasts reflect the predominant speed and direction expected. Sea forecasts represent an average of the highest one-third of the combined wind wave and swell height..TONIGHT...S wind 45 kt. Seas 19 ft. Rain. .WED...S wind 45 kt increasing to 70 kt in the afternoon. Seas 21 ft building to 30 ft in the afternoon. Rain. .WED NIGHT...W wind 50 kt. Gusts to 65 kt. Seas 27 ft. .THU AND THU NIGHT...SW wind 45 kt. Seas 27 ft. .FRI...W wind 40 kt. Seas 27 ft. .SAT...W wind 30 kt. Seas 18 ft. .SUN...W wind 25 kt. Seas 13 ft.","","","","","","",""
+"ai-eval-0050","urn:oid:2.49.0.1.840.0.6e9f2b4102f1f366fce3b121e9a4be413833827f.001.1","tornado","not-attempted","","TAKE COVER NOW! Move to a basement or an interior room on the lowest
+floor of a sturdy building. Avoid windows. If you are outdoors, in a
+mobile home, or in a vehicle, move to the closest substantial shelter
+and protect yourself from flying debris.
+
+Torrential rainfall is occurring with this storm, and may lead to
+flash flooding. Do not drive your vehicle through flooded roadways.","","","","","","",""
+"ai-eval-0051","urn:oid:2.49.0.1.840.0.7d4f64384ca9082d244d5fef9633f0b0f8873c21.001.1","wildfire","not-attempted","","The Fire Weather Watch has been replaced. Please see the latest information from NWS Cheyenne WY on this developing situation.","","","","","","",""
+"ai-eval-0052","urn:oid:2.49.0.1.840.0.0938fb89dcec4c9763e272983a52dca2084e45fc.005.1","winter-storm","not-attempted","","Take steps now to protect tender plants from the cold.","","","","","","",""
+"ai-eval-0053","urn:oid:2.49.0.1.840.0.0236f09c3e97d448a5d262bfed16d17c2064ad47.001.1","flood","not-attempted","","Turn around, don't drown when encountering flooded roads. Most flood
+deaths occur in vehicles.
+
+Report flooding directly to the Charleston National Weather Service
+at 1-888-383-2024 or email your reports to nws.charlestonsc@noaa.gov.","","","","","","",""
+"ai-eval-0054","urn:oid:2.49.0.1.840.0.81019f123a6d5f5cae015e2c7cd5c2725f08c301.001.1","hurricane","not-attempted","","A tropical storm warning means sustained winds of 34 to 63 kt are
+expected due to a tropical storm within 36 hours.","","","","","","",""
+"ai-eval-0056","urn:oid:2.49.0.1.840.0.6fef974e88e509b8493ac9b885b982d687b5e21b.001.1","tornado","not-attempted","","THE NATIONAL WEATHER SERVICE HAS ALLOWED TORNADO WATCH 675 TO
+EXPIRE FOR THE FOLLOWING AREAS
+
+IN KANSAS THIS ALLOWS TO EXPIRE 2 COUNTIES
+
+IN NORTH CENTRAL KANSAS
+
+MITCHELL              OSBORNE
+
+THIS INCLUDES THE CITIES OF BELOIT, DOWNS, AND OSBORNE.","","","","","","",""
+"ai-eval-0057","urn:oid:2.49.0.1.840.0.7d4f64384ca9082d244d5fef9633f0b0f8873c21.001.2","wildfire","not-attempted","","...RED FLAG WARNING IN EFFECT FROM NOON TO 6 PM MDT MONDAY DUE TO
+WIND AND LOW RELATIVE HUMIDITY FOR A PORTION OF WY...
+
+The National Weather Service in Cheyenne WY has issued a Red Flag
+Warning in effect from noon to 6 PM MDT Monday.
+
+* AFFECTED AREA...Fire Weather Zones 418 through 422, 427, 430, and
+432.
+
+* TIMING...From noon to 6 PM MDT Monday.
+
+* WINDS...West winds 10 to 20 mph with gusts up to 35 mph.
+
+* RELATIVE HUMIDITY...Relative Humidity between 10 to 20 percent.
+
+* IMPACTS...Any fires that develop will spread rapidly. Outdoor
+burning is not recommended.","","","","","","",""
+"ai-eval-0058","urn:oid:2.49.0.1.840.0.09854390a51689d3aed2927245268b15a486cb56.001.1","winter-storm","not-attempted","","Take steps now to protect tender plants from the cold.","","","","","","",""
+"ai-eval-0059","urn:oid:2.49.0.1.840.0.024a94cb98ca4c8c0e2d9995caf414120ad93c79.001.1","flood","not-attempted","","Turn around, don't drown when encountering flooded roads. Most flood
+deaths occur in vehicles.
+
+Be especially cautious at night when it is harder to recognize the
+dangers of flooding.
+
+Be aware of your surroundings and do not drive on flooded roads.
+
+Please report observed flooding to local emergency services or law
+enforcement and request they pass this information to the National
+Weather Service when you can do so safely.","","","","","","",""
+"ai-eval-0060","urn:oid:2.49.0.1.840.0.8d9b92c5c94ae99f4f6271303761c66a8d3a5e2a.001.1","hurricane","not-attempted","","Stay indoors during heavy rain and tropical storm-force wind
+conditions associated with Typhoon Choi-wan (26W). Heed the
+advice of your local emergency managers and officials, and
+continue to monitor forecasts by the National Weather Service
+office in Tiyan, Guam. Remain in sturdy shelter until the all-
+clear is given.
+
+Remain in suitable shelter, such as a cave or sturdy concrete
+structure. Shelter in place until the all-clear is given.
+
+.WIND INFORMATION...
+Typhoon winds of 74 mph or more will continue for Alamagan and
+Pagan into this afternoon as Choi-wan moves north-northeast
+through the northern CNMI and strengthens, arriving at Agrihan
+later this morning. On either side of the typhoon-force winds,
+tropical storm force winds of 39 to 73 mph look to continue
+through at least Sunday morning.
+
+.COASTAL INUNDATION AND SURF INFORMATION...
+Hazardous surf of 10 to 14 feet along north, south, and west
+facing reefs are expected to continue as the center moves north-
+northeast parallel to the northern CNMI through Saturday night,
+increasing by several feet during the time of nearest passage. As
+Choi-wan continues to strengthen, surf will continue to increase,
+likely becoming dangerous Saturday and Sunday. Significant
+coastal erosion and some coastal inundation is expected during
+Choi-wan's passage.
+
+.OTHER STORM EFFECTS...
+Periods of rain, widespread heavy showers and scattered
+thunderstorms are expected through tonight, which is expected to
+produce rainfall totals of 8 to 14 inches by early Monday morning,
+with up to 20 inches of rainfall possible near the center of the
+system.","","","","","","",""
+"ai-eval-0062","urn:oid:2.49.0.1.840.0.8f3bb0dd40ef4b6afb7abeeb20b6962b63929a2d.001.1","tornado","not-attempted","","The Tornado Watch has been cancelled and is no longer in effect.","","","","","","",""
+"ai-eval-0063","urn:oid:2.49.0.1.840.0.92c196bb5121d372f0e40939ce681fc28a721e4f.001.1","wildfire","not-attempted","","A Red Flag Warning means that critical fire weather conditions are
+either occurring now....or will shortly. A combination of strong
+winds...low relative humidity...and warm temperatures can
+contribute to extreme fire behavior.","","","","","","",""
+"ai-eval-0064","urn:oid:2.49.0.1.840.0.09854390a51689d3aed2927245268b15a486cb56.002.1","winter-storm","not-attempted","","Take steps now to protect tender plants from the cold.","","","","","","",""
+"ai-eval-0065","urn:oid:2.49.0.1.840.0.0259eb9cb0e47b8dfc8ecb19e352cd94aa195faf.001.1","flood","not-attempted","","Turn around, don't drown when encountering flooded roads. Most flood
+deaths occur in vehicles.
+
+Be especially cautious at night when it is harder to recognize the
+dangers of flooding.
+
+Be aware of your surroundings and do not drive on flooded roads.","","","","","","",""
+"ai-eval-0066","urn:oid:2.49.0.1.840.0.93c2485ac0b81f92894e06d980d02cfe8b4d8221.002.1","hurricane","not-attempted","","A tropical storm warning means sustained winds of 34 to 63 kt are
+expected due to a tropical storm within 36 hours.","","","","","","",""
+"ai-eval-0068","urn:oid:2.49.0.1.840.0.9e5e9446404cdf1732086f2210be8c9364914102.001.1","tornado","not-attempted","","The Tornado Watch has been cancelled and is no longer in effect.","","","","","","",""
+"ai-eval-0069","urn:oid:2.49.0.1.840.0.9564a3511c27488e1440f5bd0663f886f4b40f9d.001.1","wildfire","not-attempted","","Winds will continue to decrease this evening. Thus, the Red Flag
+Warning will be allowed to expire.","","","","","","",""
+"ai-eval-0070","urn:oid:2.49.0.1.840.0.0bb5614b977398828f7d78ff9701ce24c786caaf.001.1","winter-storm","not-attempted","","Take steps now to protect tender plants from the cold.","","","","","","",""
+"ai-eval-0071","urn:oid:2.49.0.1.840.0.0264503db88a90f030a1d9ecdd3a1c2e0cca7fe2.001.1","flood","not-attempted","","Turn around, don't drown when encountering flooded roads. Most flood
+deaths occur in vehicles.","","","","","","",""
+"ai-eval-0072","urn:oid:2.49.0.1.840.0.98a4be066535121bf0f8123c4dfdec855a78a632.001.1","hurricane","not-attempted","","A tropical storm warning means sustained winds of 34 to 63 kt are
+expected due to a tropical storm within 36 hours.","","","","","","",""
+"ai-eval-0074","urn:oid:2.49.0.1.840.0.9e5e9446404cdf1732086f2210be8c9364914102.002.1","tornado","not-attempted","","TORNADO WATCH 675 REMAINS VALID UNTIL 11 PM CDT THIS EVENING FOR
+THE FOLLOWING AREAS
+
+IN KANSAS THIS WATCH INCLUDES 5 COUNTIES
+
+IN CENTRAL KANSAS
+
+BARTON                ELLSWORTH             LINCOLN
+RUSSELL               SALINE
+
+THIS INCLUDES THE CITIES OF ELLSWORTH, GREAT BEND, LINCOLN,
+RUSSELL, SALINA, SYLVAN GROVE, AND WILSON.","","","","","","",""
+"ai-eval-0075","urn:oid:2.49.0.1.840.0.98ed8e221a941affa647df5a3746567e0c58d8bc.001.1","wildfire","not-attempted","","A Red Flag Warning means that critical fire weather conditions are
+either occurring now, or will shortly. A combination of gusty
+winds, low relative humidity, and unseasonably warm temperatures
+can contribute to extreme fire behavior.","","","","","","",""
+"ai-eval-0076","urn:oid:2.49.0.1.840.0.0c2f185107a294f391f5fb965da559b18278cf80.001.1","winter-storm","not-attempted","","Take steps now to protect tender plants from the cold.","","","","","","",""
+"ai-eval-0077","urn:oid:2.49.0.1.840.0.02836297a8b9a8e62df280d79316e1cb750d1b75.001.1","flood","not-attempted","","The Flood Warning will expire at 1045 AM CDT this morning for
+portions of central, north central, and northeast Iowa, including the
+following counties, in central Iowa, Grundy and Tama. In north
+central Iowa, Butler. In northeast Iowa, Black Hawk.
+
+Flooding is no longer expected to pose a threat. Please continue to
+heed remaining road closures.","","","","","","",""
+"ai-eval-0078","urn:oid:2.49.0.1.840.0.9905eb7cd79eee136d82662d53efb09d6c7d19ea.001.1","hurricane","not-attempted","","A gale warning means winds of 34 to 47 knots are imminent or
+occurring. Operating a vessel in gale conditions requires
+experience and properly equipped vessels.","","","","","","",""
+"ai-eval-0080","urn:oid:2.49.0.1.840.0.a79660a64adc3d8201b57764a35ab8d7c1f88156.001.1","tornado","not-attempted","","Move to an interior room on the lowest floor of a well-built building
+away from windows. If you are outdoors, in a mobile home, or in a
+vehicle, move to the closest substantial shelter and protect yourself
+from flying debris.
+
+Heavy rainfall is hiding this tornado. Do not wait to see or hear the
+tornado. Take cover now!
+
+This storm has a history of producing tornadoes.
+
+Report severe weather to your nearest law enforcement agency or the
+National Weather Service office in Hastings NE.","","","","","","",""
+"ai-eval-0081","urn:oid:2.49.0.1.840.0.a2801106c8540993e90bd4b4ce050d593e7ee55b.001.1","wildfire","not-attempted","","A Fire Weather Watch means that critical fire weather conditions
+are forecast to occur. Listen for later forecasts and possible Red
+Flag Warnings.","","","","","","",""
+"ai-eval-0082","urn:oid:2.49.0.1.840.0.0c2f185107a294f391f5fb965da559b18278cf80.001.2","winter-storm","not-attempted","","Take steps now to protect tender plants from the cold.","","","","","","",""
+"ai-eval-0083","urn:oid:2.49.0.1.840.0.02a18c8f403c4c0222fdcfe61e5556e9c685331a.001.1","flood","not-attempted","","The Flood Warning has been cancelled and is no longer in effect.","","","","","","",""
+"ai-eval-0084","urn:oid:2.49.0.1.840.0.a6464c826f69aa2cfde6d3d07b19fc86572b0d90.001.1","hurricane","not-attempted","","Stay indoors during heavy rain and tropical storm-force wind
+conditions associated with Typhoon Choi-wan (26W). Heed the advice
+of your local emergency managers and officials, and continue to
+monitor forecasts by the National Weather Service office in Tiyan,
+Guam. Remain in sturdy shelter until the all clear is given.
+
+Remain in suitable shelter, such as a cave or sturdy concrete
+structure. Shelter in place until the all-clear is given.
+
+.WIND INFORMATION...
+Typhoon winds of 74 mph or more will continue for Alamagan, Agrihan
+and Pagan into this afternoon as Choi-wan treks north through the
+northern CNMI and strengthens further into a Category 2 and
+eventually Category 3 typhoon. On either side of the typhoon-force
+winds, tropical storm force winds of 39 to 73 mph look to continue
+through at least Sunday morning.
+
+.COASTAL INUNDATION AND SURF INFORMATION...
+Hazardous surf of 10 to 14 feet along north, south, and west facing
+reefs are expected to continue as the center moves north, nearly
+parallel to the northern CNMI through tonight, increasing by several
+feet during the time of nearest passage. As Choi-wan continues to
+strengthen, dangerous surf is likely along all reefs at all three
+islands through at least Sunday. Significant coastal erosion and
+some coastal inundation is expected during Choi-wan's passage.
+
+.OTHER STORM EFFECTS...
+Periods of torrential rain, widespread heavy showers and scattered
+thunderstorms are expected through tonight, producing rainfall totals
+of 8 to 14 inches by early Monday morning, with up to 20 inches of
+rainfall possible near the center of the system.","","","","","","",""
+"ai-eval-0086","urn:oid:2.49.0.1.840.0.c438e8016b9a99350b9514a1df1a2498e61e6f3d.001.1","tornado","not-attempted","","The storm which prompted the warning no longer appears imminently
+capable of producing a tornado. Therefore, the warning will be
+allowed to expire. However, the environment may still be supportive
+of funnel clouds and perhaps a brief tornado over the next few hours,
+so the situation will be monitored closely in case another Warning
+appears warranted.
+
+To report severe weather, contact your nearest law enforcement
+agency. They will send your report to the National Weather Service
+office.
+
+A Tornado Watch remains in effect until 1100 PM CDT Wednesday for a
+portion of north central Kansas.","","","","","","",""
+"ai-eval-0087","urn:oid:2.49.0.1.840.0.a6f317d7479e7204f5855a551d2e179a9180b152.001.1","wildfire","not-attempted","","Please advise the appropriate officials or fire crews in the field of
+this Fire Weather Watch.","","","","","","",""
+"ai-eval-0088","urn:oid:2.49.0.1.840.0.0c2f185107a294f391f5fb965da559b18278cf80.002.1","winter-storm","not-attempted","","A Frost Advisory means that frost is expected.  Sensitive outdoor
+plants may be killed if left uncovered.","","","","","","",""
+"ai-eval-0089","urn:oid:2.49.0.1.840.0.02af6db195e0d896038d7856f5a86bad08fe59d3.001.1","flood","not-attempted","","Turn around, don't drown when encountering flooded roads. Most flood
+deaths occur in vehicles.
+
+In hilly terrain there are hundreds of low water crossings which are
+potentially dangerous in heavy rain. Do not attempt to cross flooded
+roads. Find an alternate route.","","","","","","",""
+"ai-eval-0090","urn:oid:2.49.0.1.840.0.abbff9bb06d7993826f5ad84ba5918589c239d1c.001.1","hurricane","not-attempted","","Stay indoors during heavy rain and tropical storm-force wind
+conditions associated with Tropical Storm Choi-wan (26W). Heed the
+advice of your local emergency managers and officials, and
+continue to monitor forecasts by the National Weather Service
+office in Tiyan, Guam. Remain in sturdy shelter until the all-
+clear is given.
+
+Preparations for Tropical Storm Choi-wan should be complete, or
+rapidly rushed to completion. Take small loose object indoors.
+Remain in suitable shelter, such as a cave or sturdy concrete
+structure. Shelter in place until the all-clear is given.
+
+.WIND INFORMATION...
+North to northeast winds of 25 to 35 mph will turn toward the
+southeast and increase today as Choi-wan moves west across the
+northern CNMI and strengthens, potentially becoming a typhoon this
+afternoon to the west of Alamagan and Pagan as it turns to the
+north. Tropical storm force winds of 39 to 50 mph look to continue
+through Sunday. Depending on the track and intensity, winds may
+increase to strong tropical storm-force of 58 to 65 mph early
+Saturday morning. Typhoon force winds greater than 74 mph look to
+remain possible during closest passage.
+
+.COASTAL INUNDATION AND SURF INFORMATION...
+Hazardous surf of 8 to 12 feet along east-facing reefs are expected
+this morning, to then spread along north and west-facing reefs as
+the center moves north-northeast parallel to the northern CNMI
+tonight through Saturday night, increasing by several feet during
+this time. As Choi-wan continues to strengthen, surf will continue
+to increase, likely becoming dangerous by early next week.
+Significant coastal erosion and some coastal inundation is expected
+during Choi-wan's passage.
+
+.OTHER STORM EFFECTS...
+Periods of rain, widespread heavy showers and scattered thunderstorms
+are expected later today, which is expected to produce rainfall
+totals of 8 to 14 inches by early Monday morning, with up to 20 inches
+of rainfall possible near the center of the system.","","","","","","",""
+"ai-eval-0092","urn:oid:2.49.0.1.840.0.e9f27ab0ebda1f210f606b58e6d151efc937c9ff.001.1","tornado","not-attempted","","Move to an interior room on the lowest floor of a well-built building
+away from windows. If you are outdoors, in a mobile home, or in a
+vehicle, move to the closest substantial shelter and protect yourself
+from flying debris.
+
+Tornadoes are difficult to observe at night. Take cover now!
+
+Report severe weather to your nearest law enforcement agency or the
+National Weather Service office in Hastings NE.","","","","","","",""
+"ai-eval-0093","urn:oid:2.49.0.1.840.0.d05bb614c61b3cfeeab48e1271cc60e36308442d.001.1","wildfire","not-attempted","","Humidity values will continue to increase while winds continue to
+wind down. Therefore, the Red Flag Warning will be allowed to expire
+on time at 6 PM MDT this evening.","","","","","","",""
+"ai-eval-0094","urn:oid:2.49.0.1.840.0.0e0a9c583277884d832f16e8699fcc191fac4e14.001.1","winter-storm","not-attempted","","Take steps now to protect tender plants from the cold.
+
+To prevent water pipes from freezing; wrap or drain or allow them to
+drip slowly. Those that have in-ground sprinkler systems should drain
+them and cover above-ground pipes to protect them from freezing.","","","","","","",""
+"ai-eval-0095","urn:oid:2.49.0.1.840.0.02b03253c8e21f223dc6b73c8e8cbccdf9e10265.001.1","flood","not-attempted","","Turn around, don't drown when encountering flooded roads. Most flood
+deaths occur in vehicles.","","","","","","",""
+"ai-eval-0096","urn:oid:2.49.0.1.840.0.b6061c7f638a956197d8756e4bd294e95186a497.004.1","hurricane","not-attempted","","Offshore Waters Forecast for the Bering Sea  Wind forecasts reflect the predominant speed and direction expected. Sea forecasts represent an average of the highest one-third of the combined wind wave and swell height..TONIGHT...NW wind up to 15 kt becoming S 15 to 30 kt after midnight. Seas 6 ft. Rain. .WED...S wind 30 to 45 kt. Seas 6 to 11 ft building to 10 to 18 ft in the afternoon. Rain. .WED NIGHT...S wind 50 to 65 kt becoming SW 40 to 55 kt after midnight. Seas 15 to 30 ft. Rain. .THU...SW wind 25 to 40 kt. Seas 13 to 21 ft. .THU NIGHT...SW wind 25 to 40 kt. Seas 14 to 22 ft. .FRI THROUGH SAT...SW wind 25 to 40 kt. Seas 14 to 22 ft. .SUN...W wind 25 kt. Seas 10 to 13 ft.","","","","","","",""
+"ai-eval-0098","urn:oid:2.49.0.1.840.0.f4907f3dc37be9e9f5cdc01c356496f86f5d1194.001.1","tornado","not-attempted","","TAKE COVER NOW! Move to a basement or an interior room on the lowest
+floor of a sturdy building. Avoid windows. If you are outdoors, in a
+mobile home, or in a vehicle, move to the closest substantial shelter
+and protect yourself from flying debris.
+
+Torrential rainfall is occurring with this storm, and may lead to
+flash flooding. Do not drive your vehicle through flooded roadways.","","","","","","",""
+"ai-eval-0099","urn:oid:2.49.0.1.840.0.e73fd9d18c02eefad45712a4f9b30cdbb43128e9.001.1","wildfire","not-attempted","","Please advise the appropriate officials or fire crews in the field of
+this Fire Weather Watch.","","","","","","",""
+"ai-eval-0100","urn:oid:2.49.0.1.840.0.0e69de218df22995ac72863771e6d6b7f08eefe9.001.1","winter-storm","not-attempted","","Take steps now to protect tender plants from the cold.","","","","","","",""
+"ai-eval-0101","urn:oid:2.49.0.1.840.0.02ccbb705c20572c108f7835056876426c0adf86.001.1","flood","not-attempted","","The Flood Watch has been cancelled and is no longer in effect.","","","","","","",""
+"ai-eval-0102","urn:oid:2.49.0.1.840.0.b816ca9780d7f92a1b2f3e5ba3d8140a6bb61ade.001.1","hurricane","not-attempted","","A tropical storm warning means sustained winds of 34 to 63 kt are
+expected due to a tropical storm within 36 hours.","","","","","","",""
+"ai-eval-0104","urn:oid:2.49.0.1.840.0.f805c03dd1b7f214ceaa7d47a2310bd10ebe15bf.001.1","wildfire","not-attempted","","A Fire Weather Watch means that critical fire weather conditions
+are forecast to occur. Listen for later forecasts and possible Red
+Flag Warnings.","","","","","","",""
+"ai-eval-0105","urn:oid:2.49.0.1.840.0.117db88fea82790c5c8375b9a7da28cea114cab9.001.1","winter-storm","not-attempted","","Take steps now to protect tender plants from the cold.","","","","","","",""
+"ai-eval-0106","urn:oid:2.49.0.1.840.0.03020f9aaf8fbf6bec15d08e4e1d22adbb25f4fa.001.1","flood","not-attempted","","Turn around, don't drown when encountering flooded roads. Most flood
+deaths occur in vehicles.","","","","","","",""
+"ai-eval-0107","urn:oid:2.49.0.1.840.0.c1f381f14810ad73f70cf718fd2ed8d5ccf22f83.001.1","hurricane","not-attempted","","A tropical storm warning means sustained winds of 34 to 63 kt are
+expected due to a tropical storm within 36 hours.","","","","","","",""
+"ai-eval-0109","urn:oid:2.49.0.1.840.0.12f8728bd61a777c25c4455267f9f011bf9f4f73.001.1","winter-storm","not-attempted","","Temperatures are warming across the advisory area. Therefore the
+advisory is being allowed to expire.","","","","","","",""
+"ai-eval-0110","urn:oid:2.49.0.1.840.0.039890633e5cc1860c37a20dd1a31067edd72832.001.1","flood","not-attempted","","Be especially cautious at night when it is harder to recognize the
+dangers of flooding.","","","","","","",""
+"ai-eval-0111","urn:oid:2.49.0.1.840.0.c39b16b46cd7f52fe8d64b7f7fe415feb42b0829.001.1","hurricane","not-attempted","","A tropical storm warning means sustained winds of 34 to 63 kt are
+expected due to a tropical storm within 36 hours.","","","","","","",""
+"ai-eval-0113","urn:oid:2.49.0.1.840.0.13527584f1ba4c60811e4216cf36f2a6ca77457b.001.1","winter-storm","not-attempted","","Take steps now to protect tender plants from the cold.","","","","","","",""
+"ai-eval-0114","urn:oid:2.49.0.1.840.0.039983d9b892d1b1b83b2266472c158deb8800fb.001.1","flood","not-attempted","","The Flood Watch has been cancelled and is no longer in effect.","","","","","","",""
+"ai-eval-0115","urn:oid:2.49.0.1.840.0.c39b16b46cd7f52fe8d64b7f7fe415feb42b0829.001.2","hurricane","not-attempted","","A tropical storm warning means sustained winds of 34 to 63 kt are
+expected due to a tropical storm within 36 hours.","","","","","","",""
+"ai-eval-0117","urn:oid:2.49.0.1.840.0.19e9ed0215ed5f69b924669877deba4d732cbe75.001.1","winter-storm","not-attempted","","Take steps now to protect tender plants from the cold.","","","","","","",""
+"ai-eval-0118","urn:oid:2.49.0.1.840.0.03b68c58ac242d636132de409c9cc42d638a500a.001.1","flood","not-attempted","","Turn around, don't drown when encountering flooded roads. Most flood
+deaths occur in vehicles.
+
+Be especially cautious at night when it is harder to recognize the
+dangers of flooding.","","","","","","",""
+"ai-eval-0119","urn:oid:2.49.0.1.840.0.c52d304d7e36f9790b1769a0c1cfbccca7db843d.001.1","hurricane","not-attempted","","Sustained damaging tropical storm force winds are no longer
+expected, however, strong to near-gale winds and frequent gale-
+force gusts will continue within the surging monsoon flow south of
+Typhoon Choi-wan. Continue to monitor forecasts by the National
+Weather Service office in Tiyan, Guam.
+
+Remain in suitable shelter, such as a cave or sturdy concrete
+structure. Shelter in place until the all-clear is given.
+
+.WIND INFORMATION...
+Typhoon winds of 74 mph or more have begun to depart Agrihan this
+evening, but tropical storm force winds of 39-73 mph will
+continue for Alamagan, Pagan, and Agrihan through at least Sunday
+morning as Choi-wan treks north-northeast away from the northern
+CNMI, gradually strengthening through Sunday afternoon. TS winds
+are currently forecasted to depart Alamagan and Pagan by around
+noon Sunday, and Agrihan by around Sunday evening.
+
+.COASTAL INUNDATION AND SURF INFORMATION...
+Hazardous to dangerous surf of 12 to 16 feet along north, south,
+and west facing reefs are expected to continue through tonight,
+diminishing gradually as Typhoon Choi-wan moves farther away from
+the northern islands through Sunday. Significant coastal erosion
+and some coastal inundation remain possible as Choi-wan moves away.
+
+.OTHER STORM EFFECTS...
+Periods of torrential rain, widespread heavy showers and scattered
+thunderstorms are expected to continue into early Sunday morning,
+producing rainfall totals of 8 to 14 inches by early Monday
+morning, with up to 20 inches of rainfall possible near the center
+of the system.","","","","","","",""
+"ai-eval-0121","urn:oid:2.49.0.1.840.0.19e9ed0215ed5f69b924669877deba4d732cbe75.002.1","winter-storm","not-attempted","","Take steps now to protect tender plants from the cold.","","","","","","",""

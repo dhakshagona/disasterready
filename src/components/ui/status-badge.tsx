@@ -23,7 +23,7 @@ export function StatusBadge({ label, tone = 'info' }: StatusBadgeProps) {
       accessibilityLabel={label}
       style={[styles.badge, { backgroundColor: palette.background }]}
       testID={`badge-${tone}`}>
-      <AppText variant="eyebrow" color={palette.foreground}>{label}</AppText>
+      <AppText variant="caption" color={palette.foreground} style={styles.label}>{label}</AppText>
     </View>
   );
 }
@@ -35,4 +35,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.sm,
     paddingVertical: 5,
   },
+  label: { fontSize: 11, lineHeight: 14, fontWeight: '700' },
 });

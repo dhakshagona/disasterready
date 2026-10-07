@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-07T01:14:27.936Z",
+  "evidenceStatus": "not-started",
+  "participantCount": 0,
+  "participantTarget": {
+    "minimum": 30,
+    "preferred": 50
+  },
+  "scenarioMetrics": {
+    "alert-to-action": {
+      "attempted": 0,
+      "successful": 0,
+      "completionPercent": 0,
+      "medianTimeSeconds": 0,
+      "p95TimeSeconds": 0
+    },
+    "checklist-recovery": {
+      "attempted": 0,
+      "successful": 0,
+      "completionPercent": 0,
+      "medianTimeSeconds": 0,
+      "p95TimeSeconds": 0
+    },
+    "safety-route-trust": {
+      "attempted": 0,
+      "successful": 0,
+      "completionPercent": 0,
+      "medianTimeSeconds": 0,
+      "p95TimeSeconds": 0
+    }
+  },
+  "sus": {
+    "completedQuestionnaires": 0,
+    "mean": null,
+    "median": null
+  },
+  "safetySignals": {
+    "demoMistakenAsReal": 0,
+    "unavailableMistakenAsClear": 0,
+    "shelterMistakenAsGuaranteed": 0,
+    "aiMistakenAsOfficial": 0
+  },
+  "claimReady": false
+}

@@ -26,6 +26,7 @@ describe('home screen analytics', () => {
 
     await render(<DisasterReadyProvider runtime={runtime}><HomeScreen /></DisasterReadyProvider>);
 
+    await waitFor(() => expect(track).toHaveBeenCalledWith('session_started', { mode: 'demo' }));
     await waitFor(() => expect(track).toHaveBeenCalledWith('demo_session_started', {
       mode: 'demo',
       properties: { hazard: 'flood', entry: 'home' },

@@ -1,0 +1,627 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-07T01:11:43.416Z",
+  "evaluationScope": "Validated end-user model outputs returned by the deployed plain-language pipeline. Rejected or unavailable generations are reported as deterministic fallbacks and are excluded from accepted-model-output quality metrics.",
+  "metrics": {
+    "requiredCases": 100,
+    "attemptedCases": 0,
+    "serverReturnedModelOutputs": 0,
+    "clientAcceptedModelOutputs": 0,
+    "pipelineFallbacks": 0,
+    "locallyRejectedServerOutputs": 0,
+    "acceptedOutputCriticalActionPreservationPercent": 0,
+    "dangerousContradictionsDelivered": 0,
+    "fallbackReasons": {},
+    "latencyMs": {
+      "median": 0,
+      "p95": 0
+    }
+  },
+  "targets": {
+    "all100CasesAttempted": false,
+    "acceptedOutputCriticalActionPreservationAtLeast95Percent": false,
+    "zeroDangerousContradictionsDelivered": false
+  },
+  "results": [
+    {
+      "evaluationId": "ai-eval-0001",
+      "providerId": "urn:oid:2.49.0.1.840.0.0ef51a0df0c41327cf2d6ff8bf1f6d2da9ff9d8f.001.1",
+      "hazard": "air-quality",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0002",
+      "providerId": "urn:oid:2.49.0.1.840.0.00623be375c575c2b7d7bbaf1556f791a70b5f54.001.1",
+      "hazard": "flood",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0003",
+      "providerId": "urn:oid:2.49.0.1.840.0.11e03cad364d50ed08e080132b94b5e3b11e5b94.029.1",
+      "hazard": "hurricane",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0005",
+      "providerId": "urn:oid:2.49.0.1.840.0.0ccf5f3d490508c8c611504566c076683dec766f.001.1",
+      "hazard": "tornado",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0006",
+      "providerId": "urn:oid:2.49.0.1.840.0.1924840fde1643ff350dd822b8cd2942c0951206.001.1",
+      "hazard": "wildfire",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0007",
+      "providerId": "urn:oid:2.49.0.1.840.0.00b592bdf075f15b36c7f704791f0c797300c8cb.001.1",
+      "hazard": "winter-storm",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0008",
+      "providerId": "urn:oid:2.49.0.1.840.0.2f61bc5a50a02bbb4db4898cc18b1ec29c225e3c.001.1",
+      "hazard": "air-quality",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0009",
+      "providerId": "urn:oid:2.49.0.1.840.0.00ab0dd27d4558e6a7c8b9f4ee0412d1ac51c363.001.1",
+      "hazard": "flood",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0010",
+      "providerId": "urn:oid:2.49.0.1.840.0.20876e6fcb096d6d7bd4691a232b1fd6dba11824.001.1",
+      "hazard": "hurricane",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0012",
+      "providerId": "urn:oid:2.49.0.1.840.0.28483804906e392b8b6635dbfcda1b61ed3bcae1.001.1",
+      "hazard": "tornado",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0013",
+      "providerId": "urn:oid:2.49.0.1.840.0.1b96fa1e984193f6c5f148f3ac0710ed28d8f13f.001.1",
+      "hazard": "wildfire",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0014",
+      "providerId": "urn:oid:2.49.0.1.840.0.00d4c7414fbc62493b4405917ea3da3919fa0224.001.1",
+      "hazard": "winter-storm",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0015",
+      "providerId": "urn:oid:2.49.0.1.840.0.5032f341cefbbdd59fb6b91038b3407f8ad5617f.001.1",
+      "hazard": "air-quality",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0016",
+      "providerId": "urn:oid:2.49.0.1.840.0.00f396c75edc76293c894aa053c5498386ab8dab.001.1",
+      "hazard": "flood",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0017",
+      "providerId": "urn:oid:2.49.0.1.840.0.33b02d8fb5fd13dc886fd869faddba525f648e20.002.1",
+      "hazard": "hurricane",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0019",
+      "providerId": "urn:oid:2.49.0.1.840.0.28483804906e392b8b6635dbfcda1b61ed3bcae1.002.1",
+      "hazard": "tornado",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0020",
+      "providerId": "urn:oid:2.49.0.1.840.0.1b96fa1e984193f6c5f148f3ac0710ed28d8f13f.001.2",
+      "hazard": "wildfire",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0021",
+      "providerId": "urn:oid:2.49.0.1.840.0.02f33c5e342e4c57bdda1f615315510a7450750e.001.1",
+      "hazard": "winter-storm",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0022",
+      "providerId": "urn:oid:2.49.0.1.840.0.6a61a5e4ce0c1771a6306d7717882f688d00e5e4.001.1",
+      "hazard": "air-quality",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0023",
+      "providerId": "urn:oid:2.49.0.1.840.0.0177bb252e360c1750fdebd78ea6cc74980dc5af.001.1",
+      "hazard": "flood",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0024",
+      "providerId": "urn:oid:2.49.0.1.840.0.4a8ac29cd8f5b7da8ee8216006d836b7275b48d9.001.1",
+      "hazard": "hurricane",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0026",
+      "providerId": "urn:oid:2.49.0.1.840.0.2eb07ea88355501a77bb3d2569dcd8f78bb0c0a6.001.1",
+      "hazard": "tornado",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0027",
+      "providerId": "urn:oid:2.49.0.1.840.0.2a96c404fb7c38a834fc86f7f533374e5ed6978a.001.1",
+      "hazard": "wildfire",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0028",
+      "providerId": "urn:oid:2.49.0.1.840.0.0938fb89dcec4c9763e272983a52dca2084e45fc.001.1",
+      "hazard": "winter-storm",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0029",
+      "providerId": "urn:oid:2.49.0.1.840.0.01995f1c2749e12142be08462f9abe59f7988587.001.1",
+      "hazard": "flood",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0030",
+      "providerId": "urn:oid:2.49.0.1.840.0.4bbd4d93b2f994fe75c34c3c325cb3ca539d7f8b.023.1",
+      "hazard": "hurricane",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0032",
+      "providerId": "urn:oid:2.49.0.1.840.0.30cc78e9183ceb541a20e589f3bebfb7337911e0.001.1",
+      "hazard": "tornado",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0033",
+      "providerId": "urn:oid:2.49.0.1.840.0.45d2e070a2c5a90bc14e8116cb84b3297dd8840a.001.1",
+      "hazard": "wildfire",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0034",
+      "providerId": "urn:oid:2.49.0.1.840.0.0938fb89dcec4c9763e272983a52dca2084e45fc.002.1",
+      "hazard": "winter-storm",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0035",
+      "providerId": "urn:oid:2.49.0.1.840.0.01c3b93387983a84e9b6041577e83f2d50dda480.001.1",
+      "hazard": "flood",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0036",
+      "providerId": "urn:oid:2.49.0.1.840.0.4bbd4d93b2f994fe75c34c3c325cb3ca539d7f8b.026.1",
+      "hazard": "hurricane",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0038",
+      "providerId": "urn:oid:2.49.0.1.840.0.30cc78e9183ceb541a20e589f3bebfb7337911e0.002.1",
+      "hazard": "tornado",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0039",
+      "providerId": "urn:oid:2.49.0.1.840.0.75c78f793d94b56b66d572d099303ad68cd2c79e.001.1",
+      "hazard": "wildfire",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0040",
+      "providerId": "urn:oid:2.49.0.1.840.0.0938fb89dcec4c9763e272983a52dca2084e45fc.003.1",
+      "hazard": "winter-storm",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0041",
+      "providerId": "urn:oid:2.49.0.1.840.0.01c47cf2dccc8f29694ac6577b0dda535f861d3d.001.1",
+      "hazard": "flood",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0042",
+      "providerId": "urn:oid:2.49.0.1.840.0.4bbd4d93b2f994fe75c34c3c325cb3ca539d7f8b.027.1",
+      "hazard": "hurricane",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0044",
+      "providerId": "urn:oid:2.49.0.1.840.0.6c7d559f484cab98548d2389561c5f505ac29294.001.1",
+      "hazard": "tornado",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0045",
+      "providerId": "urn:oid:2.49.0.1.840.0.75c78f793d94b56b66d572d099303ad68cd2c79e.001.2",
+      "hazard": "wildfire",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0046",
+      "providerId": "urn:oid:2.49.0.1.840.0.0938fb89dcec4c9763e272983a52dca2084e45fc.004.1",
+      "hazard": "winter-storm",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0047",
+      "providerId": "urn:oid:2.49.0.1.840.0.0216c1f2c05d084ad9537d25d4f4dc933c582680.001.1",
+      "hazard": "flood",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0048",
+      "providerId": "urn:oid:2.49.0.1.840.0.4bbd4d93b2f994fe75c34c3c325cb3ca539d7f8b.029.1",
+      "hazard": "hurricane",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0050",
+      "providerId": "urn:oid:2.49.0.1.840.0.6e9f2b4102f1f366fce3b121e9a4be413833827f.001.1",
+      "hazard": "tornado",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0051",
+      "providerId": "urn:oid:2.49.0.1.840.0.7d4f64384ca9082d244d5fef9633f0b0f8873c21.001.1",
+      "hazard": "wildfire",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0052",
+      "providerId": "urn:oid:2.49.0.1.840.0.0938fb89dcec4c9763e272983a52dca2084e45fc.005.1",
+      "hazard": "winter-storm",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0053",
+      "providerId": "urn:oid:2.49.0.1.840.0.0236f09c3e97d448a5d262bfed16d17c2064ad47.001.1",
+      "hazard": "flood",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0054",
+      "providerId": "urn:oid:2.49.0.1.840.0.81019f123a6d5f5cae015e2c7cd5c2725f08c301.001.1",
+      "hazard": "hurricane",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0056",
+      "providerId": "urn:oid:2.49.0.1.840.0.6fef974e88e509b8493ac9b885b982d687b5e21b.001.1",
+      "hazard": "tornado",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0057",
+      "providerId": "urn:oid:2.49.0.1.840.0.7d4f64384ca9082d244d5fef9633f0b0f8873c21.001.2",
+      "hazard": "wildfire",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0058",
+      "providerId": "urn:oid:2.49.0.1.840.0.09854390a51689d3aed2927245268b15a486cb56.001.1",
+      "hazard": "winter-storm",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0059",
+      "providerId": "urn:oid:2.49.0.1.840.0.024a94cb98ca4c8c0e2d9995caf414120ad93c79.001.1",
+      "hazard": "flood",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0060",
+      "providerId": "urn:oid:2.49.0.1.840.0.8d9b92c5c94ae99f4f6271303761c66a8d3a5e2a.001.1",
+      "hazard": "hurricane",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0062",
+      "providerId": "urn:oid:2.49.0.1.840.0.8f3bb0dd40ef4b6afb7abeeb20b6962b63929a2d.001.1",
+      "hazard": "tornado",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0063",
+      "providerId": "urn:oid:2.49.0.1.840.0.92c196bb5121d372f0e40939ce681fc28a721e4f.001.1",
+      "hazard": "wildfire",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0064",
+      "providerId": "urn:oid:2.49.0.1.840.0.09854390a51689d3aed2927245268b15a486cb56.002.1",
+      "hazard": "winter-storm",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0065",
+      "providerId": "urn:oid:2.49.0.1.840.0.0259eb9cb0e47b8dfc8ecb19e352cd94aa195faf.001.1",
+      "hazard": "flood",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0066",
+      "providerId": "urn:oid:2.49.0.1.840.0.93c2485ac0b81f92894e06d980d02cfe8b4d8221.002.1",
+      "hazard": "hurricane",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0068",
+      "providerId": "urn:oid:2.49.0.1.840.0.9e5e9446404cdf1732086f2210be8c9364914102.001.1",
+      "hazard": "tornado",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0069",
+      "providerId": "urn:oid:2.49.0.1.840.0.9564a3511c27488e1440f5bd0663f886f4b40f9d.001.1",
+      "hazard": "wildfire",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0070",
+      "providerId": "urn:oid:2.49.0.1.840.0.0bb5614b977398828f7d78ff9701ce24c786caaf.001.1",
+      "hazard": "winter-storm",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0071",
+      "providerId": "urn:oid:2.49.0.1.840.0.0264503db88a90f030a1d9ecdd3a1c2e0cca7fe2.001.1",
+      "hazard": "flood",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0072",
+      "providerId": "urn:oid:2.49.0.1.840.0.98a4be066535121bf0f8123c4dfdec855a78a632.001.1",
+      "hazard": "hurricane",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0074",
+      "providerId": "urn:oid:2.49.0.1.840.0.9e5e9446404cdf1732086f2210be8c9364914102.002.1",
+      "hazard": "tornado",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0075",
+      "providerId": "urn:oid:2.49.0.1.840.0.98ed8e221a941affa647df5a3746567e0c58d8bc.001.1",
+      "hazard": "wildfire",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0076",
+      "providerId": "urn:oid:2.49.0.1.840.0.0c2f185107a294f391f5fb965da559b18278cf80.001.1",
+      "hazard": "winter-storm",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0077",
+      "providerId": "urn:oid:2.49.0.1.840.0.02836297a8b9a8e62df280d79316e1cb750d1b75.001.1",
+      "hazard": "flood",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0078",
+      "providerId": "urn:oid:2.49.0.1.840.0.9905eb7cd79eee136d82662d53efb09d6c7d19ea.001.1",
+      "hazard": "hurricane",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0080",
+      "providerId": "urn:oid:2.49.0.1.840.0.a79660a64adc3d8201b57764a35ab8d7c1f88156.001.1",
+      "hazard": "tornado",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0081",
+      "providerId": "urn:oid:2.49.0.1.840.0.a2801106c8540993e90bd4b4ce050d593e7ee55b.001.1",
+      "hazard": "wildfire",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0082",
+      "providerId": "urn:oid:2.49.0.1.840.0.0c2f185107a294f391f5fb965da559b18278cf80.001.2",
+      "hazard": "winter-storm",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0083",
+      "providerId": "urn:oid:2.49.0.1.840.0.02a18c8f403c4c0222fdcfe61e5556e9c685331a.001.1",
+      "hazard": "flood",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0084",
+      "providerId": "urn:oid:2.49.0.1.840.0.a6464c826f69aa2cfde6d3d07b19fc86572b0d90.001.1",
+      "hazard": "hurricane",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0086",
+      "providerId": "urn:oid:2.49.0.1.840.0.c438e8016b9a99350b9514a1df1a2498e61e6f3d.001.1",
+      "hazard": "tornado",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0087",
+      "providerId": "urn:oid:2.49.0.1.840.0.a6f317d7479e7204f5855a551d2e179a9180b152.001.1",
+      "hazard": "wildfire",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0088",
+      "providerId": "urn:oid:2.49.0.1.840.0.0c2f185107a294f391f5fb965da559b18278cf80.002.1",
+      "hazard": "winter-storm",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0089",
+      "providerId": "urn:oid:2.49.0.1.840.0.02af6db195e0d896038d7856f5a86bad08fe59d3.001.1",
+      "hazard": "flood",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0090",
+      "providerId": "urn:oid:2.49.0.1.840.0.abbff9bb06d7993826f5ad84ba5918589c239d1c.001.1",
+      "hazard": "hurricane",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0092",
+      "providerId": "urn:oid:2.49.0.1.840.0.e9f27ab0ebda1f210f606b58e6d151efc937c9ff.001.1",
+      "hazard": "tornado",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0093",
+      "providerId": "urn:oid:2.49.0.1.840.0.d05bb614c61b3cfeeab48e1271cc60e36308442d.001.1",
+      "hazard": "wildfire",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0094",
+      "providerId": "urn:oid:2.49.0.1.840.0.0e0a9c583277884d832f16e8699fcc191fac4e14.001.1",
+      "hazard": "winter-storm",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0095",
+      "providerId": "urn:oid:2.49.0.1.840.0.02b03253c8e21f223dc6b73c8e8cbccdf9e10265.001.1",
+      "hazard": "flood",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0096",
+      "providerId": "urn:oid:2.49.0.1.840.0.b6061c7f638a956197d8756e4bd294e95186a497.004.1",
+      "hazard": "hurricane",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0098",
+      "providerId": "urn:oid:2.49.0.1.840.0.f4907f3dc37be9e9f5cdc01c356496f86f5d1194.001.1",
+      "hazard": "tornado",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0099",
+      "providerId": "urn:oid:2.49.0.1.840.0.e73fd9d18c02eefad45712a4f9b30cdbb43128e9.001.1",
+      "hazard": "wildfire",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0100",
+      "providerId": "urn:oid:2.49.0.1.840.0.0e69de218df22995ac72863771e6d6b7f08eefe9.001.1",
+      "hazard": "winter-storm",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0101",
+      "providerId": "urn:oid:2.49.0.1.840.0.02ccbb705c20572c108f7835056876426c0adf86.001.1",
+      "hazard": "flood",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0102",
+      "providerId": "urn:oid:2.49.0.1.840.0.b816ca9780d7f92a1b2f3e5ba3d8140a6bb61ade.001.1",
+      "hazard": "hurricane",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0104",
+      "providerId": "urn:oid:2.49.0.1.840.0.f805c03dd1b7f214ceaa7d47a2310bd10ebe15bf.001.1",
+      "hazard": "wildfire",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0105",
+      "providerId": "urn:oid:2.49.0.1.840.0.117db88fea82790c5c8375b9a7da28cea114cab9.001.1",
+      "hazard": "winter-storm",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0106",
+      "providerId": "urn:oid:2.49.0.1.840.0.03020f9aaf8fbf6bec15d08e4e1d22adbb25f4fa.001.1",
+      "hazard": "flood",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0107",
+      "providerId": "urn:oid:2.49.0.1.840.0.c1f381f14810ad73f70cf718fd2ed8d5ccf22f83.001.1",
+      "hazard": "hurricane",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0109",
+      "providerId": "urn:oid:2.49.0.1.840.0.12f8728bd61a777c25c4455267f9f011bf9f4f73.001.1",
+      "hazard": "winter-storm",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0110",
+      "providerId": "urn:oid:2.49.0.1.840.0.039890633e5cc1860c37a20dd1a31067edd72832.001.1",
+      "hazard": "flood",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0111",
+      "providerId": "urn:oid:2.49.0.1.840.0.c39b16b46cd7f52fe8d64b7f7fe415feb42b0829.001.1",
+      "hazard": "hurricane",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0113",
+      "providerId": "urn:oid:2.49.0.1.840.0.13527584f1ba4c60811e4216cf36f2a6ca77457b.001.1",
+      "hazard": "winter-storm",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0114",
+      "providerId": "urn:oid:2.49.0.1.840.0.039983d9b892d1b1b83b2266472c158deb8800fb.001.1",
+      "hazard": "flood",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0115",
+      "providerId": "urn:oid:2.49.0.1.840.0.c39b16b46cd7f52fe8d64b7f7fe415feb42b0829.001.2",
+      "hazard": "hurricane",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0117",
+      "providerId": "urn:oid:2.49.0.1.840.0.19e9ed0215ed5f69b924669877deba4d732cbe75.001.1",
+      "hazard": "winter-storm",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0118",
+      "providerId": "urn:oid:2.49.0.1.840.0.03b68c58ac242d636132de409c9cc42d638a500a.001.1",
+      "hazard": "flood",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0119",
+      "providerId": "urn:oid:2.49.0.1.840.0.c52d304d7e36f9790b1769a0c1cfbccca7db843d.001.1",
+      "hazard": "hurricane",
+      "status": "not-attempted"
+    },
+    {
+      "evaluationId": "ai-eval-0121",
+      "providerId": "urn:oid:2.49.0.1.840.0.19e9ed0215ed5f69b924669877deba4d732cbe75.002.1",
+      "hazard": "winter-storm",
+      "status": "not-attempted"
+    }
+  ]
+}

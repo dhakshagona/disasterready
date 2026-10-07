@@ -16,12 +16,13 @@ const outFields = [
   'reporting_period', 'latitude', 'longitude', 'geox', 'geoy',
 ].join(',');
 
-function validatePoint(point: ShelterSearchPoint) {
+export function validateShelterSearch(point: ShelterSearchPoint, radiusMiles: number) {
   if (
     !Number.isFinite(point.latitude) || !Number.isFinite(point.longitude) ||
     point.latitude < -90 || point.latitude > 90 ||
     point.longitude < -180 || point.longitude > 180
   ) throw new Error('Invalid shelter search coordinates');
+  if (!Number.isFinite(radiusMiles) || radiusMiles <= 0 || radiusMiles > 500) throw new Error('Invalid shelter search radius');
 }
 
 export class FemaShelterClient {
@@ -34,8 +35,7 @@ export class FemaShelterClient {
   }
 
   async fetchNearby(point: ShelterSearchPoint, radiusMiles: number): Promise<unknown> {
-    validatePoint(point);
-    if (!Number.isFinite(radiusMiles) || radiusMiles <= 0 || radiusMiles > 500) throw new Error('Invalid shelter search radius');
+    validateShelterSearch(point, radiusMiles);
     const query = new URLSearchParams({
       f: 'json',
       where: '1=1',

@@ -17,7 +17,7 @@ type HomeFeedContentProps = {
   onRefresh(): Promise<void>;
   onOpenAlert(alert: Alert): void;
   onOpenPlan(alert: Alert): void;
-  onOpenShelters(): void;
+  onOpenSafetyRoute(alert: Alert): void;
 };
 
 function formatTime(value: string): string {
@@ -26,9 +26,9 @@ function formatTime(value: string): string {
 
 function LoadingFeed() {
   return (
-    <View style={[styles.scene, styles.loadingScene]} accessibilityRole="progressbar">
+    <View style={styles.loadingScene} accessibilityRole="progressbar">
       <ActivityIndicator color={colors.primary} size="large" />
-      <AppText variant="heading">Checking official alerts…</AppText>
+      <AppText variant="heading">Checking official alerts...</AppText>
       <AppText variant="caption" color={colors.inkMuted} style={styles.centerText}>Contacting the National Weather Service for your selected area.</AppText>
     </View>
   );
@@ -40,7 +40,7 @@ function UnavailableFeed({ isRefreshing, onRefresh }: Pick<HomeFeedContentProps,
       <View style={styles.dangerIcon}><Icon name={{ ios: 'wifi.slash', android: 'wifi_off', web: 'wifi_off' }} color={colors.danger} size={24} /></View>
       <AppText variant="heading" color={colors.dangerStrong}>Alert status unavailable</AppText>
       <AppText color={colors.dangerStrong} style={styles.centerText}>We could not reach the National Weather Service and no saved alert data is available.</AppText>
-      <SecondaryButton disabled={isRefreshing} onPress={() => void onRefresh()}>{isRefreshing ? 'Checking…' : 'Try again'}</SecondaryButton>
+      <SecondaryButton disabled={isRefreshing} onPress={() => void onRefresh()}>{isRefreshing ? 'Checking...' : 'Try again'}</SecondaryButton>
     </Card>
   );
 }
@@ -49,67 +49,60 @@ function NoActiveAlerts({ feed, isRefreshing, onRefresh }: Pick<HomeFeedContentP
   return (
     <>
       {feed.isOffline && feed.retrievedAt ? <OfflineBanner lastUpdated={formatTime(feed.retrievedAt)} /> : null}
-      <View style={[styles.scene, styles.safeScene]}>
-        <Image source={require('../../../assets/brand/lifebuoy.png')} style={styles.sceneArt} contentFit="contain" />
-        <View style={styles.sceneCopy}>
-          <View style={styles.statusLine}>
-            <Icon name={{ ios: 'checkmark.circle.fill', android: 'check_circle', web: 'check_circle' }} color={colors.safeStrong} size={20} />
-            <AppText variant="heading" color={colors.safeStrong}>No active alerts</AppText>
-          </View>
-          <AppText variant="caption" color={colors.safeStrong} style={styles.centerText}>No matching NWS alerts are active for your selected area.</AppText>
-          <Pressable accessibilityRole="button" accessibilityLabel="Refresh alert status" disabled={isRefreshing} onPress={() => void onRefresh()} style={styles.refreshPill}>
-            {isRefreshing ? <ActivityIndicator color={colors.safeStrong} size="small" /> : <Icon name={{ ios: 'arrow.clockwise', android: 'refresh', web: 'refresh' }} color={colors.safeStrong} size={15} />}
-            <AppText variant="caption" color={colors.safeStrong}>
-              National Weather Service · {feed.retrievedAt ? `Updated ${formatTime(feed.retrievedAt)}` : 'Not yet updated'}
-            </AppText>
-          </Pressable>
+      <View style={styles.safeScene}>
+        <View style={styles.safeGlow}>
+          <Image source={require('../../../assets/brand/lifebuoy-transparent.png')} style={styles.safeArt} contentFit="contain" />
         </View>
+        <AppText variant="title" color={colors.safeStrong}>No Active Alerts</AppText>
+        <AppText variant="caption" color={colors.safeStrong} style={styles.centerText}>All clear. Your selected area is safe.</AppText>
+        <Pressable accessibilityRole="button" accessibilityLabel="Refresh alert status" disabled={isRefreshing} onPress={() => void onRefresh()} style={styles.refreshPill}>
+          {isRefreshing ? <ActivityIndicator color={colors.safeStrong} size="small" /> : <Icon name={{ ios: 'arrow.clockwise', android: 'refresh', web: 'refresh' }} color={colors.safeStrong} size={15} />}
+          <AppText variant="caption" color={colors.safeStrong}>{feed.retrievedAt ? `Updated ${formatTime(feed.retrievedAt)}` : 'Refresh alerts'}</AppText>
+        </Pressable>
       </View>
     </>
   );
 }
 
-function ActiveAlert({ alert, feed, onOpenAlert, onOpenPlan, onOpenShelters }: { alert: Alert } & Pick<HomeFeedContentProps, 'feed' | 'onOpenAlert' | 'onOpenPlan' | 'onOpenShelters'>) {
+function ActionCard({ icon, title, detail, onPress }: { icon: 'route' | 'checklist'; title: string; detail: string; onPress(): void }) {
+  const isRoute = icon === 'route';
+  return (
+    <Pressable accessibilityRole="button" accessibilityLabel={title} onPress={onPress} style={({ pressed }) => pressed && styles.pressed}>
+      <Card style={[styles.actionCard, isRoute ? styles.routeActionCard : styles.checklistActionCard]}>
+        <View style={[styles.actionIcon, !isRoute && styles.checklistIcon]}>
+          <Icon name={isRoute ? { ios: 'map.fill', android: 'map', web: 'map' } : { ios: 'checklist', android: 'checklist', web: 'checklist' }} color={isRoute ? colors.primary : '#A97708'} size={23} />
+        </View>
+        <View style={styles.flex}>
+          <AppText variant="bodyStrong">{title}</AppText>
+          <AppText variant="caption" color={colors.inkMuted}>{detail}</AppText>
+        </View>
+        <View style={[styles.actionArrow, isRoute ? styles.routeArrow : styles.checklistArrow]}>
+          <Icon name={{ ios: 'chevron.right', android: 'chevron_right', web: 'chevron_right' }} color={isRoute ? colors.surface : '#7A5606'} size={17} />
+        </View>
+      </Card>
+    </Pressable>
+  );
+}
+
+function ActiveAlert({ alert, feed, onOpenAlert, onOpenPlan, onOpenSafetyRoute }: { alert: Alert } & Pick<HomeFeedContentProps, 'feed' | 'onOpenAlert' | 'onOpenPlan' | 'onOpenSafetyRoute'>) {
   return (
     <>
       {feed.isOffline && feed.retrievedAt ? <OfflineBanner lastUpdated={formatTime(feed.retrievedAt)} /> : null}
-      <View style={[styles.scene, styles.dangerScene]}>
-        <Image source={require('../../../assets/brand/lifebuoy.png')} style={styles.sceneArtSmall} contentFit="contain" />
-        <View style={styles.sceneCopy}>
-          <AppText variant="eyebrow" color={colors.dangerStrong}>{alert.severity} · {alert.urgency}</AppText>
-          <AppText variant="title" color={colors.dangerStrong} style={styles.centerText}>{alert.headline}</AppText>
-          <AppText variant="caption" color={colors.dangerStrong} style={styles.centerText}>{alert.areaDescription}</AppText>
-          <Pressable accessibilityRole="button" accessibilityLabel={`View ${alert.headline} details`} onPress={() => onOpenAlert(alert)} style={styles.alertPill}>
-            <AppText variant="bodyStrong" color={colors.surface}>View alert</AppText>
-            <Icon name={{ ios: 'chevron.right', android: 'chevron_right', web: 'chevron_right' }} color={colors.surface} size={18} />
-          </Pressable>
+      <View style={styles.alertScene}>
+        <View style={styles.alertGlow}>
+          <Image source={require('../../../assets/brand/lifebuoy-transparent.png')} style={styles.alertArt} contentFit="contain" />
         </View>
+        <AppText variant="title" color={colors.dangerStrong} style={styles.centerText}>{alert.headline}</AppText>
+        <AppText variant="caption" color={colors.dangerStrong} style={styles.centerText}>Within your selected alert area</AppText>
+        <Pressable accessibilityRole="button" accessibilityLabel={`View ${alert.headline} details`} onPress={() => onOpenAlert(alert)} style={styles.alertPill}>
+          <AppText variant="bodyStrong" color={colors.surface}>View Alert</AppText>
+          <Icon name={{ ios: 'chevron.right', android: 'chevron_right', web: 'chevron_right' }} color={colors.surface} size={16} />
+        </Pressable>
       </View>
-      <View style={styles.sourceLine}>
-        <AppText variant="caption" color={colors.inkMuted}>{alert.source}</AppText>
-        <AppText variant="caption" color={colors.inkMuted}>Expires {formatTime(alert.expiresAt)}</AppText>
+      <View style={styles.actionStack}>
+        <ActionCard icon="route" title="Safety Route" detail={alert.isDemo ? 'Find a simulated safety destination' : 'Check verified shelter availability'} onPress={() => onOpenSafetyRoute(alert)} />
+        <ActionCard icon="checklist" title="Emergency Checklist" detail="Quick reviewed steps for this warning" onPress={() => onOpenPlan(alert)} />
       </View>
-      <Card style={styles.doNowCard}>
-        <View style={styles.sectionHeading}>
-          <AppText variant="heading">Do these now</AppText>
-          <AppText variant="caption" color={colors.inkMuted}>Reviewed actions selected from structured alert fields</AppText>
-        </View>
-        {alert.doNow.length ? alert.doNow.map((step) => (
-          <View key={step.id} style={styles.actionRow}>
-            <View style={styles.actionNumber}><AppText variant="caption" color={colors.primary}>{step.priority}</AppText></View>
-            <AppText variant="caption" style={styles.flex}>{step.title}</AppText>
-          </View>
-        )) : <AppText variant="caption" color={colors.inkMuted}>No reviewed plan matches this alert. Follow the original official instructions.</AppText>}
-        {alert.doNow.length ? <SecondaryButton accessibilityLabel={`Open ${alert.hazard} safety checklist`} onPress={() => onOpenPlan(alert)}>Open safety checklist</SecondaryButton> : null}
-      </Card>
-      <Pressable accessibilityRole="button" accessibilityLabel="View verified safety resources" onPress={onOpenShelters} style={({ pressed }) => [styles.resourceCard, pressed && styles.pressed]}>
-        <View style={styles.resourceIcon}><Icon name={{ ios: 'checkmark.shield.fill', android: 'verified_user', web: 'verified_user' }} color={colors.safe} size={22} /></View>
-        <View style={styles.flex}>
-          <AppText variant="bodyStrong">Verified safety resources</AppText>
-          <AppText variant="caption" color={colors.inkMuted}>Check verified source availability</AppText>
-        </View>
-        <Icon name={{ ios: 'chevron.right', android: 'chevron_right', web: 'chevron_right' }} color={colors.inkSubtle} />
-      </Pressable>
     </>
   );
 }
@@ -119,30 +112,31 @@ export function HomeFeedContent(props: HomeFeedContentProps) {
   if (props.feed.source === 'unavailable') return <UnavailableFeed isRefreshing={props.isRefreshing} onRefresh={props.onRefresh} />;
   const primaryAlert = props.feed.active[0];
   if (!primaryAlert) return <NoActiveAlerts feed={props.feed} isRefreshing={props.isRefreshing} onRefresh={props.onRefresh} />;
-  return <ActiveAlert alert={primaryAlert} feed={props.feed} onOpenAlert={props.onOpenAlert} onOpenPlan={props.onOpenPlan} onOpenShelters={props.onOpenShelters} />;
+  return <ActiveAlert alert={primaryAlert} feed={props.feed} onOpenAlert={props.onOpenAlert} onOpenPlan={props.onOpenPlan} onOpenSafetyRoute={props.onOpenSafetyRoute} />;
 }
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   pressed: { opacity: 0.68 },
   centerText: { textAlign: 'center' },
-  scene: { minHeight: 318, borderRadius: radii.xl, alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: spacing.xl, gap: spacing.md },
-  loadingScene: { backgroundColor: colors.canvasStrong },
-  safeScene: { backgroundColor: colors.safeWash },
-  dangerScene: { backgroundColor: colors.dangerWash },
-  sceneArt: { width: 178, height: 144 },
-  sceneArtSmall: { width: 146, height: 116 },
-  sceneCopy: { alignItems: 'center', gap: spacing.sm },
-  statusLine: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
-  refreshPill: { minHeight: 38, flexDirection: 'row', alignItems: 'center', gap: spacing.xs, paddingHorizontal: spacing.md, borderRadius: radii.pill, backgroundColor: 'rgba(255,255,255,0.72)' },
-  alertPill: { minHeight: 42, flexDirection: 'row', alignItems: 'center', gap: spacing.xs, paddingHorizontal: spacing.lg, borderRadius: radii.pill, backgroundColor: colors.danger },
-  sourceLine: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.sm },
-  sectionHeading: { gap: spacing.xs },
-  doNowCard: { gap: spacing.sm },
-  actionRow: { minHeight: 38, flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
-  actionNumber: { width: 26, height: 26, borderRadius: 13, backgroundColor: colors.primarySoft, alignItems: 'center', justifyContent: 'center' },
+  loadingScene: { minHeight: 330, alignItems: 'center', justifyContent: 'center', gap: spacing.md },
   unavailableCard: { minHeight: 300, alignItems: 'center', justifyContent: 'center', gap: spacing.md },
   dangerIcon: { width: 48, height: 48, borderRadius: 24, backgroundColor: colors.surface, alignItems: 'center', justifyContent: 'center' },
-  resourceCard: { minHeight: 76, flexDirection: 'row', alignItems: 'center', gap: spacing.md, padding: spacing.lg, borderRadius: radii.lg, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface },
-  resourceIcon: { width: 42, height: 42, borderRadius: radii.md, backgroundColor: colors.safeSoft, alignItems: 'center', justifyContent: 'center' },
+  safeScene: { minHeight: 320, alignItems: 'center', justifyContent: 'center', gap: 7, paddingTop: spacing.sm },
+  safeGlow: { width: 206, height: 178, alignItems: 'center', justifyContent: 'center', borderRadius: 103, backgroundColor: 'rgba(139, 231, 184, 0.20)' },
+  safeArt: { width: 202, height: 164 },
+  alertScene: { minHeight: 304, alignItems: 'center', justifyContent: 'center', gap: 7, padding: spacing.md, borderRadius: radii.xl, borderWidth: 1, borderColor: 'rgba(239,62,87,0.13)', backgroundColor: 'rgba(255,255,255,0.30)', boxShadow: '0 8px 24px rgba(176,31,53,0.07)' },
+  alertGlow: { width: 190, height: 150, alignItems: 'center', justifyContent: 'center', borderRadius: 95, backgroundColor: 'rgba(239,62,87,0.13)' },
+  alertArt: { width: 182, height: 142 },
+  refreshPill: { minHeight: 36, flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 14, borderRadius: radii.pill, backgroundColor: 'rgba(255,255,255,0.84)', borderWidth: 1, borderColor: 'rgba(8,113,75,0.10)', marginTop: 4 },
+  alertPill: { minHeight: 44, flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 20, borderRadius: radii.pill, backgroundColor: colors.danger, marginTop: 5, boxShadow: '0 5px 14px rgba(176,31,53,0.22)' },
+  actionStack: { gap: spacing.sm },
+  actionCard: { minHeight: 82, flexDirection: 'row', alignItems: 'center', gap: spacing.md, paddingHorizontal: spacing.md },
+  routeActionCard: { borderColor: '#BED2FA', backgroundColor: '#F9FBFF' },
+  checklistActionCard: { borderColor: '#E8D9A8', backgroundColor: '#FFFEF9' },
+  actionIcon: { width: 46, height: 46, borderRadius: radii.md, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.primarySoft },
+  checklistIcon: { backgroundColor: '#FFF7D9' },
+  actionArrow: { width: 30, height: 30, borderRadius: 15, alignItems: 'center', justifyContent: 'center' },
+  routeArrow: { backgroundColor: colors.primary },
+  checklistArrow: { backgroundColor: '#FFF0B8' },
 });

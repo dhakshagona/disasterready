@@ -8,6 +8,7 @@ import { AppHeader } from '@/components/ui/app-header';
 import { AppText } from '@/components/ui/app-text';
 import { PrimaryButton, SecondaryButton } from '@/components/ui/buttons';
 import { Card } from '@/components/ui/card';
+import { Icon } from '@/components/ui/icon';
 import { Screen } from '@/components/ui/screen';
 import { DemoBanner, ErrorState, LoadingState } from '@/components/ui/state-messages';
 import { colors, radii, spacing } from '@/constants/tokens';
@@ -29,17 +30,12 @@ export default function ActionPlanScreen() {
   useEffect(() => {
     if (!plan || openedPlanIdRef.current === plan.id) return;
     openedPlanIdRef.current = plan.id;
-    void trackEvent('action_plan_opened', {
-      mode: plan.isDemo ? 'demo' : 'real',
-      properties: { hazard: plan.hazard, stepCount: plan.steps.length },
-    });
+    void trackEvent('action_plan_opened', { mode: plan.isDemo ? 'demo' : 'real', properties: { hazard: plan.hazard, stepCount: plan.steps.length } });
   }, [plan, trackEvent]);
 
   useEffect(() => {
     let mounted = true;
-    if (!plan) {
-      return () => { mounted = false; };
-    }
+    if (!plan) return () => { mounted = false; };
     void checklistRepository.getCompleted(plan.id).then((saved) => {
       if (mounted) {
         setCompletedIds(new Set([...saved].filter((stepId) => plan.steps.some((step) => step.id === stepId))));
@@ -52,8 +48,8 @@ export default function ActionPlanScreen() {
   if (!plan) {
     return (
       <Screen>
-        <AppHeader title="Emergency checklist" back />
-        {isLoading ? <LoadingState label="Loading safety plan…" /> : <ErrorState message="No reviewed action plan is available for this alert." />}
+        <AppHeader title="Emergency Checklist" back />
+        {isLoading ? <LoadingState label="Loading safety plan..." /> : <ErrorState message="No reviewed action plan is available for this alert." />}
       </Screen>
     );
   }
@@ -62,10 +58,7 @@ export default function ActionPlanScreen() {
   const percent = Math.round((completedCount / plan.steps.length) * 100);
 
   function saveProgress(next: Set<string>) {
-    const eventOptions = {
-      mode: plan!.isDemo ? 'demo' as const : 'real' as const,
-      properties: { hazard: plan!.hazard, stepCount: plan!.steps.length },
-    };
+    const eventOptions = { mode: plan!.isDemo ? 'demo' as const : 'real' as const, properties: { hazard: plan!.hazard, stepCount: plan!.steps.length } };
     if (completedIds.size === 0 && next.size > 0 && !checklistStartedRef.current) {
       checklistStartedRef.current = true;
       void trackEvent('checklist_started', eventOptions);
@@ -91,20 +84,28 @@ export default function ActionPlanScreen() {
 
   async function shareSummary() {
     const completeSteps = plan!.steps.filter((step) => completedIds.has(step.id));
-    const summary = completeSteps.length ? completeSteps.map((step) => `✓ ${step.title}`).join('\n') : 'No steps marked complete yet.';
-    await Share.share({ message: `${plan!.isDemo ? 'DisasterReady DEMO' : 'DisasterReady'} · ${plan!.title}\n${completedCount}/${plan!.steps.length} complete\n${summary}` });
+    const summary = completeSteps.length ? completeSteps.map((step) => `Complete: ${step.title}`).join('\n') : 'No steps marked complete yet.';
+    await Share.share({ message: `${plan!.isDemo ? 'DisasterReady DEMO' : 'DisasterReady'}: ${plan!.title}\n${completedCount}/${plan!.steps.length} complete\n${summary}` });
   }
 
   return (
-    <Screen testID="action-plan-screen">
-      <AppHeader title="Emergency checklist" subtitle={`${hazardLabels[plan.hazard]} guidance`} back />
-      {plan.isDemo ? <DemoBanner label="Demo · Safety checklist" /> : null}
+    <Screen
+      testID="action-plan-screen"
+      footer={<PrimaryButton accessibilityLabel="Mark all checklist steps done" disabled={completedCount === plan.steps.length} onPress={markAllDone}>{completedCount === plan.steps.length ? 'All steps completed' : 'Mark all done'}</PrimaryButton>}>
+      <AppHeader title={`Checklist: ${hazardLabels[plan.hazard]}`} back />
+      {plan.isDemo ? <DemoBanner label="Demo: Safety checklist" /> : null}
+
+      <Card style={styles.powerCard}>
+        <View style={styles.powerIcon}><Icon name={{ ios: 'battery.75percent', android: 'battery_5_bar', web: 'battery_5_bar' }} color={colors.safe} size={24} /></View>
+        <View style={styles.flex}>
+          <AppText variant="bodyStrong">Phone power ready</AppText>
+          <AppText variant="caption" color={colors.inkMuted}>Keep your phone charged and conserve power.</AppText>
+        </View>
+      </Card>
+
       <View style={styles.progressSection}>
         <View style={styles.progressHeader}>
-          <View style={styles.flex}>
-            <AppText variant="title">{plan.title}</AppText>
-            <AppText variant="caption" color={colors.inkMuted}>Tap each step as you complete it. Progress is saved on this device.</AppText>
-          </View>
+          <AppText variant="bodyStrong">Your progress</AppText>
           <AppText variant="bodyStrong" color={completedCount === plan.steps.length ? colors.safeStrong : colors.primary}>{completedCount} of {plan.steps.length}</AppText>
         </View>
         <View accessibilityLabel={`${percent} percent complete`} accessibilityRole="progressbar" style={styles.track}>
@@ -112,16 +113,15 @@ export default function ActionPlanScreen() {
         </View>
       </View>
 
-      {isProgressLoading ? <LoadingState label="Loading saved progress…" /> : (
+      {isProgressLoading ? <LoadingState label="Loading saved progress..." /> : (
         <View style={styles.steps}>
-          {plan.steps.map((step) => <ActionStepRow key={step.id} step={step} completed={completedIds.has(step.id)} onToggle={() => toggleStep(step.id)} />)}
+          {plan.steps.map((step) => <ActionStepRow key={step.id} step={step} completed={completedIds.has(step.id)} compact onToggle={() => toggleStep(step.id)} />)}
         </View>
       )}
 
       {!isProgressLoading ? (
-        <View style={styles.actions}>
-          <PrimaryButton accessibilityLabel="Mark all checklist steps done" disabled={completedCount === plan.steps.length} onPress={markAllDone}>{completedCount === plan.steps.length ? 'All steps completed' : 'Mark all done'}</PrimaryButton>
-          <SecondaryButton accessibilityLabel="Share checklist summary" onPress={shareSummary}>Share progress summary</SecondaryButton>
+        <View style={styles.secondaryActions}>
+          <SecondaryButton accessibilityLabel="Share checklist summary" onPress={shareSummary}>Share progress</SecondaryButton>
           {completedCount > 0 ? <SecondaryButton accessibilityLabel="Reset all checklist progress" onPress={() => saveProgress(new Set())}>Reset checklist</SecondaryButton> : null}
         </View>
       ) : null}
@@ -130,9 +130,7 @@ export default function ActionPlanScreen() {
         <AppText variant="eyebrow" color={colors.inkMuted}>Guidance source</AppText>
         <AppText variant="bodyStrong">{plan.sourceName}</AppText>
         <AppText variant="caption" color={colors.inkMuted}>{plan.sourceNote}</AppText>
-        {plan.sourceReferences.map((reference) => (
-          <SecondaryButton key={reference.url} accessibilityLabel={`Open official source: ${reference.label}`} onPress={() => Linking.openURL(reference.url)}>{reference.label}</SecondaryButton>
-        ))}
+        {plan.sourceReferences.map((reference) => <SecondaryButton key={reference.url} accessibilityLabel={`Open official source: ${reference.label}`} onPress={() => Linking.openURL(reference.url)}>{reference.label}</SecondaryButton>)}
       </Card>
     </Screen>
   );
@@ -140,11 +138,13 @@ export default function ActionPlanScreen() {
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
-  progressSection: { gap: spacing.md },
-  progressHeader: { flexDirection: 'row', alignItems: 'flex-end', gap: spacing.md },
+  powerCard: { minHeight: 70, flexDirection: 'row', alignItems: 'center', gap: spacing.md },
+  powerIcon: { width: 44, height: 44, borderRadius: radii.md, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.safeSoft },
+  progressSection: { gap: spacing.sm },
+  progressHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: spacing.md },
   track: { height: 8, borderRadius: radii.pill, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, overflow: 'hidden' },
   fill: { height: '100%', borderRadius: radii.pill, backgroundColor: colors.primary },
-  steps: { gap: spacing.sm },
-  actions: { gap: spacing.sm },
+  steps: { gap: 7 },
+  secondaryActions: { gap: spacing.sm },
   source: { gap: spacing.sm },
 });

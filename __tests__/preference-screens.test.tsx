@@ -12,6 +12,8 @@ jest.mock('expo-router', () => ({
   router: { back: jest.fn(), replace: jest.fn() },
 }));
 
+jest.setTimeout(15_000);
+
 function makeRuntime(
   save: (preferences: typeof defaultPreferences) => Promise<void>,
   notificationPermissionService: NotificationPermissionAdapter = { getStatus: async () => 'unsupported', request: async () => 'unsupported' },

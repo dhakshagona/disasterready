@@ -1,4 +1,5 @@
 import type { AlertSource } from '@/application/alerts/live-alert-service';
+import type { HazardType } from '@/domain/models';
 import type { GeoPoint } from '@/infrastructure/nws/client';
 import { parseNwsFeatureCollection } from '@/infrastructure/nws/normalizer';
 
@@ -6,7 +7,7 @@ export interface NwsClientPort {
   fetchActiveForPoint(point: GeoPoint): Promise<unknown>;
 }
 
-export type NormalizedAlertMetadata = { count: number; hazards: string[] };
+export type NormalizedAlertMetadata = { count: number; hazards: HazardType[] };
 
 export class NwsAlertSource implements AlertSource {
   constructor(

@@ -35,13 +35,13 @@ export function AppHeader({ title, subtitle, back, trailing }: AppHeaderProps) {
 }
 
 const styles = StyleSheet.create({
-  row: { minHeight: 48, flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
-  copy: { flex: 1, gap: spacing.xs },
+  row: { minHeight: 52, flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
+  copy: { flex: 1, gap: 2 },
   back: {
     width: 40,
     height: 40,
     borderRadius: radii.pill,
-    backgroundColor: colors.surface,
+    backgroundColor: 'rgba(255,255,255,0.86)',
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,

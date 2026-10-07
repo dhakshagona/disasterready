@@ -1,27 +1,16 @@
-export type AnalyticsEventName =
-  | 'session_started'
-  | 'alerts_fetched'
-  | 'alerts_normalized'
-  | 'action_plan_opened'
-  | 'checklist_started'
-  | 'checklist_completed'
-  | 'shelter_lookup'
-  | 'demo_session_started'
-  | 'ai_simplification_requested'
-  | 'ai_simplification_used'
-  | 'ai_simplification_fallback';
+import {
+  parseAnalyticsEvent,
+  type AnalyticsEventName,
+  type AnalyticsEventPropertiesByName,
+  type StoredAnalyticsEvent,
+} from '../../../shared/analytics-contract';
+
+export type { AnalyticsEventName };
 
 export type AnalyticsMode = 'real' | 'demo';
 export type AnalyticsProperty = string | number | boolean | string[];
 
-export type AnalyticsEvent = {
-  id: string;
-  sessionId: string;
-  name: AnalyticsEventName;
-  occurredAt: string;
-  mode: AnalyticsMode;
-  properties: Record<string, AnalyticsProperty>;
-};
+export type AnalyticsEvent<Name extends AnalyticsEventName = AnalyticsEventName> = Extract<StoredAnalyticsEvent, { name: Name }>;
 
 export interface AnalyticsOutbox {
   append(event: AnalyticsEvent): Promise<void>;
@@ -33,6 +22,18 @@ export interface AnalyticsTransport {
   send(events: AnalyticsEvent[]): Promise<void>;
 }
 
+export class AnalyticsTransportError extends Error {
+  readonly status: number;
+  readonly retryable: boolean;
+
+  constructor(message: string, status: number, retryable: boolean) {
+    super(message);
+    this.name = 'AnalyticsTransportError';
+    this.status = status;
+    this.retryable = retryable;
+  }
+}
+
 type AnalyticsServiceOptions = {
   outbox: AnalyticsOutbox;
   transport?: AnalyticsTransport;
@@ -41,14 +42,19 @@ type AnalyticsServiceOptions = {
   sessionId?: string;
 };
 
-export type AnalyticsTrackOptions = {
+export type AnalyticsTrackOptions<Name extends AnalyticsEventName = AnalyticsEventName> = {
   mode: AnalyticsMode;
-  properties?: Record<string, AnalyticsProperty>;
-};
+} & (Name extends 'session_started'
+  ? { properties?: AnalyticsEventPropertiesByName[Name] }
+  : { properties: AnalyticsEventPropertiesByName[Name] });
 
 function defaultId(): string {
   if (globalThis.crypto?.randomUUID) return globalThis.crypto.randomUUID();
-  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (token) => {
+    const random = Math.floor(Math.random() * 16);
+    const value = token === 'x' ? random : (random & 0x3) | 0x8;
+    return value.toString(16);
+  });
 }
 
 export class AnalyticsService {
@@ -67,15 +73,20 @@ export class AnalyticsService {
     this.sessionId = sessionId ?? createId();
   }
 
-  async track(name: AnalyticsEventName, { mode, properties = {} }: AnalyticsTrackOptions): Promise<void> {
-    const event: AnalyticsEvent = {
-      id: this.createId(),
-      sessionId: this.sessionId,
-      name,
-      occurredAt: this.now().toISOString(),
-      mode,
-      properties,
-    };
+  async track<Name extends AnalyticsEventName>(name: Name, { mode, properties = {} }: AnalyticsTrackOptions<Name>): Promise<void> {
+    let event: AnalyticsEvent;
+    try {
+      event = parseAnalyticsEvent({
+        id: this.createId(),
+        sessionId: this.sessionId,
+        name,
+        occurredAt: this.now().toISOString(),
+        mode,
+        properties,
+      });
+    } catch {
+      return;
+    }
 
     try {
       await this.outbox.append(event);
@@ -92,7 +103,28 @@ export class AnalyticsService {
     if (!this.transport) return;
     const events = await this.outbox.list(25);
     if (!events.length) return;
-    await this.transport.send(events);
-    await this.outbox.remove(events.map((event) => event.id));
+    try {
+      await this.transport.send(events);
+      await this.outbox.remove(events.map((event) => event.id));
+    } catch (error) {
+      if (!(error instanceof AnalyticsTransportError) || error.retryable) throw error;
+
+      const removableIds: string[] = [];
+      let retryableError: unknown;
+      for (const event of events) {
+        try {
+          await this.transport.send([event]);
+          removableIds.push(event.id);
+        } catch (individualError) {
+          if (individualError instanceof AnalyticsTransportError && !individualError.retryable) {
+            removableIds.push(event.id);
+          } else {
+            retryableError ??= individualError;
+          }
+        }
+      }
+      if (removableIds.length) await this.outbox.remove(removableIds);
+      if (retryableError) throw retryableError;
+    }
   }
 }

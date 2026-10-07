@@ -5,11 +5,11 @@ import { Card } from '@/components/ui/card';
 import { Icon } from '@/components/ui/icon';
 import { colors, spacing } from '@/constants/tokens';
 
-export function DemoBanner({ label = 'Demo · Simulated alert' }: { label?: string }) {
+export function DemoBanner({ label = 'Demo: Simulated alert' }: { label?: string }) {
   return (
     <View accessibilityRole="alert" style={[styles.banner, styles.demo]} testID="demo-banner">
-      <Icon name={{ ios: 'sparkles', android: 'science', web: 'science' }} color={colors.demo} size={16} />
-      <AppText variant="caption" color={colors.demo} style={styles.flex}>{label}</AppText>
+      <Icon name={{ ios: 'sparkles', android: 'science', web: 'science' }} color={colors.demo} size={15} />
+      <AppText variant="caption" color={colors.demo}>{label}</AppText>
     </View>
   );
 }
@@ -20,7 +20,7 @@ export function OfflineBanner({ lastUpdated }: { lastUpdated: string }) {
       <Icon name={{ ios: 'wifi.slash', android: 'wifi_off', web: 'wifi_off' }} color={colors.warning} size={18} />
       <View style={styles.flex}>
         <AppText variant="bodyStrong" color={colors.warning}>Offline</AppText>
-        <AppText variant="caption" color={colors.inkMuted}>Showing cached data from {lastUpdated}. It may be stale.</AppText>
+        <AppText variant="caption" color={colors.inkMuted}>Showing saved data from {lastUpdated}. It may be stale.</AppText>
       </View>
     </View>
   );
@@ -38,7 +38,7 @@ export function EmptyState({ title, message }: { title: string; message: string 
   );
 }
 
-export function LoadingState({ label = 'Loading…' }: { label?: string }) {
+export function LoadingState({ label = 'Loading...' }: { label?: string }) {
   return (
     <View accessibilityLabel={label} accessibilityRole="progressbar" style={styles.loading}>
       <ActivityIndicator color={colors.primary} />
@@ -57,9 +57,9 @@ export function ErrorState({ message }: { message: string }) {
 }
 
 const styles = StyleSheet.create({
-  banner: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, paddingHorizontal: spacing.md, paddingVertical: spacing.sm, borderRadius: 12 },
+  banner: { alignSelf: 'center', flexDirection: 'row', alignItems: 'center', gap: spacing.sm, paddingHorizontal: spacing.md, paddingVertical: 7, borderRadius: 18 },
   demo: { backgroundColor: colors.demoSoft, borderWidth: 1, borderColor: colors.border },
-  offline: { backgroundColor: colors.warningSoft, borderWidth: 1, borderColor: '#E8CF81' },
+  offline: { alignSelf: 'stretch', backgroundColor: colors.warningSoft, borderWidth: 1, borderColor: '#E8CF81' },
   flex: { flex: 1 },
   centered: { alignItems: 'center', gap: spacing.md, paddingVertical: spacing.xxxl },
   iconCircle: { width: 56, height: 56, borderRadius: 28, backgroundColor: colors.safeSoft, alignItems: 'center', justifyContent: 'center' },

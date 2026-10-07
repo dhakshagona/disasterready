@@ -62,7 +62,6 @@ describe('DisasterReady application context', () => {
 
     await waitFor(() => expect(screen.getByTestId('state')).toHaveTextContent('false:live:Houston'));
     expect(getFeed).toHaveBeenCalledWith(persisted);
-    expect(track).toHaveBeenCalledWith('session_started', { mode: 'real' });
     expect(track).toHaveBeenCalledWith('alerts_fetched', {
       mode: 'real',
       properties: { source: 'live', activeCount: 0, recentCount: 0, hazards: [] },

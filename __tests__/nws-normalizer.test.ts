@@ -45,6 +45,7 @@ describe('NWS alert normalization', () => {
     });
     expect(alert?.id).toMatch(/^nws-/);
     expect(alert?.originalText).toContain('Move to higher ground now.');
+    expect(alert?.instructionText).toBe('Move to higher ground now. Do not drive through flooded roads.');
   });
 
   it('maps unsupported weather events to other instead of silently discarding them', () => {
@@ -54,6 +55,42 @@ describe('NWS alert normalization', () => {
     );
 
     expect(alert?.hazard).toBe('other');
+  });
+
+  it('classifies tropical cyclone local statements as hurricane hazards', () => {
+    const alert = normalizeNwsFeature(
+      {
+        ...floodFeature,
+        properties: {
+          ...floodFeature.properties,
+          id: 'urn:test:tropical-cyclone',
+          event: 'Tropical Cyclone Local Statement',
+          headline: 'Tropical Cyclone Local Statement',
+        },
+      },
+      '2026-08-07T20:05:00.000Z',
+    );
+
+    expect(alert?.hazard).toBe('hurricane');
+  });
+
+  it('uses the official headline when an update omits its description', () => {
+    const alert = normalizeNwsFeature(
+      {
+        ...floodFeature,
+        properties: {
+          ...floodFeature.properties,
+          id: 'urn:test:headline-fallback',
+          headline: 'Coastal Flood Advisory update',
+          description: null,
+          instruction: null,
+        },
+      },
+      '2026-08-07T20:05:00.000Z',
+    );
+
+    expect(alert?.summary).toBe('Coastal Flood Advisory update');
+    expect(alert?.originalText).toBe('Coastal Flood Advisory update');
   });
 
   it('rejects malformed feature collections at the provider boundary', () => {

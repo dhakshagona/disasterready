@@ -32,7 +32,12 @@ function normalizeEnum<T extends string>(value: string | null, allowed: readonly
 function mapHazard(event: string): HazardType {
   const normalized = event.toLowerCase();
   if (normalized.includes('tornado')) return 'tornado';
-  if (normalized.includes('hurricane') || normalized.includes('tropical storm') || normalized.includes('storm surge')) return 'hurricane';
+  if (
+    normalized.includes('hurricane') ||
+    normalized.includes('tropical cyclone') ||
+    normalized.includes('tropical storm') ||
+    normalized.includes('storm surge')
+  ) return 'hurricane';
   if (normalized.includes('flood') || normalized.includes('hydrologic')) return 'flood';
   if (normalized.includes('red flag') || normalized.includes('fire weather') || normalized.includes('wildfire')) return 'wildfire';
   if (normalized.includes('air quality') || normalized.includes('smoke')) return 'air-quality';
@@ -64,7 +69,7 @@ export function normalizeNwsFeature(feature: unknown, retrievedAt: string): Aler
   const areaDescription = requiredString(properties, 'areaDesc');
   const issuedAt = requiredString(properties, 'sent') ?? requiredString(properties, 'effective');
   const expiresAt = requiredString(properties, 'expires') ?? requiredString(properties, 'ends');
-  const description = requiredString(properties, 'description');
+  const description = requiredString(properties, 'description') ?? requiredString(properties, 'instruction') ?? headline;
 
   if (!providerId || !event || !headline || !areaDescription || !issuedAt || !expiresAt || !description) return null;
 
@@ -87,6 +92,7 @@ export function normalizeNwsFeature(feature: unknown, retrievedAt: string): Aler
     expiresAt,
     source: optionalString(properties, 'senderName') ?? 'National Weather Service',
     originalText: instruction ? `${description}\n\n${instruction}` : description,
+    ...(instruction ? { instructionText: instruction } : {}),
     retrievedAt,
     freshness: 'current',
     isDemo: false,

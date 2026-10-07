@@ -23,17 +23,17 @@ export function AppText({ children, variant = 'body', color = colors.ink, style,
 
 const styles = StyleSheet.create({
   base: { fontFamily: 'System' },
-  display: { fontSize: type.display, lineHeight: 34, fontWeight: '800', letterSpacing: -0.6 },
-  title: { fontSize: type.title, lineHeight: 28, fontWeight: '800', letterSpacing: -0.3 },
-  heading: { fontSize: 17, lineHeight: 22, fontWeight: '700' },
+  display: { fontSize: type.display, lineHeight: 32, fontWeight: '800', letterSpacing: -0.7 },
+  title: { fontSize: type.title, lineHeight: 26, fontWeight: '800', letterSpacing: -0.35 },
+  heading: { fontSize: 17, lineHeight: 21, fontWeight: '700', letterSpacing: -0.15 },
   body: { fontSize: type.body, lineHeight: 22, fontWeight: '400' },
   bodyStrong: { fontSize: type.bodyStrong, lineHeight: 21, fontWeight: '700' },
-  caption: { fontSize: type.caption, lineHeight: 18, fontWeight: '500' },
+  caption: { fontSize: type.caption, lineHeight: 19, fontWeight: '500' },
   eyebrow: {
     fontSize: type.eyebrow,
     lineHeight: 15,
     fontWeight: '800',
-    letterSpacing: 0.8,
+    letterSpacing: 0.65,
     textTransform: 'uppercase',
   },
 });

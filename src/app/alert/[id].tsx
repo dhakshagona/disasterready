@@ -1,7 +1,7 @@
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams, type Href } from 'expo-router';
 import { useEffect } from 'react';
-import { Linking, Share, StyleSheet, View } from 'react-native';
+import { Linking, Pressable, Share, StyleSheet, View } from 'react-native';
 
 import { useDisasterReady } from '@/application/app-context';
 import { AppHeader } from '@/components/ui/app-header';
@@ -11,7 +11,6 @@ import { Card } from '@/components/ui/card';
 import { Icon } from '@/components/ui/icon';
 import { Screen } from '@/components/ui/screen';
 import { DemoBanner, ErrorState, LoadingState, OfflineBanner } from '@/components/ui/state-messages';
-import { StatusBadge } from '@/components/ui/status-badge';
 import { colors, radii, spacing } from '@/constants/tokens';
 import { demoExpiredAlert, demoFloodAlert } from '@/data/mock-repositories';
 
@@ -19,29 +18,38 @@ function formatDate(value: string) {
   return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' }).format(new Date(value));
 }
 
+function DetailAction({ icon, title, detail, onPress, tone }: { icon: 'map' | 'checklist'; title: string; detail: string; onPress(): void; tone: 'blue' | 'yellow' }) {
+  return (
+    <Pressable accessibilityRole="button" accessibilityLabel={title} onPress={onPress} style={({ pressed }) => pressed && styles.pressed}>
+      <Card style={styles.actionCard}>
+        <View style={[styles.actionIcon, tone === 'yellow' && styles.yellowIcon]}>
+          <Icon name={icon === 'map' ? { ios: 'map.fill', android: 'map', web: 'map' } : { ios: 'checklist', android: 'checklist', web: 'checklist' }} color={tone === 'blue' ? colors.primary : '#C58B08'} size={21} />
+        </View>
+        <View style={styles.flex}>
+          <AppText variant="bodyStrong">{title}</AppText>
+          <AppText variant="caption" color={colors.inkMuted}>{detail}</AppText>
+        </View>
+        <Icon name={{ ios: 'chevron.right', android: 'chevron_right', web: 'chevron_right' }} color={colors.ink} size={17} />
+      </Card>
+    </Pressable>
+  );
+}
+
 export default function AlertDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
-  const {
-    getAlertById,
-    isLoading,
-    loadPlainLanguageSummary,
-    plainLanguageResults,
-    preferences,
-  } = useDisasterReady();
+  const { getAlertById, isLoading, loadPlainLanguageSummary, plainLanguageResults, preferences } = useDisasterReady();
   const alert = [demoFloodAlert, demoExpiredAlert].find((item) => item.id === id) ?? getAlertById(id);
   const plainLanguageResult = alert ? plainLanguageResults[alert.id] : undefined;
 
   useEffect(() => {
-    if (alert && !alert.isDemo && preferences.plainLanguage) {
-      void loadPlainLanguageSummary(alert);
-    }
+    if (alert && !alert.isDemo && preferences.plainLanguage) void loadPlainLanguageSummary(alert);
   }, [alert, loadPlainLanguageSummary, preferences.plainLanguage]);
 
   if (!alert) {
     return (
       <Screen>
-        <AppHeader title="Alert details" back />
-        {isLoading ? <LoadingState label="Loading alert details…" /> : <ErrorState message="This alert is no longer available in the live or saved alert feed." />}
+        <AppHeader title="Alert Detail" back />
+        {isLoading ? <LoadingState label="Loading alert details..." /> : <ErrorState message="This alert is no longer available in the live or saved alert feed." />}
         <SecondaryButton onPress={() => router.back()}>Return</SecondaryButton>
       </Screen>
     );
@@ -51,89 +59,84 @@ export default function AlertDetailScreen() {
     await Share.share({ message: `${alert?.isDemo ? 'SIMULATED ' : ''}DISASTERREADY ALERT: ${alert?.headline} for ${alert?.areaDescription}. Source: ${alert?.source}.` });
   }
 
+  const route = `/safety-route/${alert.id}` as Href;
+  const checklist = `/action-plan/${alert.id}` as Href;
+
   return (
-    <Screen testID="alert-detail-screen">
-      <AppHeader title="Alert details" back trailing={<StatusBadge label={alert.status === 'active' ? 'Active' : 'Expired'} tone={alert.status === 'active' ? 'danger' : 'info'} />} />
-      {alert.isDemo ? <DemoBanner label={`Demo · Simulated ${alert.headline}`} /> : null}
+    <Screen
+      testID="alert-detail-screen"
+      tone={alert.status === 'active' ? 'alert' : 'default'}
+      footer={alert.status === 'active' ? <PrimaryButton accessibilityLabel={`Find Safety Route for ${alert.headline}`} onPress={() => router.push(route)}>Find Safety Route</PrimaryButton> : undefined}>
+      <AppHeader title="Alert Detail" subtitle={alert.status === 'active' ? `Expires ${formatDate(alert.expiresAt)}` : 'Expired alert'} back />
+      {alert.isDemo ? <DemoBanner label={`Demo: Simulated ${alert.headline}`} /> : null}
       {!alert.isDemo && alert.freshness !== 'current' ? <OfflineBanner lastUpdated={formatDate(alert.retrievedAt)} /> : null}
 
-      <View style={[styles.hero, alert.status !== 'active' && styles.heroMuted]}>
-        <Image source={require('../../../assets/brand/lifebuoy.png')} style={styles.heroArt} contentFit="contain" />
-        <StatusBadge label={`${alert.severity} · ${alert.urgency}`} tone="danger" />
-        <AppText variant="title" color={colors.dangerStrong} style={styles.centerText}>{alert.headline}</AppText>
-        <AppText variant="caption" color={colors.dangerStrong} style={styles.centerText}>{alert.areaDescription}</AppText>
-        <AppText color={colors.dangerStrong} style={styles.centerText}>{alert.summary}</AppText>
-        {plainLanguageResult?.source === 'ai' ? (
-          <View style={styles.plainLanguageCard}>
-            <StatusBadge label="AI simplified" tone="info" />
-            <AppText variant="bodyStrong" style={styles.centerText}>{plainLanguageResult.summary}</AppText>
-            <AppText variant="caption" color={colors.inkMuted} style={styles.centerText}>
-              Optional wording only. Official alert text and reviewed actions remain authoritative.
-            </AppText>
-          </View>
-        ) : null}
+      <View style={[styles.alertPanel, alert.status !== 'active' && styles.alertPanelMuted]}>
+        <Image source={require('../../../assets/brand/lifebuoy-transparent.png')} style={styles.heroArt} contentFit="contain" />
+        <View style={styles.heroCopy}>
+          <AppText variant="title" color={colors.surface}>{alert.headline}</AppText>
+          <AppText variant="bodyStrong" color={colors.surface}>{alert.areaDescription}</AppText>
+          <AppText variant="caption" color="rgba(255,255,255,0.90)">{alert.severity} severity. {alert.urgency} action.</AppText>
+        </View>
       </View>
 
-      <Card style={styles.section}>
-        <View style={styles.sectionHeading}>
-          <AppText variant="heading">Do these now</AppText>
-          <AppText variant="caption" color={colors.inkMuted}>Follow these immediate safety actions in order.</AppText>
+      {alert.status === 'active' ? (
+        <View style={styles.actionStack}>
+          <DetailAction icon="map" title="Safety Route" detail={alert.isDemo ? 'Simulated destination, clearly labeled' : 'Verified shelter destinations only'} tone="blue" onPress={() => router.push(route)} />
+          {alert.doNow.length ? <DetailAction icon="checklist" title="Emergency Checklist" detail="Quick reviewed preparation steps" tone="yellow" onPress={() => router.push(checklist)} /> : null}
         </View>
-        {alert.doNow.map((step) => (
-          <View key={step.id} style={styles.actionRow}>
-            <View style={styles.number}><AppText variant="caption" color={colors.primary}>{step.priority}</AppText></View>
-            <View style={styles.flex}>
-              <AppText variant="bodyStrong">{step.title}</AppText>
-              <AppText variant="caption" color={colors.inkMuted}>{step.detail}</AppText>
-            </View>
+      ) : null}
+
+      <Card style={styles.officialCard}>
+        <AppText variant="bodyStrong">Official text ({alert.isDemo ? 'simulated NWS' : 'NWS'})</AppText>
+        <AppText variant="caption" color={colors.inkMuted}>{alert.originalText}</AppText>
+        {plainLanguageResult?.source === 'ai' ? (
+          <View style={styles.simpleCopy}>
+            <AppText variant="eyebrow" color={colors.primary}>AI simplified</AppText>
+            <AppText variant="caption">{plainLanguageResult.summary}</AppText>
           </View>
-        ))}
-        {!alert.doNow.length ? <AppText variant="caption" color={colors.inkMuted}>No reviewed action-plan template matches this alert. Use the original official instructions below.</AppText> : null}
-        {alert.status === 'active' && alert.doNow.length ? (
-          <PrimaryButton accessibilityLabel={`Open ${alert.hazard} safety checklist`} onPress={() => router.push(`/action-plan/${alert.id}` as Href)}>Open safety checklist</PrimaryButton>
         ) : null}
+        {alert.sourceUrl ? <SecondaryButton accessibilityLabel="Open original National Weather Service alert" onPress={() => Linking.openURL(alert.sourceUrl!)}>Open original NWS alert</SecondaryButton> : null}
       </Card>
 
-      <Card style={styles.resourceCard}>
-        <View style={styles.resourceIcon}><Icon name={{ ios: 'checkmark.shield.fill', android: 'verified_user', web: 'verified_user' }} color={colors.safe} size={22} /></View>
+      <Card style={styles.reviewedActions}>
+        <AppText variant="bodyStrong">Reviewed immediate actions</AppText>
+        {alert.doNow.length ? alert.doNow.map((step) => (
+          <View key={step.id} style={styles.reviewedRow}>
+            <View style={styles.stepNumber}><AppText variant="caption" color={colors.primary}>{step.priority}</AppText></View>
+            <AppText variant="caption" style={styles.flex}>{step.title}</AppText>
+          </View>
+        )) : <AppText variant="caption" color={colors.inkMuted}>No reviewed plan matches this alert. Follow the original official instructions.</AppText>}
+      </Card>
+
+      <Card style={styles.resourceInfo}>
+        <Icon name={{ ios: 'checkmark.shield.fill', android: 'verified_user', web: 'verified_user' }} color={colors.safe} size={21} />
         <View style={styles.flex}>
           <AppText variant="bodyStrong">Verified safety resources</AppText>
           <AppText variant="caption" color={colors.inkMuted}>Check FEMA-reported shelter availability and routing.</AppText>
         </View>
-        <SecondaryButton accessibilityLabel="View verified safety resource status" onPress={() => router.push('/shelters' as Href)}>View</SecondaryButton>
       </Card>
 
-      <Card style={styles.section}>
-        <View style={styles.sectionHeading}>
-          <AppText variant="heading">Official alert text</AppText>
-          <AppText variant="caption" color={colors.inkMuted}>{alert.source}</AppText>
-        </View>
-        <AppText>{alert.originalText}</AppText>
-        {alert.sourceUrl ? <SecondaryButton accessibilityLabel="Open original National Weather Service alert" onPress={() => Linking.openURL(alert.sourceUrl!)}>Open original NWS alert</SecondaryButton> : null}
-        <View style={styles.metadata}>
-          <View style={styles.metaItem}><AppText variant="eyebrow" color={colors.inkSubtle}>Issued</AppText><AppText variant="caption">{formatDate(alert.issuedAt)}</AppText></View>
-          <View style={styles.metaItem}><AppText variant="eyebrow" color={colors.inkSubtle}>Expires</AppText><AppText variant="caption">{formatDate(alert.expiresAt)}</AppText></View>
-          <View style={styles.metaItem}><AppText variant="eyebrow" color={colors.inkSubtle}>Retrieved</AppText><AppText variant="caption">{formatDate(alert.retrievedAt)} · {alert.freshness}</AppText></View>
-        </View>
-      </Card>
-      <SecondaryButton accessibilityLabel={`Share ${alert.isDemo ? 'simulated ' : ''}alert status`} onPress={shareAlert}>Share alert status</SecondaryButton>
+      <SecondaryButton accessibilityLabel={`Share ${alert.isDemo ? 'simulated ' : ''}alert status`} onPress={shareAlert}>Share with family</SecondaryButton>
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  centerText: { textAlign: 'center' },
-  flex: { flex: 1, gap: spacing.xs },
-  hero: { minHeight: 330, alignItems: 'center', justifyContent: 'center', gap: spacing.sm, padding: spacing.xl, borderRadius: radii.xl, backgroundColor: colors.dangerWash },
-  heroMuted: { backgroundColor: colors.surfaceMuted },
-  heroArt: { width: 142, height: 114 },
-  plainLanguageCard: { alignItems: 'center', gap: spacing.sm, padding: spacing.md, borderRadius: radii.lg, backgroundColor: colors.surface },
-  section: { gap: spacing.md },
-  sectionHeading: { gap: spacing.xs },
-  actionRow: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.md, paddingVertical: spacing.sm, borderBottomWidth: 1, borderBottomColor: colors.border },
-  number: { width: 28, height: 28, borderRadius: 14, backgroundColor: colors.primarySoft, alignItems: 'center', justifyContent: 'center' },
-  resourceCard: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
-  resourceIcon: { width: 42, height: 42, borderRadius: radii.md, backgroundColor: colors.safeSoft, alignItems: 'center', justifyContent: 'center' },
-  metadata: { gap: spacing.sm, paddingTop: spacing.md, borderTopWidth: 1, borderTopColor: colors.border },
-  metaItem: { gap: spacing.xs },
+  flex: { flex: 1 },
+  pressed: { opacity: 0.68 },
+  alertPanel: { minHeight: 150, flexDirection: 'row', alignItems: 'center', gap: spacing.md, padding: spacing.lg, borderRadius: radii.xl, backgroundColor: colors.dangerPanel },
+  alertPanelMuted: { backgroundColor: colors.demo },
+  heroArt: { width: 92, height: 84 },
+  heroCopy: { flex: 1, gap: spacing.xs },
+  actionStack: { gap: spacing.sm },
+  actionCard: { minHeight: 72, flexDirection: 'row', alignItems: 'center', gap: spacing.md },
+  actionIcon: { width: 42, height: 42, borderRadius: radii.md, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.primarySoft },
+  yellowIcon: { backgroundColor: '#FFF7D9' },
+  officialCard: { gap: spacing.sm },
+  simpleCopy: { gap: spacing.xs, padding: spacing.md, borderRadius: radii.md, backgroundColor: colors.primarySoft },
+  reviewedActions: { gap: spacing.sm },
+  reviewedRow: { minHeight: 34, flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
+  stepNumber: { width: 25, height: 25, borderRadius: 13, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.primarySoft },
+  resourceInfo: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
 });

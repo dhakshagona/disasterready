@@ -89,21 +89,39 @@ describe('local-first repositories', () => {
 
   it('keeps a bounded analytics outbox and removes only delivered events', async () => {
     const outbox = new LocalAnalyticsOutbox(new MemoryStorage(), 2);
-    const event = (id: string) => ({
-      id,
-      sessionId: 'session-1',
+    const occurredAt = new Date().toISOString();
+    const event = (sequence: number) => ({
+      id: `00000000-0000-4000-8000-${String(sequence).padStart(12, '0')}`,
+      sessionId: '00000000-0000-4000-8000-000000000100',
       name: 'session_started' as const,
-      occurredAt: '2026-08-08T02:00:00.000Z',
+      occurredAt,
       mode: 'real' as const,
       properties: {},
     });
 
-    await outbox.append(event('event-1'));
-    await outbox.append(event('event-2'));
-    await outbox.append(event('event-3'));
-    await outbox.remove(['event-2']);
+    await outbox.append(event(1));
+    await outbox.append(event(2));
+    await outbox.append(event(3));
+    await outbox.remove([event(2).id]);
 
-    await expect(outbox.list(10)).resolves.toEqual([event('event-3')]);
+    await expect(outbox.list(10)).resolves.toEqual([event(3)]);
+  });
+
+  it('serializes concurrent analytics mutations without losing events', async () => {
+    const outbox = new LocalAnalyticsOutbox(new MemoryStorage(), 10);
+    const occurredAt = new Date().toISOString();
+    const event = (sequence: number) => ({
+      id: `00000000-0000-4000-8000-${String(sequence).padStart(12, '0')}`,
+      sessionId: '00000000-0000-4000-8000-000000000100',
+      name: 'session_started' as const,
+      occurredAt,
+      mode: 'real' as const,
+      properties: {},
+    });
+
+    await Promise.all([outbox.append(event(1)), outbox.append(event(2)), outbox.append(event(3))]);
+
+    await expect(outbox.list(10)).resolves.toEqual([event(1), event(2), event(3)]);
   });
 
   it('fails closed when stored JSON is malformed', async () => {
@@ -111,6 +129,20 @@ describe('local-first repositories', () => {
     storage.values.set('alerts:austin', '{invalid-json');
 
     await expect(new LocalAlertCache(storage).get('austin')).resolves.toBeNull();
+  });
+
+  it('drops analytics events that are too old for server ingestion', async () => {
+    const storage = new MemoryStorage();
+    storage.values.set('analytics:outbox', JSON.stringify([{
+      id: '00000000-0000-4000-8000-000000000001',
+      sessionId: '00000000-0000-4000-8000-000000000100',
+      name: 'session_started',
+      occurredAt: '2025-01-01T00:00:00.000Z',
+      mode: 'real',
+      properties: {},
+    }]));
+
+    await expect(new LocalAnalyticsOutbox(storage).list(10)).resolves.toEqual([]);
   });
 
   it('rejects structurally invalid cached alerts', async () => {

@@ -55,3 +55,19 @@ Status: accepted
 Expo web uses `single` output with host rewrites to `index.html`.
 
 Consequence: nested routes load directly on public demo hosts while retaining the centered mobile experience.
+
+## ADR 008: public cloud functions use bounded anonymous access
+
+Status: accepted
+
+Modern Supabase publishable keys are public configuration, not user identity or bearer tokens. Edge Functions validate the `apikey`, actual body size, exact contract, per-client budget, and global budget. Database writes use a hosted secret key and least-privilege grants.
+
+Consequence: the optional backend can support guest access without misrepresenting a public key as authentication. Telemetry remains anonymous and untrusted, and paid AI work stays behind explicit cost controls.
+
+## ADR 009: shelter proxy fails back to the official public source
+
+Status: accepted
+
+When Supabase is configured, FEMA shelter requests use the Edge Function first. A proxy failure falls back to the direct public FEMA endpoint and the same client normalizer.
+
+Consequence: centralized validation and rate limits improve the public demo without making shelter lookup depend on the optional backend.

@@ -9,26 +9,26 @@ import { Card } from '@/components/ui/card';
 import { Icon } from '@/components/ui/icon';
 import { Screen } from '@/components/ui/screen';
 import { SettingRow } from '@/components/ui/setting-row';
-import { DemoBanner, OfflineBanner } from '@/components/ui/state-messages';
+import { OfflineBanner } from '@/components/ui/state-messages';
 import { StatusBadge } from '@/components/ui/status-badge';
 import { colors, radii, spacing } from '@/constants/tokens';
 import { hazardLabels } from '@/data/mock-repositories';
 
+function ValueRow({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <Card style={styles.valueRow}>
+      <AppText variant="bodyStrong" style={styles.flex}>{label}</AppText>
+      <View style={styles.valueContent}>{children}</View>
+    </Card>
+  );
+}
+
 export default function SettingsScreen() {
-  const {
-    feed,
-    isNotificationPermissionLoading,
-    notificationPermissionState,
-    preferences,
-    requestNotificationPermission,
-    updatePreferences,
-  } = useDisasterReady();
+  const { feed, isNotificationPermissionLoading, notificationPermissionState, preferences, requestNotificationPermission, updatePreferences } = useDisasterReady();
   const [offlinePreview, setOfflinePreview] = useState(false);
   const location = preferences.location;
   const showOffline = offlinePreview || (feed.isOffline && Boolean(feed.retrievedAt));
-  const savedAt = feed.retrievedAt
-    ? new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit' }).format(new Date(feed.retrievedAt))
-    : '3:02 PM (preview)';
+  const savedAt = feed.retrievedAt ? new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit' }).format(new Date(feed.retrievedAt)) : '3:02 PM (preview)';
 
   const save = <Key extends keyof typeof preferences>(key: Key, value: (typeof preferences)[Key]) => {
     void updatePreferences({ ...preferences, [key]: value });
@@ -41,103 +41,52 @@ export default function SettingsScreen() {
     granted: 'Allowed',
     provisional: 'Provisional',
     ephemeral: 'Temporary',
-    error: 'Status unavailable',
+    error: 'Unavailable',
   }[notificationPermissionState ?? 'error'];
-  const notificationTone = notificationPermissionState === 'granted'
-    || notificationPermissionState === 'provisional'
-    || notificationPermissionState === 'ephemeral'
-    ? 'safe'
-    : notificationPermissionState === 'denied' || notificationPermissionState === 'error'
-      ? 'danger'
-      : 'info';
 
   return (
-    <Screen testID="settings-screen">
-      <AppHeader title="Settings" subtitle="Guest profile" />
+    <Screen tabScreen testID="settings-screen">
+      <AppHeader title="Settings" subtitle="Manage your settings" />
       {showOffline ? <OfflineBanner lastUpdated={savedAt} /> : null}
 
       <Card style={styles.profileCard}>
-        <View style={styles.avatar}><AppText variant="heading" color={colors.primary}>G</AppText></View>
+        <View style={styles.avatar}><Icon name={{ ios: 'person.fill', android: 'person', web: 'person' }} color={colors.ink} size={20} /></View>
         <View style={styles.flex}>
-          <AppText variant="bodyStrong">Guest mode</AppText>
-          <AppText variant="caption" color={colors.inkMuted}>Use emergency information without signing in.</AppText>
+          <AppText variant="bodyStrong">Guest profile</AppText>
+          <AppText variant="caption" color={colors.inkMuted}>Stored on this device</AppText>
         </View>
-        <StatusBadge label="Local" tone="info" />
+        <Icon name={{ ios: 'pencil', android: 'edit', web: 'edit' }} color={colors.inkMuted} size={18} />
       </Card>
 
-      <View style={styles.section}>
-        <AppText variant="eyebrow" color={colors.inkMuted}>Location & hazards</AppText>
-        <Card style={styles.locationCard}>
-          <View style={styles.locationRow}>
-            <View style={styles.iconBox}><Icon name={{ ios: 'location.fill', android: 'location_on', web: 'location_on' }} color={colors.primary} size={20} /></View>
-            <View style={styles.flex}>
-              <AppText variant="bodyStrong">{location.city}, {location.region} {location.postalCode}</AppText>
-              <AppText variant="caption" color={colors.inkMuted}>Your selected alert area</AppText>
-            </View>
+      <ValueRow label="Hazards">
+        <View style={styles.chips}>{preferences.hazards.slice(0, 2).map((hazard) => <StatusBadge key={hazard} label={hazardLabels[hazard]} tone="info" />)}{preferences.hazards.length > 2 ? <StatusBadge label={`+${preferences.hazards.length - 2}`} tone="info" /> : null}</View>
+      </ValueRow>
+      <ValueRow label="Location"><StatusBadge label={`${location.city}, ${location.region} ${location.postalCode}`} tone="info" /></ValueRow>
+      <ValueRow label="Language"><StatusBadge label="English" tone="info" /></ValueRow>
+      <ValueRow label="Text size"><StatusBadge label={preferences.textSize === 'standard' ? 'Standard' : preferences.textSize === 'large' ? 'Large' : 'Extra large'} tone="info" /></ValueRow>
+
+      <Card style={styles.settingCard}>
+        <SettingRow label="High contrast" value={preferences.highContrast} onValueChange={(value) => save('highContrast', value)} />
+        <SettingRow accessibilityLabel="Plain language" label="Simple words" value={preferences.plainLanguage} onValueChange={(value) => save('plainLanguage', value)} />
+        <SettingRow label="Larger text" value={preferences.textSize !== 'standard'} onValueChange={(value) => save('textSize', value ? 'large' : 'standard')} />
+        <SettingRow label="Reduced motion" value={preferences.reducedMotion} onValueChange={(value) => save('reducedMotion', value)} />
+        <SettingRow label="Preview offline state" value={offlinePreview} onValueChange={setOfflinePreview} />
+      </Card>
+
+      <Card style={styles.notificationCard}>
+        <View style={styles.notificationHeader}>
+          <View style={styles.notificationIcon}><Icon name={{ ios: 'bell.badge.fill', android: 'notifications_active', web: 'notifications_active' }} color={colors.primary} size={20} /></View>
+          <View style={styles.flex}>
+            <AppText variant="bodyStrong">Emergency notifications</AppText>
+            <AppText variant="caption" color={colors.inkMuted}>{isNotificationPermissionLoading ? 'Checking permission' : notificationStatus}</AppText>
           </View>
-          <View style={styles.chips}>
-            {preferences.hazards.map((hazard) => <StatusBadge key={hazard} label={hazardLabels[hazard]} tone="info" />)}
-          </View>
-        </Card>
-      </View>
-
-      <View style={styles.section}>
-        <AppText variant="eyebrow" color={colors.inkMuted}>Accessibility</AppText>
-        <Card style={styles.settingCard}>
-          <SettingRow label="Plain language" detail="Shorter, more direct summaries" value={preferences.plainLanguage} onValueChange={(value) => save('plainLanguage', value)} />
-          <SettingRow label="High contrast" detail="Stronger visual separation" value={preferences.highContrast} onValueChange={(value) => save('highContrast', value)} />
-          <SettingRow label="Larger text" detail="Use the larger reading preset" value={preferences.textSize !== 'standard'} onValueChange={(value) => save('textSize', value ? 'large' : 'standard')} />
-        </Card>
-      </View>
-
-      <View style={styles.section}>
-        <AppText variant="eyebrow" color={colors.inkMuted}>Emergency notifications</AppText>
-        <Card style={styles.notificationCard}>
-          <View style={styles.notificationHeader}>
-            <View style={styles.iconBox}><Icon name={{ ios: 'bell.badge.fill', android: 'notifications_active', web: 'notifications_active' }} color={colors.primary} size={20} /></View>
-            <View style={styles.flex}>
-              <AppText variant="bodyStrong">System alert permission</AppText>
-              <AppText variant="caption" color={colors.inkMuted}>Controls whether this device can display DisasterReady alerts.</AppText>
-            </View>
-            <StatusBadge label={isNotificationPermissionLoading ? 'Checking' : notificationStatus} tone={notificationTone} />
-          </View>
-          {notificationPermissionState === 'unsupported' ? (
-            <AppText variant="caption" color={colors.inkMuted}>Install the iOS or Android development build to request system notification permission.</AppText>
-          ) : null}
-          {notificationPermissionState === 'not-determined' ? (
-            <PrimaryButton
-              accessibilityLabel="Enable emergency notifications"
-              loading={isNotificationPermissionLoading}
-              onPress={() => void requestNotificationPermission()}>
-              Enable notifications
-            </PrimaryButton>
-          ) : null}
-          {notificationPermissionState === 'denied' ? (
-            <AppText variant="caption" color={colors.inkMuted}>Permission is denied. You can allow notifications from the device Settings app.</AppText>
-          ) : null}
-          <AppText variant="caption" color={colors.inkSubtle}>Remote alert delivery requires the project notification service to be configured.</AppText>
-        </Card>
-      </View>
-
-      <View style={styles.section}>
-        <AppText variant="eyebrow" color={colors.inkMuted}>Language</AppText>
-        <Card style={styles.languageRow}>
-          <View style={styles.iconBox}><Icon name={{ ios: 'globe', android: 'language', web: 'language' }} color={colors.primary} size={20} /></View>
-          <AppText variant="bodyStrong" style={styles.flex}>English</AppText>
-          <Icon name={{ ios: 'chevron.right', android: 'chevron_right', web: 'chevron_right' }} color={colors.inkSubtle} />
-        </Card>
-      </View>
-
-      <View style={styles.section}>
-        <AppText variant="eyebrow" color={colors.inkMuted}>Demo & offline</AppText>
-        <DemoBanner label="Simulated alerts are always clearly labeled" />
-        <Card style={styles.settingCard}>
-          <SettingRow label="Preview offline state" detail="See cached-data freshness messaging" value={offlinePreview} onValueChange={setOfflinePreview} />
-        </Card>
-      </View>
+        </View>
+        {notificationPermissionState === 'unsupported' ? <AppText variant="caption" color={colors.inkMuted}>Install the iOS or Android development build to request system notification permission.</AppText> : null}
+        {notificationPermissionState === 'not-determined' ? <PrimaryButton accessibilityLabel="Enable emergency notifications" loading={isNotificationPermissionLoading} onPress={() => void requestNotificationPermission()}>Enable notifications</PrimaryButton> : null}
+      </Card>
 
       <Card tone="muted" style={styles.privacyCard}>
-        <Icon name={{ ios: 'lock.shield.fill', android: 'privacy_tip', web: 'privacy_tip' }} color={colors.safe} size={22} />
+        <Icon name={{ ios: 'lock.shield.fill', android: 'privacy_tip', web: 'privacy_tip' }} color={colors.safe} size={21} />
         <View style={styles.flex}>
           <AppText variant="bodyStrong">Data & privacy</AppText>
           <AppText variant="caption" color={colors.inkMuted}>Guest mode does not create a cloud profile.</AppText>
@@ -149,16 +98,14 @@ export default function SettingsScreen() {
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
-  profileCard: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
-  avatar: { width: 44, height: 44, borderRadius: 22, backgroundColor: colors.primarySoft, alignItems: 'center', justifyContent: 'center' },
-  section: { gap: spacing.sm },
-  locationCard: { gap: spacing.md },
-  locationRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
-  iconBox: { width: 38, height: 38, borderRadius: radii.md, backgroundColor: colors.primarySoft, alignItems: 'center', justifyContent: 'center' },
-  chips: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
+  profileCard: { minHeight: 62, flexDirection: 'row', alignItems: 'center', gap: spacing.md },
+  avatar: { width: 40, height: 40, borderRadius: radii.md, backgroundColor: colors.surfaceMuted, alignItems: 'center', justifyContent: 'center' },
+  valueRow: { minHeight: 48, flexDirection: 'row', alignItems: 'center', gap: spacing.sm, paddingVertical: spacing.sm },
+  valueContent: { maxWidth: '68%', alignItems: 'flex-end' },
+  chips: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'flex-end', gap: 5 },
   settingCard: { paddingTop: 0, paddingBottom: 0 },
   notificationCard: { gap: spacing.md },
   notificationHeader: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
-  languageRow: { minHeight: 66, flexDirection: 'row', alignItems: 'center', gap: spacing.md },
+  notificationIcon: { width: 40, height: 40, borderRadius: radii.md, backgroundColor: colors.primarySoft, alignItems: 'center', justifyContent: 'center' },
   privacyCard: { flexDirection: 'row', alignItems: 'center', gap: spacing.md },
 });

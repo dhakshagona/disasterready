@@ -44,7 +44,7 @@ type AppContextValue = {
   openShelterMap(shelter: Shelter): Promise<void>;
   requestNotificationPermission(): Promise<void>;
   loadPlainLanguageSummary(alert: Alert): Promise<void>;
-  trackEvent(name: AnalyticsEventName, options: AnalyticsTrackOptions): Promise<void>;
+  trackEvent<Name extends AnalyticsEventName>(name: Name, options: AnalyticsTrackOptions<Name>): Promise<void>;
   updatePreferences(preferences: UserPreferences): Promise<void>;
   getAlertById(id: string): Alert | null;
   checklistRepository: ChecklistRepositoryPort;
@@ -79,7 +79,6 @@ export function DisasterReadyProvider({ children, runtime }: PropsWithChildren<{
     let mounted = true;
     async function initialize() {
       try {
-        void runtimeRef.current.analyticsService.track('session_started', { mode: 'real' }).catch(() => undefined);
         const saved = (await runtimeRef.current.preferencesRepository.get().catch(() => null)) ?? defaultPreferences;
         if (!mounted) return;
         preferencesRef.current = saved;
@@ -176,7 +175,7 @@ export function DisasterReadyProvider({ children, runtime }: PropsWithChildren<{
     }
   }, [updatePreferences]);
 
-  const trackEvent = useCallback(async (name: AnalyticsEventName, options: AnalyticsTrackOptions) => {
+  const trackEvent = useCallback(async <Name extends AnalyticsEventName,>(name: Name, options: AnalyticsTrackOptions<Name>) => {
     await runtimeRef.current.analyticsService.track(name, options).catch(() => undefined);
   }, []);
 

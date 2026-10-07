@@ -18,7 +18,7 @@ describe('web deployment configuration', () => {
     const example = readFileSync('.env.example', 'utf8');
     expect(example).toContain('EXPO_PUBLIC_SUPABASE_URL=');
     expect(example).toContain('EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY=');
-    expect(example).not.toContain('OPENAI_API_KEY');
+    expect(example).not.toContain('GEMINI_API_KEY');
     expect(example).not.toContain('SERVICE_ROLE');
   });
 });

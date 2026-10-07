@@ -26,6 +26,22 @@ describe('plain-language service', () => {
     expect(liveAlert.doNow).toEqual(demoFloodAlert.doNow);
   });
 
+  it('uses the official NWS instruction for simplification while preserving the full bulletin', async () => {
+    const provider = { simplify: async (input: { officialText: string }) => ({ plainSummary: input.officialText }) };
+    const service = new PlainLanguageService({ provider });
+    const alert = {
+      ...liveAlert,
+      originalText: 'A long official description remains visible. Move to higher ground immediately. Do not drive through flooded roads.',
+      instructionText: 'Move to higher ground immediately. Do not drive through flooded roads.',
+    };
+
+    await expect(service.simplify(alert)).resolves.toEqual({
+      summary: alert.instructionText,
+      source: 'ai',
+    });
+    expect(alert.originalText).toContain('long official description');
+  });
+
   it('falls back when no server-side provider is configured', async () => {
     const service = new PlainLanguageService();
 

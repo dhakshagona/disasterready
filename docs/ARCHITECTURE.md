@@ -21,14 +21,20 @@ flowchart TD
   end
 
   ALERTS --> NWS["api.weather.gov"]
-  RESOURCES --> FEMA["FEMA National Shelter System"]
+  RESOURCES --> SHELTEREDGE["shelter-proxy Edge Function, optional"]
+  SHELTEREDGE --> FEMA["FEMA National Shelter System"]
+  RESOURCES --> FEMA
   ANALYTICS --> OUTBOX["Bounded local event outbox"]
   PLAIN --> DETERMINISTIC["Deterministic fallback"]
   OUTBOX --> RECORD["record-events Edge Function, optional"]
   PLAIN --> SIMPLIFY["simplify-alert Edge Function, optional"]
   RECORD --> POSTGRES["Supabase PostgreSQL"]
-  SIMPLIFY --> OPENAI["OpenAI Responses API"]
-  OPENAI --> CONTRACT["Strict JSON schema plus safety contract"]
+  RECORD --> LIMITS["Private rate-limit counters"]
+  SIMPLIFY --> LIMITS
+  SHELTEREDGE --> LIMITS
+  SIMPLIFY --> PROVIDER["Plain-language provider port"]
+  PROVIDER --> GEMINI["Gemini free-tier API"]
+  GEMINI --> CONTRACT["Strict JSON schema plus safety contract"]
   CONTRACT --> PLAIN
 ```
 
@@ -40,7 +46,7 @@ flowchart TD
 - Reusable UI primitives and design tokens
 - Accessible names, roles, states, and minimum touch targets
 - Loading, empty, offline, stale, demo, expired, and error disclosures
-- No direct knowledge of NWS, FEMA, Supabase, or OpenAI response shapes
+- No direct knowledge of NWS, FEMA, Supabase, or Gemini response shapes
 
 ### Domain
 
@@ -65,6 +71,7 @@ flowchart TD
 - Platform notification adapters
 - Apple Maps, Google Maps, and web routing adapters
 - Supabase analytics and plain-language transports
+- Optional Supabase shelter proxy with direct FEMA fallback
 - Supabase Edge Functions and migration
 
 ## Live alert flow
@@ -80,13 +87,17 @@ flowchart TD
 
 The deterministic action-plan selector is the safety authority. It uses alert hazard and status to select reviewed, source-linked instructions. The language model does not select, reorder, add, or remove actions.
 
+For optional wording, the application sends the dedicated official NWS instruction when available. The complete official bulletin remains in the alert model and UI. This keeps the model task narrow without hiding source context from the user.
+
 ## Optional cloud boundary
 
 Supabase is used only where it adds clear value:
 
 - Store anonymous, aggregate product events after a strict allowlist check
-- Keep the OpenAI credential off the client
+- Keep the Gemini credential off the client
 - Apply a schema and safety check before AI wording reaches the app
+- Reduce public FEMA CORS and availability risk while preserving a direct public fallback
+- Enforce per-client and global request budgets before database or external-provider work
 
 Authentication, profile sync, saved-location sync, and server-side alert mirroring are deliberately not included. Guest access and local emergency readiness do not benefit enough from those dependencies at this stage.
 
@@ -100,10 +111,10 @@ Client-safe configuration:
 
 Server-only configuration:
 
-- OpenAI API key
+- Gemini API key
 - Supabase service-role key supplied by the Edge Function environment
 
-The analytics table contains random event and session identifiers, event name, event time, real or demo mode, and allowlisted aggregate properties. It does not accept contact data, saved coordinates, city, or postal code.
+The analytics table contains random UUID event and session identifiers, event name, client event time, server receipt time, real or demo mode, and allowlisted aggregate properties. It does not accept contact data, saved coordinates, city, postal code, alert text, or arbitrary event properties. Client roles have no direct access.
 
 ## Offline behavior
 
@@ -112,6 +123,25 @@ The analytics table contains random event and session identifiers, event name, e
 - Shelter results older than 30 minutes are stale.
 - Failed cache reads or writes do not turn network failure into an all-clear.
 - Analytics and AI failures never block the emergency flow.
+- Cold-start evidence exercises cached alert recovery, cached FEMA source and timestamp recovery, stale-state disclosure, and checklist progress after repository restart.
+
+## Evidence architecture
+
+The evidence harness imports the same production normalizers, selectors, services, safety contracts, and repositories used by the app. Controlled adapters supply network, storage, timeout, malformed, and permission-independent conditions.
+
+```mermaid
+flowchart LR
+  NWSARCHIVE["Frozen official NWS corpus"] --> REPLAY["Production replay harness"]
+  REPLAY --> NORMALIZER["NWS normalizer"]
+  NORMALIZER --> SELECTOR["Deterministic plan selector"]
+  TAXONOMY["Explicit reviewed event taxonomy"] --> REPLAY
+  SCENARIOS["148 controlled failure scenarios"] --> SERVICES["Production application services"]
+  REPLAY --> REPORTS["JSON and Markdown reports"]
+  SERVICES --> REPORTS
+  REPORTS --> CI["GitHub Actions verification"]
+```
+
+The corpus manifest stores collection time, exact paginated source URLs, category counts, and a SHA-256 digest. Replaying the frozen corpus does not require external network access. Refreshing the corpus is a separate explicit command so a changing upstream population cannot silently alter a historical result.
 
 ## Direct web routes
 

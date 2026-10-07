@@ -1,0 +1,83 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-07T01:14:26.322Z",
+  "dataset": "evidence/data/nws-alerts-1000.jsonl.gz",
+  "datasetSha256": "f3823277203daa93728e7a8ba6e34de4f1b82bb9d133edf575bf9bebfb03a9e2",
+  "runtime": {
+    "node": "v24.17.0",
+    "platform": "win32",
+    "architecture": "x64"
+  },
+  "latencyScope": "Local CPU wall time for normalization and deterministic action-plan selection. Network and rendering are excluded.",
+  "metrics": {
+    "attemptedRecords": 1000,
+    "acceptedRecords": 1000,
+    "pipelineCompletionPercent": 100,
+    "classificationAgreementPercent": 100,
+    "representedCategories": 7,
+    "planEligibleRecords": 556,
+    "plansCreated": 556,
+    "actionPlanCoveragePercent": 100,
+    "crashCount": 0,
+    "cpuLatencyMs": {
+      "median": 0.006,
+      "p95": 0.016,
+      "maximum": 1.156
+    }
+  },
+  "targets": {
+    "recordsAtLeast1000": true,
+    "categoriesAtLeast5": true,
+    "pipelineCompletionAtLeast99Percent": true,
+    "classificationAgreementAtLeast98Percent": true,
+    "medianCpuLatencyBelow2000Ms": true,
+    "p95CpuLatencyBelow5000Ms": true,
+    "zeroCrashes": true
+  },
+  "categories": {
+    "air-quality": {
+      "attempted": 4,
+      "accepted": 4,
+      "correct": 4,
+      "plans": 4
+    },
+    "flood": {
+      "attempted": 374,
+      "accepted": 374,
+      "correct": 374,
+      "plans": 320
+    },
+    "hurricane": {
+      "attempted": 28,
+      "accepted": 28,
+      "correct": 28,
+      "plans": 26
+    },
+    "other": {
+      "attempted": 373,
+      "accepted": 373,
+      "correct": 373,
+      "plans": 0
+    },
+    "tornado": {
+      "attempted": 16,
+      "accepted": 16,
+      "correct": 16,
+      "plans": 11
+    },
+    "wildfire": {
+      "attempted": 17,
+      "accepted": 17,
+      "correct": 17,
+      "plans": 13
+    },
+    "winter-storm": {
+      "attempted": 188,
+      "accepted": 188,
+      "correct": 188,
+      "plans": 182
+    }
+  },
+  "failureCount": 0,
+  "failures": []
+}

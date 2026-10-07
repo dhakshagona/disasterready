@@ -25,7 +25,7 @@ comment on table public.analytics_events is
 
 alter table public.analytics_events enable row level security;
 revoke all on table public.analytics_events from anon, authenticated;
-grant all on table public.analytics_events to service_role;
+grant insert on table public.analytics_events to service_role;
 
 create index if not exists analytics_events_occurred_at_idx
   on public.analytics_events (occurred_at desc);

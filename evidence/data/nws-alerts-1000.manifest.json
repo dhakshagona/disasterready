@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "source": "National Weather Service API",
+  "sourceDocumentation": "https://www.weather.gov/documentation/services-web-api",
+  "collectedAt": "2026-10-07T00:45:33.405Z",
+  "windowStart": "2026-10-01T00:45:33.405Z",
+  "windowEnd": "2026-10-07T00:45:33.405Z",
+  "requestedRecords": 1000,
+  "availableDistinctRecords": 7123,
+  "selectedDistinctRecords": 1000,
+  "selection": "Deterministic round-robin selection across reviewed hazard categories, sorted by provider identifier",
+  "availableCategoryCounts": {
+    "flood": 2252,
+    "tornado": 16,
+    "hurricane": 28,
+    "wildfire": 17,
+    "air-quality": 4,
+    "winter-storm": 188,
+    "earthquake": 0,
+    "other": 4618
+  },
+  "selectedCategoryCounts": {
+    "flood": 374,
+    "tornado": 16,
+    "hurricane": 28,
+    "wildfire": 17,
+    "air-quality": 4,
+    "winter-storm": 188,
+    "earthquake": 0,
+    "other": 373
+  },
+  "representedCategories": 7,
+  "sourcePages": [
+    "https://api.weather.gov/alerts?start=2026-10-01T00%3A45%3A33.405Z&end=2026-10-07T00%3A45%3A33.405Z&limit=500",
+    "https://api.weather.gov/alerts?start=2026-10-01T00:45:33.405Z&end=2026-10-07T00:45:33.405Z&limit=500&cursor=eyJ0IjoxNzkxMjkwNTg5LCJpIjoidXJuOm9pZDoyLjQ5LjAuMS44NDAuMC1LRUVQQUxJVkUtNTIwMjUifQ%3D%3D",
+    "https://api.weather.gov/alerts?start=2026-10-01T00:45:33.405Z&end=2026-10-07T00:45:33.405Z&limit=500&cursor=eyJ0IjoxNzkxMjQyMjIwLCJpIjoidXJuOm9pZDoyLjQ5LjAuMS44NDAuMC45YTYyZGE1MDg5MDk2MDMzNGM1YjMxZDA2YjczMDZmMmI5MWVjYjg3LjAwMS4xIn0%3D",
+    "https://api.weather.gov/alerts?start=2026-10-01T00:45:33.405Z&end=2026-10-07T00:45:33.405Z&limit=500&cursor=eyJ0IjoxNzkxMjA0MTg5LCJpIjoidXJuOm9pZDoyLjQ5LjAuMS44NDAuMC1LRUVQQUxJVkUtNDkxMTUifQ%3D%3D",
+    "https://api.weather.gov/alerts?start=2026-10-01T00:45:33.405Z&end=2026-10-07T00:45:33.405Z&limit=500&cursor=eyJ0IjoxNzkxMTY0NDAwLCJpIjoidXJuOm9pZDoyLjQ5LjAuMS44NDAuMC40YzU0OGM1ZWFiMzllYzViMzA5OTliNWY2YTg3MWYwN2M0N2MxMzIzLjAwMi4xIn0%3D",
+    "https://api.weather.gov/alerts?start=2026-10-01T00:45:33.405Z&end=2026-10-07T00:45:33.405Z&limit=500&cursor=eyJ0IjoxNzkxMTMxNjQwLCJpIjoidXJuOm9pZDoyLjQ5LjAuMS44NDAuMC5mZWY1MDhiZWU5ZTI3YTA3N2M4YWNkYWM3NmEzMGFhOThjNTNmNWM2LjAwMS4xIn0%3D",
+    "https://api.weather.gov/alerts?start=2026-10-01T00:45:33.405Z&end=2026-10-07T00:45:33.405Z&limit=500&cursor=eyJ0IjoxNzkxMDkxNzcwLCJpIjoiMjc3ODAyMDgxNzQyOTM4OSJ9",
+    "https://api.weather.gov/alerts?start=2026-10-01T00:45:33.405Z&end=2026-10-07T00:45:33.405Z&limit=500&cursor=eyJ0IjoxNzkxMDY1NzYwLCJpIjoidXJuOm9pZDoyLjQ5LjAuMS44NDAuMC4yZWRhMTkwM2FjZmNkODkyYjliNzBmMWM0MTM0M2NjYjQ0NDM4ODE0LjAwOC4xIn0%3D",
+    "https://api.weather.gov/alerts?start=2026-10-01T00:45:33.405Z&end=2026-10-07T00:45:33.405Z&limit=500&cursor=eyJ0IjoxNzkxMDI5NTIwLCJpIjoidXJuOm9pZDoyLjQ5LjAuMS44NDAuMC45NGViZjE4OGM1NWM5ZTBhODE1MDY4NGMxNWE0OTc4NzRhNWNmMDk5LjAxOC4xIn0%3D",
+    "https://api.weather.gov/alerts?start=2026-10-01T00:45:33.405Z&end=2026-10-07T00:45:33.405Z&limit=500&cursor=eyJ0IjoxNzkwOTc4NjQwLCJpIjoidXJuOm9pZDoyLjQ5LjAuMS44NDAuMC5jMzFlYzNjMWY0NTk3YmJmMjg2MzNhYjliZmRlYTNjZmY0ZDllN2E2LjAwMS4xIn0%3D",
+    "https://api.weather.gov/alerts?start=2026-10-01T00:45:33.405Z&end=2026-10-07T00:45:33.405Z&limit=500&cursor=eyJ0IjoxNzkwOTQzMDYwLCJpIjoidXJuOm9pZDoyLjQ5LjAuMS44NDAuMC4yMjM4Y2U0ZTUzNjUwNTkyODBkMzZjZDQxMGYwZDg2MDQ4ODdjMGQwLjAwMS4xIn0%3D",
+    "https://api.weather.gov/alerts?start=2026-10-01T00:45:33.405Z&end=2026-10-07T00:45:33.405Z&limit=500&cursor=eyJ0IjoxNzkwOTA2MjgwLCJpIjoidXJuOm9pZDoyLjQ5LjAuMS44NDAuMC5iMDNkYjZkNDdiYmM2ZWFiZTY1ZDIwYmRjNmQ2Njk2ZDE1ZDhjYmRjLjAwMS4xIn0%3D",
+    "https://api.weather.gov/alerts?start=2026-10-01T00:45:33.405Z&end=2026-10-07T00:45:33.405Z&limit=500&cursor=eyJ0IjoxNzkwODgwMDYwLCJpIjoidXJuOm9pZDoyLjQ5LjAuMS44NDAuMC4zYzVmYTAxMmVlZWZmNmZlMDY4Y2M1OGVkYzk3YjgzYTdhODc1MjAzLjAwMS4xIn0%3D",
+    "https://api.weather.gov/alerts?start=2026-10-01T00:45:33.405Z&end=2026-10-07T00:45:33.405Z&limit=500&cursor=eyJ0IjoxNzkwODUxMzgwLCJpIjoidXJuOm9pZDoyLjQ5LjAuMS44NDAuMC5iZjA3NmExZTRlMzFhMWJhYmY3NzIyZjdiODBkOTZjZjQxOWRjZWZmLjAwMS4xIn0%3D",
+    "https://api.weather.gov/alerts?start=2026-10-01T00:45:33.405Z&end=2026-10-07T00:45:33.405Z&limit=500&cursor=eyJ0IjoxNzkwODIyMTAwLCJpIjoidXJuOm9pZDoyLjQ5LjAuMS44NDAuMC4zMmE5YTIxNWU5YTc3NjRhYjlmMTljZmYwNTM1MTkyNjAwNWIwMjRkLjAwMS4xIn0%3D",
+    "https://api.weather.gov/alerts?start=2026-10-01T00:45:33.405Z&end=2026-10-07T00:45:33.405Z&limit=500&cursor=eyJ0IjoxNzkwODE1NjIwLCJpIjoidXJuOm9pZDoyLjQ5LjAuMS44NDAuMC45YjY5ZDFkMmU4ODVmNmNmMzdiZTU0ZGMwOGY1MzcyYmJhZGMwNGFjLjAwMS4xIn0%3D"
+  ],
+  "datasetFile": "evidence/data/nws-alerts-1000.jsonl.gz",
+  "datasetSha256": "f3823277203daa93728e7a8ba6e34de4f1b82bb9d133edf575bf9bebfb03a9e2"
+}

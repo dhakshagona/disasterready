@@ -23,12 +23,12 @@ type ShortcutProps = {
 };
 
 function Shortcut({ icon, title, detail, tone = 'primary', onPress }: ShortcutProps) {
-  const accent = tone === 'safe' ? colors.safe : colors.primary;
+  const accent = tone === 'safe' ? colors.safe : '#C58B08';
   return (
     <Pressable accessibilityRole={onPress ? 'button' : undefined} accessibilityLabel={title} disabled={!onPress} onPress={onPress} style={({ pressed }) => pressed && styles.pressed}>
       <Card style={styles.shortcutCard}>
-        <View style={[styles.shortcutIcon, tone === 'safe' && styles.safeIcon]}>
-          <Icon name={{ ios: icon === 'menu_book' ? 'book.fill' : 'checklist', android: icon, web: icon }} color={accent} size={22} />
+        <View style={[styles.shortcutIcon, tone === 'safe' ? styles.safeIcon : styles.checklistIcon]}>
+          <Icon name={{ ios: icon === 'menu_book' ? 'book.fill' : 'checklist', android: icon, web: icon }} color={accent} size={21} />
         </View>
         <View style={styles.flex}>
           <AppText variant="bodyStrong">{title}</AppText>
@@ -43,9 +43,9 @@ function Shortcut({ icon, title, detail, tone = 'primary', onPress }: ShortcutPr
 function LocationHeader({ location }: { location: SavedLocation }) {
   return (
     <View style={styles.locationHeader}>
-      <AppText variant="title" accessibilityRole="header">Good afternoon</AppText>
+      <AppText variant="title" accessibilityRole="header">Welcome back</AppText>
       <View style={styles.locationLine}>
-        <Icon name={{ ios: 'location.fill', android: 'location_on', web: 'location_on' }} color={colors.primary} size={16} />
+        <Icon name={{ ios: 'location.fill', android: 'location_on', web: 'location_on' }} color={colors.primary} size={15} />
         <AppText variant="caption" color={colors.inkMuted}>{location.city}, {location.region} {location.postalCode}</AppText>
       </View>
     </View>
@@ -60,28 +60,45 @@ const demoFeed: AlertFeed = {
   retrievedAt: demoFloodAlert.retrievedAt,
 };
 
+const clearDemoFeed: AlertFeed = {
+  active: [],
+  recent: [],
+  source: 'live',
+  isOffline: false,
+  retrievedAt: demoFloodAlert.retrievedAt,
+};
+
 export default function HomeScreen() {
   const { demo } = useLocalSearchParams<{ demo?: string }>();
   const { feed, preferences, isLoading, isRefreshing, refreshAlerts, trackEvent } = useDisasterReady();
-  const isDemo = demo === '1';
+  const isAlertDemo = demo === '1';
+  const isClearDemo = demo === 'clear';
+  const isDemo = isAlertDemo || isClearDemo;
+  const sessionTrackedRef = useRef(false);
   const demoTrackedRef = useRef(false);
-  const shownFeed = isDemo ? demoFeed : feed;
+  const shownFeed = isAlertDemo ? demoFeed : isClearDemo ? clearDemoFeed : feed;
   const openAlert = (alert: Alert) => router.push(`/alert/${alert.id}` as Href);
   const openPlan = (alert: Alert) => router.push(`/action-plan/${alert.id}` as Href);
-  const showPreparedness = !isDemo && !isLoading && feed.source !== 'unavailable' && feed.active.length === 0;
+  const openSafetyRoute = (alert: Alert) => router.push(`/safety-route/${alert.id}` as Href);
+  const showPreparedness = isClearDemo || (!isDemo && !isLoading && feed.source !== 'unavailable' && feed.active.length === 0);
+  const tone = shownFeed.active.length > 0 ? 'alert' : 'calm';
 
   useEffect(() => {
-    if (isDemo && !demoTrackedRef.current) {
+    if (!sessionTrackedRef.current) {
+      sessionTrackedRef.current = true;
+      void trackEvent('session_started', { mode: isDemo ? 'demo' : 'real' });
+    }
+    if (isAlertDemo && !demoTrackedRef.current) {
       demoTrackedRef.current = true;
       void trackEvent('demo_session_started', { mode: 'demo', properties: { hazard: 'flood', entry: 'home' } });
     }
-    if (!isDemo) demoTrackedRef.current = false;
-  }, [isDemo, trackEvent]);
+    if (!isAlertDemo) demoTrackedRef.current = false;
+  }, [isAlertDemo, isDemo, trackEvent]);
 
   return (
-    <Screen testID="home-screen">
+    <Screen tabScreen testID="home-screen" tone={tone}>
       <LocationHeader location={preferences.location} />
-      {isDemo ? <DemoBanner label="Demo · Simulated Flood Warning" /> : null}
+      {isDemo ? <DemoBanner label={isAlertDemo ? 'Demo: Simulated Flood Warning' : 'Demo: All-clear state'} /> : null}
       <HomeFeedContent
         feed={shownFeed}
         isLoading={isDemo ? false : isLoading}
@@ -89,20 +106,19 @@ export default function HomeScreen() {
         onRefresh={refreshAlerts}
         onOpenAlert={openAlert}
         onOpenPlan={openPlan}
-        onOpenShelters={() => router.push('/shelters' as Href)}
+        onOpenSafetyRoute={openSafetyRoute}
       />
 
       {showPreparedness ? (
         <View style={styles.section}>
-          <AppText variant="eyebrow" color={colors.inkMuted}>Ready when you need it</AppText>
-          <Shortcut icon="checklist" title="Preview emergency checklist" detail="Try the reviewed flood safety plan in demo mode" onPress={() => router.push('/action-plan/demo-flood-001' as Href)} />
-          <Shortcut icon="menu_book" title="Stay prepared & up to date" detail="Review practical safety guidance before an emergency" tone="safe" />
+          <Shortcut icon="checklist" title="Emergency Checklist" detail="Review quick emergency steps" onPress={() => router.push('/action-plan/demo-flood-001' as Href)} />
+          <Shortcut icon="menu_book" title="Stay prepared & up to date" detail="Review practical guidance before an emergency" tone="safe" />
         </View>
       ) : null}
 
       {isDemo ? (
         <Pressable accessibilityRole="button" accessibilityLabel="End demo mode" onPress={() => router.setParams({ demo: undefined })} style={styles.demoLink}>
-          <AppText variant="caption" color={colors.demo}>End demo and return to live alerts</AppText>
+          <AppText variant="caption" color={colors.demo}>End demo</AppText>
         </Pressable>
       ) : (
         <Pressable accessibilityRole="button" accessibilityLabel="Preview a simulated flood warning" onPress={() => router.setParams({ demo: '1' })} style={styles.demoLink}>
@@ -117,11 +133,12 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   pressed: { opacity: 0.68 },
-  locationHeader: { alignItems: 'center', gap: spacing.xs, paddingTop: spacing.xs },
+  locationHeader: { alignItems: 'center', gap: 2, paddingTop: spacing.xs },
   locationLine: { flexDirection: 'row', alignItems: 'center', gap: spacing.xs },
   section: { gap: spacing.sm },
-  shortcutCard: { minHeight: 76, flexDirection: 'row', alignItems: 'center', gap: spacing.md },
-  shortcutIcon: { width: 42, height: 42, borderRadius: radii.md, backgroundColor: colors.primarySoft, alignItems: 'center', justifyContent: 'center' },
+  shortcutCard: { minHeight: 72, flexDirection: 'row', alignItems: 'center', gap: spacing.md },
+  shortcutIcon: { width: 42, height: 42, borderRadius: radii.md, alignItems: 'center', justifyContent: 'center' },
+  checklistIcon: { backgroundColor: '#FFF7D9' },
   safeIcon: { backgroundColor: colors.safeSoft },
   demoLink: { minHeight: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: spacing.sm },
 });

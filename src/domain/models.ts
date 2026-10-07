@@ -36,6 +36,7 @@ export type Alert = {
   expiresAt: string;
   source: string;
   originalText: string;
+  instructionText?: string;
   sourceUrl?: string;
   retrievedAt: string;
   freshness: DataFreshness;

@@ -5,17 +5,18 @@ import { colors, spacing } from '@/constants/tokens';
 
 type SettingRowProps = {
   label: string;
+  accessibilityLabel?: string;
   detail?: string;
   value: boolean;
   onValueChange: (value: boolean) => void;
 };
 
-export function SettingRow({ label, detail, value, onValueChange }: SettingRowProps) {
+export function SettingRow({ accessibilityLabel, label, detail, value, onValueChange }: SettingRowProps) {
   return (
     <Pressable
       accessibilityRole="switch"
       accessibilityState={{ checked: value }}
-      accessibilityLabel={label}
+      accessibilityLabel={accessibilityLabel ?? label}
       onPress={() => onValueChange(!value)}
       style={({ pressed }) => [styles.row, pressed && styles.pressed]}>
       <View style={styles.copy}>

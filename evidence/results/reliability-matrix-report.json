@@ -1,0 +1,1130 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-07T01:14:27.158Z",
+  "runtime": {
+    "node": "v24.17.0",
+    "platform": "win32",
+    "architecture": "x64"
+  },
+  "summary": {
+    "attempted": 148,
+    "passed": 148,
+    "failed": 0,
+    "passRatePercent": 100
+  },
+  "families": {
+    "ai-failure": {
+      "attempted": 12,
+      "passed": 12,
+      "failed": 0
+    },
+    "corrupt-storage": {
+      "attempted": 4,
+      "passed": 4,
+      "failed": 0
+    },
+    "duplicate-alert": {
+      "attempted": 12,
+      "passed": 12,
+      "failed": 0
+    },
+    "expired-alert": {
+      "attempted": 12,
+      "passed": 12,
+      "failed": 0
+    },
+    "large-payload": {
+      "attempted": 4,
+      "passed": 4,
+      "failed": 0
+    },
+    "malformed-nws": {
+      "attempted": 12,
+      "passed": 12,
+      "failed": 0
+    },
+    "network-failure": {
+      "attempted": 12,
+      "passed": 12,
+      "failed": 0
+    },
+    "no-shelter": {
+      "attempted": 12,
+      "passed": 12,
+      "failed": 0
+    },
+    "offline-checklist": {
+      "attempted": 8,
+      "passed": 8,
+      "failed": 0
+    },
+    "offline-shelter-cache": {
+      "attempted": 8,
+      "passed": 8,
+      "failed": 0
+    },
+    "overlapping-hazards": {
+      "attempted": 12,
+      "passed": 12,
+      "failed": 0
+    },
+    "preference-change": {
+      "attempted": 12,
+      "passed": 12,
+      "failed": 0
+    },
+    "provider-update": {
+      "attempted": 12,
+      "passed": 12,
+      "failed": 0
+    },
+    "saved-location-fallback": {
+      "attempted": 12,
+      "passed": 12,
+      "failed": 0
+    },
+    "storage-write-failure": {
+      "attempted": 4,
+      "passed": 4,
+      "failed": 0
+    }
+  },
+  "results": [
+    {
+      "id": "duplicate-alert-001",
+      "family": "duplicate-alert",
+      "expectedOutcome": "A repeated provider version notifies once",
+      "passed": true,
+      "durationMs": 0.233
+    },
+    {
+      "id": "provider-update-001",
+      "family": "provider-update",
+      "expectedOutcome": "A new issue time is treated as a distinct provider update",
+      "passed": true,
+      "durationMs": 0.049
+    },
+    {
+      "id": "expired-alert-001",
+      "family": "expired-alert",
+      "expectedOutcome": "Expired alerts never generate a notification",
+      "passed": true,
+      "durationMs": 0.029
+    },
+    {
+      "id": "malformed-nws-001",
+      "family": "malformed-nws",
+      "expectedOutcome": "Malformed provider input fails closed without an uncaught crash",
+      "passed": true,
+      "durationMs": 0.137
+    },
+    {
+      "id": "saved-location-fallback-001",
+      "family": "saved-location-fallback",
+      "expectedOutcome": "A saved location works without live device location permission",
+      "passed": true,
+      "durationMs": 0.647
+    },
+    {
+      "id": "no-shelter-001",
+      "family": "no-shelter",
+      "expectedOutcome": "An empty verified shelter response stays empty and explicit",
+      "passed": true,
+      "durationMs": 0.159
+    },
+    {
+      "id": "network-failure-001",
+      "family": "network-failure",
+      "expectedOutcome": "A network failure returns cached alert data with disclosed freshness",
+      "passed": true,
+      "durationMs": 0.138
+    },
+    {
+      "id": "ai-failure-001",
+      "family": "ai-failure",
+      "expectedOutcome": "Unsafe or unavailable AI output falls back to deterministic text",
+      "passed": true,
+      "durationMs": 0.139
+    },
+    {
+      "id": "preference-change-001",
+      "family": "preference-change",
+      "expectedOutcome": "Hazard preference changes immediately filter alert visibility",
+      "passed": true,
+      "durationMs": 0.091
+    },
+    {
+      "id": "overlapping-hazards-001",
+      "family": "overlapping-hazards",
+      "expectedOutcome": "Concurrent hazards remain visible and sorted by risk",
+      "passed": true,
+      "durationMs": 0.139
+    },
+    {
+      "id": "duplicate-alert-002",
+      "family": "duplicate-alert",
+      "expectedOutcome": "A repeated provider version notifies once",
+      "passed": true,
+      "durationMs": 0.016
+    },
+    {
+      "id": "provider-update-002",
+      "family": "provider-update",
+      "expectedOutcome": "A new issue time is treated as a distinct provider update",
+      "passed": true,
+      "durationMs": 0.011
+    },
+    {
+      "id": "expired-alert-002",
+      "family": "expired-alert",
+      "expectedOutcome": "Expired alerts never generate a notification",
+      "passed": true,
+      "durationMs": 0.005
+    },
+    {
+      "id": "malformed-nws-002",
+      "family": "malformed-nws",
+      "expectedOutcome": "Malformed provider input fails closed without an uncaught crash",
+      "passed": true,
+      "durationMs": 0.009
+    },
+    {
+      "id": "saved-location-fallback-002",
+      "family": "saved-location-fallback",
+      "expectedOutcome": "A saved location works without live device location permission",
+      "passed": true,
+      "durationMs": 0.024
+    },
+    {
+      "id": "no-shelter-002",
+      "family": "no-shelter",
+      "expectedOutcome": "An empty verified shelter response stays empty and explicit",
+      "passed": true,
+      "durationMs": 0.013
+    },
+    {
+      "id": "network-failure-002",
+      "family": "network-failure",
+      "expectedOutcome": "A network failure returns cached alert data with disclosed freshness",
+      "passed": true,
+      "durationMs": 0.029
+    },
+    {
+      "id": "ai-failure-002",
+      "family": "ai-failure",
+      "expectedOutcome": "Unsafe or unavailable AI output falls back to deterministic text",
+      "passed": true,
+      "durationMs": 0.029
+    },
+    {
+      "id": "preference-change-002",
+      "family": "preference-change",
+      "expectedOutcome": "Hazard preference changes immediately filter alert visibility",
+      "passed": true,
+      "durationMs": 0.039
+    },
+    {
+      "id": "overlapping-hazards-002",
+      "family": "overlapping-hazards",
+      "expectedOutcome": "Concurrent hazards remain visible and sorted by risk",
+      "passed": true,
+      "durationMs": 0.05
+    },
+    {
+      "id": "duplicate-alert-003",
+      "family": "duplicate-alert",
+      "expectedOutcome": "A repeated provider version notifies once",
+      "passed": true,
+      "durationMs": 0.012
+    },
+    {
+      "id": "provider-update-003",
+      "family": "provider-update",
+      "expectedOutcome": "A new issue time is treated as a distinct provider update",
+      "passed": true,
+      "durationMs": 0.015
+    },
+    {
+      "id": "expired-alert-003",
+      "family": "expired-alert",
+      "expectedOutcome": "Expired alerts never generate a notification",
+      "passed": true,
+      "durationMs": 0.008
+    },
+    {
+      "id": "malformed-nws-003",
+      "family": "malformed-nws",
+      "expectedOutcome": "Malformed provider input fails closed without an uncaught crash",
+      "passed": true,
+      "durationMs": 0.008
+    },
+    {
+      "id": "saved-location-fallback-003",
+      "family": "saved-location-fallback",
+      "expectedOutcome": "A saved location works without live device location permission",
+      "passed": true,
+      "durationMs": 0.026
+    },
+    {
+      "id": "no-shelter-003",
+      "family": "no-shelter",
+      "expectedOutcome": "An empty verified shelter response stays empty and explicit",
+      "passed": true,
+      "durationMs": 0.011
+    },
+    {
+      "id": "network-failure-003",
+      "family": "network-failure",
+      "expectedOutcome": "A network failure returns cached alert data with disclosed freshness",
+      "passed": true,
+      "durationMs": 0.042
+    },
+    {
+      "id": "ai-failure-003",
+      "family": "ai-failure",
+      "expectedOutcome": "Unsafe or unavailable AI output falls back to deterministic text",
+      "passed": true,
+      "durationMs": 0.079
+    },
+    {
+      "id": "preference-change-003",
+      "family": "preference-change",
+      "expectedOutcome": "Hazard preference changes immediately filter alert visibility",
+      "passed": true,
+      "durationMs": 0.043
+    },
+    {
+      "id": "overlapping-hazards-003",
+      "family": "overlapping-hazards",
+      "expectedOutcome": "Concurrent hazards remain visible and sorted by risk",
+      "passed": true,
+      "durationMs": 0.029
+    },
+    {
+      "id": "duplicate-alert-004",
+      "family": "duplicate-alert",
+      "expectedOutcome": "A repeated provider version notifies once",
+      "passed": true,
+      "durationMs": 0.013
+    },
+    {
+      "id": "provider-update-004",
+      "family": "provider-update",
+      "expectedOutcome": "A new issue time is treated as a distinct provider update",
+      "passed": true,
+      "durationMs": 0.007
+    },
+    {
+      "id": "expired-alert-004",
+      "family": "expired-alert",
+      "expectedOutcome": "Expired alerts never generate a notification",
+      "passed": true,
+      "durationMs": 0.003
+    },
+    {
+      "id": "malformed-nws-004",
+      "family": "malformed-nws",
+      "expectedOutcome": "Malformed provider input fails closed without an uncaught crash",
+      "passed": true,
+      "durationMs": 0.007
+    },
+    {
+      "id": "saved-location-fallback-004",
+      "family": "saved-location-fallback",
+      "expectedOutcome": "A saved location works without live device location permission",
+      "passed": true,
+      "durationMs": 0.012
+    },
+    {
+      "id": "no-shelter-004",
+      "family": "no-shelter",
+      "expectedOutcome": "An empty verified shelter response stays empty and explicit",
+      "passed": true,
+      "durationMs": 0.012
+    },
+    {
+      "id": "network-failure-004",
+      "family": "network-failure",
+      "expectedOutcome": "A network failure returns cached alert data with disclosed freshness",
+      "passed": true,
+      "durationMs": 0.028
+    },
+    {
+      "id": "ai-failure-004",
+      "family": "ai-failure",
+      "expectedOutcome": "Unsafe or unavailable AI output falls back to deterministic text",
+      "passed": true,
+      "durationMs": 0.045
+    },
+    {
+      "id": "preference-change-004",
+      "family": "preference-change",
+      "expectedOutcome": "Hazard preference changes immediately filter alert visibility",
+      "passed": true,
+      "durationMs": 0.019
+    },
+    {
+      "id": "overlapping-hazards-004",
+      "family": "overlapping-hazards",
+      "expectedOutcome": "Concurrent hazards remain visible and sorted by risk",
+      "passed": true,
+      "durationMs": 0.014
+    },
+    {
+      "id": "duplicate-alert-005",
+      "family": "duplicate-alert",
+      "expectedOutcome": "A repeated provider version notifies once",
+      "passed": true,
+      "durationMs": 0.005
+    },
+    {
+      "id": "provider-update-005",
+      "family": "provider-update",
+      "expectedOutcome": "A new issue time is treated as a distinct provider update",
+      "passed": true,
+      "durationMs": 0.005
+    },
+    {
+      "id": "expired-alert-005",
+      "family": "expired-alert",
+      "expectedOutcome": "Expired alerts never generate a notification",
+      "passed": true,
+      "durationMs": 0.002
+    },
+    {
+      "id": "malformed-nws-005",
+      "family": "malformed-nws",
+      "expectedOutcome": "Malformed provider input fails closed without an uncaught crash",
+      "passed": true,
+      "durationMs": 0.007
+    },
+    {
+      "id": "saved-location-fallback-005",
+      "family": "saved-location-fallback",
+      "expectedOutcome": "A saved location works without live device location permission",
+      "passed": true,
+      "durationMs": 0.01
+    },
+    {
+      "id": "no-shelter-005",
+      "family": "no-shelter",
+      "expectedOutcome": "An empty verified shelter response stays empty and explicit",
+      "passed": true,
+      "durationMs": 0.009
+    },
+    {
+      "id": "network-failure-005",
+      "family": "network-failure",
+      "expectedOutcome": "A network failure returns cached alert data with disclosed freshness",
+      "passed": true,
+      "durationMs": 0.02
+    },
+    {
+      "id": "ai-failure-005",
+      "family": "ai-failure",
+      "expectedOutcome": "Unsafe or unavailable AI output falls back to deterministic text",
+      "passed": true,
+      "durationMs": 0.011
+    },
+    {
+      "id": "preference-change-005",
+      "family": "preference-change",
+      "expectedOutcome": "Hazard preference changes immediately filter alert visibility",
+      "passed": true,
+      "durationMs": 0.011
+    },
+    {
+      "id": "overlapping-hazards-005",
+      "family": "overlapping-hazards",
+      "expectedOutcome": "Concurrent hazards remain visible and sorted by risk",
+      "passed": true,
+      "durationMs": 0.012
+    },
+    {
+      "id": "duplicate-alert-006",
+      "family": "duplicate-alert",
+      "expectedOutcome": "A repeated provider version notifies once",
+      "passed": true,
+      "durationMs": 0.004
+    },
+    {
+      "id": "provider-update-006",
+      "family": "provider-update",
+      "expectedOutcome": "A new issue time is treated as a distinct provider update",
+      "passed": true,
+      "durationMs": 0.005
+    },
+    {
+      "id": "expired-alert-006",
+      "family": "expired-alert",
+      "expectedOutcome": "Expired alerts never generate a notification",
+      "passed": true,
+      "durationMs": 0.002
+    },
+    {
+      "id": "malformed-nws-006",
+      "family": "malformed-nws",
+      "expectedOutcome": "Malformed provider input fails closed without an uncaught crash",
+      "passed": true,
+      "durationMs": 0.006
+    },
+    {
+      "id": "saved-location-fallback-006",
+      "family": "saved-location-fallback",
+      "expectedOutcome": "A saved location works without live device location permission",
+      "passed": true,
+      "durationMs": 0.008
+    },
+    {
+      "id": "no-shelter-006",
+      "family": "no-shelter",
+      "expectedOutcome": "An empty verified shelter response stays empty and explicit",
+      "passed": true,
+      "durationMs": 0.009
+    },
+    {
+      "id": "network-failure-006",
+      "family": "network-failure",
+      "expectedOutcome": "A network failure returns cached alert data with disclosed freshness",
+      "passed": true,
+      "durationMs": 0.016
+    },
+    {
+      "id": "ai-failure-006",
+      "family": "ai-failure",
+      "expectedOutcome": "Unsafe or unavailable AI output falls back to deterministic text",
+      "passed": true,
+      "durationMs": 0.015
+    },
+    {
+      "id": "preference-change-006",
+      "family": "preference-change",
+      "expectedOutcome": "Hazard preference changes immediately filter alert visibility",
+      "passed": true,
+      "durationMs": 0.011
+    },
+    {
+      "id": "overlapping-hazards-006",
+      "family": "overlapping-hazards",
+      "expectedOutcome": "Concurrent hazards remain visible and sorted by risk",
+      "passed": true,
+      "durationMs": 0.011
+    },
+    {
+      "id": "duplicate-alert-007",
+      "family": "duplicate-alert",
+      "expectedOutcome": "A repeated provider version notifies once",
+      "passed": true,
+      "durationMs": 0.004
+    },
+    {
+      "id": "provider-update-007",
+      "family": "provider-update",
+      "expectedOutcome": "A new issue time is treated as a distinct provider update",
+      "passed": true,
+      "durationMs": 0.004
+    },
+    {
+      "id": "expired-alert-007",
+      "family": "expired-alert",
+      "expectedOutcome": "Expired alerts never generate a notification",
+      "passed": true,
+      "durationMs": 0.002
+    },
+    {
+      "id": "malformed-nws-007",
+      "family": "malformed-nws",
+      "expectedOutcome": "Malformed provider input fails closed without an uncaught crash",
+      "passed": true,
+      "durationMs": 0.006
+    },
+    {
+      "id": "saved-location-fallback-007",
+      "family": "saved-location-fallback",
+      "expectedOutcome": "A saved location works without live device location permission",
+      "passed": true,
+      "durationMs": 0.008
+    },
+    {
+      "id": "no-shelter-007",
+      "family": "no-shelter",
+      "expectedOutcome": "An empty verified shelter response stays empty and explicit",
+      "passed": true,
+      "durationMs": 0.009
+    },
+    {
+      "id": "network-failure-007",
+      "family": "network-failure",
+      "expectedOutcome": "A network failure returns cached alert data with disclosed freshness",
+      "passed": true,
+      "durationMs": 0.017
+    },
+    {
+      "id": "ai-failure-007",
+      "family": "ai-failure",
+      "expectedOutcome": "Unsafe or unavailable AI output falls back to deterministic text",
+      "passed": true,
+      "durationMs": 0.008
+    },
+    {
+      "id": "preference-change-007",
+      "family": "preference-change",
+      "expectedOutcome": "Hazard preference changes immediately filter alert visibility",
+      "passed": true,
+      "durationMs": 0.01
+    },
+    {
+      "id": "overlapping-hazards-007",
+      "family": "overlapping-hazards",
+      "expectedOutcome": "Concurrent hazards remain visible and sorted by risk",
+      "passed": true,
+      "durationMs": 0.011
+    },
+    {
+      "id": "duplicate-alert-008",
+      "family": "duplicate-alert",
+      "expectedOutcome": "A repeated provider version notifies once",
+      "passed": true,
+      "durationMs": 0.005
+    },
+    {
+      "id": "provider-update-008",
+      "family": "provider-update",
+      "expectedOutcome": "A new issue time is treated as a distinct provider update",
+      "passed": true,
+      "durationMs": 0.014
+    },
+    {
+      "id": "expired-alert-008",
+      "family": "expired-alert",
+      "expectedOutcome": "Expired alerts never generate a notification",
+      "passed": true,
+      "durationMs": 0.002
+    },
+    {
+      "id": "malformed-nws-008",
+      "family": "malformed-nws",
+      "expectedOutcome": "Malformed provider input fails closed without an uncaught crash",
+      "passed": true,
+      "durationMs": 0.027
+    },
+    {
+      "id": "saved-location-fallback-008",
+      "family": "saved-location-fallback",
+      "expectedOutcome": "A saved location works without live device location permission",
+      "passed": true,
+      "durationMs": 0.012
+    },
+    {
+      "id": "no-shelter-008",
+      "family": "no-shelter",
+      "expectedOutcome": "An empty verified shelter response stays empty and explicit",
+      "passed": true,
+      "durationMs": 0.009
+    },
+    {
+      "id": "network-failure-008",
+      "family": "network-failure",
+      "expectedOutcome": "A network failure returns cached alert data with disclosed freshness",
+      "passed": true,
+      "durationMs": 0.019
+    },
+    {
+      "id": "ai-failure-008",
+      "family": "ai-failure",
+      "expectedOutcome": "Unsafe or unavailable AI output falls back to deterministic text",
+      "passed": true,
+      "durationMs": 0.009
+    },
+    {
+      "id": "preference-change-008",
+      "family": "preference-change",
+      "expectedOutcome": "Hazard preference changes immediately filter alert visibility",
+      "passed": true,
+      "durationMs": 0.011
+    },
+    {
+      "id": "overlapping-hazards-008",
+      "family": "overlapping-hazards",
+      "expectedOutcome": "Concurrent hazards remain visible and sorted by risk",
+      "passed": true,
+      "durationMs": 0.012
+    },
+    {
+      "id": "duplicate-alert-009",
+      "family": "duplicate-alert",
+      "expectedOutcome": "A repeated provider version notifies once",
+      "passed": true,
+      "durationMs": 0.012
+    },
+    {
+      "id": "provider-update-009",
+      "family": "provider-update",
+      "expectedOutcome": "A new issue time is treated as a distinct provider update",
+      "passed": true,
+      "durationMs": 0.005
+    },
+    {
+      "id": "expired-alert-009",
+      "family": "expired-alert",
+      "expectedOutcome": "Expired alerts never generate a notification",
+      "passed": true,
+      "durationMs": 0.002
+    },
+    {
+      "id": "malformed-nws-009",
+      "family": "malformed-nws",
+      "expectedOutcome": "Malformed provider input fails closed without an uncaught crash",
+      "passed": true,
+      "durationMs": 0.013
+    },
+    {
+      "id": "saved-location-fallback-009",
+      "family": "saved-location-fallback",
+      "expectedOutcome": "A saved location works without live device location permission",
+      "passed": true,
+      "durationMs": 0.009
+    },
+    {
+      "id": "no-shelter-009",
+      "family": "no-shelter",
+      "expectedOutcome": "An empty verified shelter response stays empty and explicit",
+      "passed": true,
+      "durationMs": 0.011
+    },
+    {
+      "id": "network-failure-009",
+      "family": "network-failure",
+      "expectedOutcome": "A network failure returns cached alert data with disclosed freshness",
+      "passed": true,
+      "durationMs": 0.017
+    },
+    {
+      "id": "ai-failure-009",
+      "family": "ai-failure",
+      "expectedOutcome": "Unsafe or unavailable AI output falls back to deterministic text",
+      "passed": true,
+      "durationMs": 0.011
+    },
+    {
+      "id": "preference-change-009",
+      "family": "preference-change",
+      "expectedOutcome": "Hazard preference changes immediately filter alert visibility",
+      "passed": true,
+      "durationMs": 0.011
+    },
+    {
+      "id": "overlapping-hazards-009",
+      "family": "overlapping-hazards",
+      "expectedOutcome": "Concurrent hazards remain visible and sorted by risk",
+      "passed": true,
+      "durationMs": 0.013
+    },
+    {
+      "id": "duplicate-alert-010",
+      "family": "duplicate-alert",
+      "expectedOutcome": "A repeated provider version notifies once",
+      "passed": true,
+      "durationMs": 0.007
+    },
+    {
+      "id": "provider-update-010",
+      "family": "provider-update",
+      "expectedOutcome": "A new issue time is treated as a distinct provider update",
+      "passed": true,
+      "durationMs": 0.008
+    },
+    {
+      "id": "expired-alert-010",
+      "family": "expired-alert",
+      "expectedOutcome": "Expired alerts never generate a notification",
+      "passed": true,
+      "durationMs": 0.003
+    },
+    {
+      "id": "malformed-nws-010",
+      "family": "malformed-nws",
+      "expectedOutcome": "Malformed provider input fails closed without an uncaught crash",
+      "passed": true,
+      "durationMs": 0.016
+    },
+    {
+      "id": "saved-location-fallback-010",
+      "family": "saved-location-fallback",
+      "expectedOutcome": "A saved location works without live device location permission",
+      "passed": true,
+      "durationMs": 0.015
+    },
+    {
+      "id": "no-shelter-010",
+      "family": "no-shelter",
+      "expectedOutcome": "An empty verified shelter response stays empty and explicit",
+      "passed": true,
+      "durationMs": 0.019
+    },
+    {
+      "id": "network-failure-010",
+      "family": "network-failure",
+      "expectedOutcome": "A network failure returns cached alert data with disclosed freshness",
+      "passed": true,
+      "durationMs": 0.026
+    },
+    {
+      "id": "ai-failure-010",
+      "family": "ai-failure",
+      "expectedOutcome": "Unsafe or unavailable AI output falls back to deterministic text",
+      "passed": true,
+      "durationMs": 0.018
+    },
+    {
+      "id": "preference-change-010",
+      "family": "preference-change",
+      "expectedOutcome": "Hazard preference changes immediately filter alert visibility",
+      "passed": true,
+      "durationMs": 0.017
+    },
+    {
+      "id": "overlapping-hazards-010",
+      "family": "overlapping-hazards",
+      "expectedOutcome": "Concurrent hazards remain visible and sorted by risk",
+      "passed": true,
+      "durationMs": 0.017
+    },
+    {
+      "id": "duplicate-alert-011",
+      "family": "duplicate-alert",
+      "expectedOutcome": "A repeated provider version notifies once",
+      "passed": true,
+      "durationMs": 0.004
+    },
+    {
+      "id": "provider-update-011",
+      "family": "provider-update",
+      "expectedOutcome": "A new issue time is treated as a distinct provider update",
+      "passed": true,
+      "durationMs": 0.004
+    },
+    {
+      "id": "expired-alert-011",
+      "family": "expired-alert",
+      "expectedOutcome": "Expired alerts never generate a notification",
+      "passed": true,
+      "durationMs": 0.002
+    },
+    {
+      "id": "malformed-nws-011",
+      "family": "malformed-nws",
+      "expectedOutcome": "Malformed provider input fails closed without an uncaught crash",
+      "passed": true,
+      "durationMs": 0.008
+    },
+    {
+      "id": "saved-location-fallback-011",
+      "family": "saved-location-fallback",
+      "expectedOutcome": "A saved location works without live device location permission",
+      "passed": true,
+      "durationMs": 0.01
+    },
+    {
+      "id": "no-shelter-011",
+      "family": "no-shelter",
+      "expectedOutcome": "An empty verified shelter response stays empty and explicit",
+      "passed": true,
+      "durationMs": 0.01
+    },
+    {
+      "id": "network-failure-011",
+      "family": "network-failure",
+      "expectedOutcome": "A network failure returns cached alert data with disclosed freshness",
+      "passed": true,
+      "durationMs": 0.017
+    },
+    {
+      "id": "ai-failure-011",
+      "family": "ai-failure",
+      "expectedOutcome": "Unsafe or unavailable AI output falls back to deterministic text",
+      "passed": true,
+      "durationMs": 0.015
+    },
+    {
+      "id": "preference-change-011",
+      "family": "preference-change",
+      "expectedOutcome": "Hazard preference changes immediately filter alert visibility",
+      "passed": true,
+      "durationMs": 0.011
+    },
+    {
+      "id": "overlapping-hazards-011",
+      "family": "overlapping-hazards",
+      "expectedOutcome": "Concurrent hazards remain visible and sorted by risk",
+      "passed": true,
+      "durationMs": 0.013
+    },
+    {
+      "id": "duplicate-alert-012",
+      "family": "duplicate-alert",
+      "expectedOutcome": "A repeated provider version notifies once",
+      "passed": true,
+      "durationMs": 0.004
+    },
+    {
+      "id": "provider-update-012",
+      "family": "provider-update",
+      "expectedOutcome": "A new issue time is treated as a distinct provider update",
+      "passed": true,
+      "durationMs": 0.003
+    },
+    {
+      "id": "expired-alert-012",
+      "family": "expired-alert",
+      "expectedOutcome": "Expired alerts never generate a notification",
+      "passed": true,
+      "durationMs": 0.001
+    },
+    {
+      "id": "malformed-nws-012",
+      "family": "malformed-nws",
+      "expectedOutcome": "Malformed provider input fails closed without an uncaught crash",
+      "passed": true,
+      "durationMs": 0.005
+    },
+    {
+      "id": "saved-location-fallback-012",
+      "family": "saved-location-fallback",
+      "expectedOutcome": "A saved location works without live device location permission",
+      "passed": true,
+      "durationMs": 0.009
+    },
+    {
+      "id": "no-shelter-012",
+      "family": "no-shelter",
+      "expectedOutcome": "An empty verified shelter response stays empty and explicit",
+      "passed": true,
+      "durationMs": 0.009
+    },
+    {
+      "id": "network-failure-012",
+      "family": "network-failure",
+      "expectedOutcome": "A network failure returns cached alert data with disclosed freshness",
+      "passed": true,
+      "durationMs": 0.014
+    },
+    {
+      "id": "ai-failure-012",
+      "family": "ai-failure",
+      "expectedOutcome": "Unsafe or unavailable AI output falls back to deterministic text",
+      "passed": true,
+      "durationMs": 0.013
+    },
+    {
+      "id": "preference-change-012",
+      "family": "preference-change",
+      "expectedOutcome": "Hazard preference changes immediately filter alert visibility",
+      "passed": true,
+      "durationMs": 0.011
+    },
+    {
+      "id": "overlapping-hazards-012",
+      "family": "overlapping-hazards",
+      "expectedOutcome": "Concurrent hazards remain visible and sorted by risk",
+      "passed": true,
+      "durationMs": 0.009
+    },
+    {
+      "id": "large-payload-001",
+      "family": "large-payload",
+      "expectedOutcome": "250 official-format features normalize without loss",
+      "passed": true,
+      "durationMs": 1.205
+    },
+    {
+      "id": "large-payload-002",
+      "family": "large-payload",
+      "expectedOutcome": "500 official-format features normalize without loss",
+      "passed": true,
+      "durationMs": 1.45
+    },
+    {
+      "id": "large-payload-003",
+      "family": "large-payload",
+      "expectedOutcome": "1000 official-format features normalize without loss",
+      "passed": true,
+      "durationMs": 2.623
+    },
+    {
+      "id": "large-payload-004",
+      "family": "large-payload",
+      "expectedOutcome": "2000 official-format features normalize without loss",
+      "passed": true,
+      "durationMs": 5.891
+    },
+    {
+      "id": "offline-shelter-cache-001",
+      "family": "offline-shelter-cache",
+      "expectedOutcome": "A cold offline start returns cached shelter data with source and timestamp",
+      "passed": true,
+      "durationMs": 0.33
+    },
+    {
+      "id": "offline-checklist-001",
+      "family": "offline-checklist",
+      "expectedOutcome": "Checklist progress survives a cold repository restart",
+      "passed": true,
+      "durationMs": 0.125
+    },
+    {
+      "id": "offline-shelter-cache-002",
+      "family": "offline-shelter-cache",
+      "expectedOutcome": "A cold offline start returns cached shelter data with source and timestamp",
+      "passed": true,
+      "durationMs": 0.038
+    },
+    {
+      "id": "offline-checklist-002",
+      "family": "offline-checklist",
+      "expectedOutcome": "Checklist progress survives a cold repository restart",
+      "passed": true,
+      "durationMs": 0.017
+    },
+    {
+      "id": "offline-shelter-cache-003",
+      "family": "offline-shelter-cache",
+      "expectedOutcome": "A cold offline start returns cached shelter data with source and timestamp",
+      "passed": true,
+      "durationMs": 0.032
+    },
+    {
+      "id": "offline-checklist-003",
+      "family": "offline-checklist",
+      "expectedOutcome": "Checklist progress survives a cold repository restart",
+      "passed": true,
+      "durationMs": 0.006
+    },
+    {
+      "id": "offline-shelter-cache-004",
+      "family": "offline-shelter-cache",
+      "expectedOutcome": "A cold offline start returns cached shelter data with source and timestamp",
+      "passed": true,
+      "durationMs": 0.019
+    },
+    {
+      "id": "offline-checklist-004",
+      "family": "offline-checklist",
+      "expectedOutcome": "Checklist progress survives a cold repository restart",
+      "passed": true,
+      "durationMs": 0.006
+    },
+    {
+      "id": "offline-shelter-cache-005",
+      "family": "offline-shelter-cache",
+      "expectedOutcome": "A cold offline start returns cached shelter data with source and timestamp",
+      "passed": true,
+      "durationMs": 0.014
+    },
+    {
+      "id": "offline-checklist-005",
+      "family": "offline-checklist",
+      "expectedOutcome": "Checklist progress survives a cold repository restart",
+      "passed": true,
+      "durationMs": 0.012
+    },
+    {
+      "id": "offline-shelter-cache-006",
+      "family": "offline-shelter-cache",
+      "expectedOutcome": "A cold offline start returns cached shelter data with source and timestamp",
+      "passed": true,
+      "durationMs": 0.014
+    },
+    {
+      "id": "offline-checklist-006",
+      "family": "offline-checklist",
+      "expectedOutcome": "Checklist progress survives a cold repository restart",
+      "passed": true,
+      "durationMs": 0.005
+    },
+    {
+      "id": "offline-shelter-cache-007",
+      "family": "offline-shelter-cache",
+      "expectedOutcome": "A cold offline start returns cached shelter data with source and timestamp",
+      "passed": true,
+      "durationMs": 0.013
+    },
+    {
+      "id": "offline-checklist-007",
+      "family": "offline-checklist",
+      "expectedOutcome": "Checklist progress survives a cold repository restart",
+      "passed": true,
+      "durationMs": 0.008
+    },
+    {
+      "id": "offline-shelter-cache-008",
+      "family": "offline-shelter-cache",
+      "expectedOutcome": "A cold offline start returns cached shelter data with source and timestamp",
+      "passed": true,
+      "durationMs": 0.02
+    },
+    {
+      "id": "offline-checklist-008",
+      "family": "offline-checklist",
+      "expectedOutcome": "Checklist progress survives a cold repository restart",
+      "passed": true,
+      "durationMs": 0.005
+    },
+    {
+      "id": "corrupt-storage-001",
+      "family": "corrupt-storage",
+      "expectedOutcome": "Corrupt local data fails closed",
+      "passed": true,
+      "durationMs": 0.101
+    },
+    {
+      "id": "corrupt-storage-002",
+      "family": "corrupt-storage",
+      "expectedOutcome": "Corrupt local data fails closed",
+      "passed": true,
+      "durationMs": 0.056
+    },
+    {
+      "id": "corrupt-storage-003",
+      "family": "corrupt-storage",
+      "expectedOutcome": "Corrupt local data fails closed",
+      "passed": true,
+      "durationMs": 0.075
+    },
+    {
+      "id": "corrupt-storage-004",
+      "family": "corrupt-storage",
+      "expectedOutcome": "Corrupt local data fails closed",
+      "passed": true,
+      "durationMs": 0.023
+    },
+    {
+      "id": "storage-write-failure-001",
+      "family": "storage-write-failure",
+      "expectedOutcome": "A cache write failure does not discard successful live data",
+      "passed": true,
+      "durationMs": 0.093
+    },
+    {
+      "id": "storage-write-failure-002",
+      "family": "storage-write-failure",
+      "expectedOutcome": "A cache write failure does not discard successful live data",
+      "passed": true,
+      "durationMs": 0.019
+    },
+    {
+      "id": "storage-write-failure-003",
+      "family": "storage-write-failure",
+      "expectedOutcome": "A cache write failure does not discard successful live data",
+      "passed": true,
+      "durationMs": 0.012
+    },
+    {
+      "id": "storage-write-failure-004",
+      "family": "storage-write-failure",
+      "expectedOutcome": "A cache write failure does not discard successful live data",
+      "passed": true,
+      "durationMs": 0.01
+    }
+  ]
+}

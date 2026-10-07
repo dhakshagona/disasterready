@@ -5,9 +5,11 @@
 - Analytics must not block emergency workflows.
 - Events queue locally and deliver only when Supabase is configured.
 - Every event is labeled `real` or `demo`.
+- Session start mode is assigned by the Home route, so a direct demo visit does not create a real session event.
 - Contact, saved location, coordinates, city, and postal code are not accepted.
 - Metrics describe observed product events, not user intent or safety outcomes.
 - This repository contains no fabricated totals.
+- Anonymous telemetry is rate-limited and schema-validated, but it is not authenticated user evidence. Treat it as operational telemetry.
 
 ## Event glossary
 
@@ -27,7 +29,7 @@
 
 ## Derived metrics
 
-Reports must filter by mode before aggregation.
+Reports must filter by mode before aggregation. Prefer `received_at`, which is assigned by PostgreSQL, for reporting windows and retention. `occurred_at` is accepted only within a bounded client clock window.
 
 - Real checklist start rate: real `checklist_started` events divided by real `action_plan_opened` events in the same reporting window
 - Real checklist completion rate: real `checklist_completed` events divided by real `checklist_started` events in the same reporting window
@@ -42,13 +44,21 @@ These are event ratios, not unique-user conversion rates. Random session identif
 
 ```sql
 select
-  date_trunc('day', occurred_at) as day,
+  received_day,
   mode,
   name,
-  count(*) as events
-from public.analytics_events
-group by 1, 2, 3
-order by 1 desc, 2, 3;
+  event_count
+from public.analytics_daily_counts
+order by received_day desc, mode, name;
 ```
 
 Always display demo and real rows separately.
+
+## Retention and access
+
+- Client roles have no direct table or reporting-view access.
+- The Edge Function service role can execute the bounded ingestion RPC but has no direct `analytics_events` table privileges.
+- The server reporting view groups by server-controlled UTC receipt date and mode.
+- `delete_expired_analytics_events(90, 5000)` provides a batched retention path for a scheduled server job.
+- `delete_expired_edge_rate_limits(5000)` removes expired hashed limiter rows in bounded batches.
+- No report should treat random session IDs as accounts, people, or cross-install identity.

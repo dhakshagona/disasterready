@@ -1,7 +1,7 @@
 import type { PropsWithChildren } from 'react';
 import { StyleSheet, View, type ViewProps } from 'react-native';
 
-import { colors, radii, shadows, spacing } from '@/constants/tokens';
+import { colors, radii, shadows } from '@/constants/tokens';
 
 type CardProps = PropsWithChildren<ViewProps> & {
   tone?: 'default' | 'danger' | 'safe' | 'muted';
@@ -32,5 +32,5 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
     ...(shadows.card ?? {}),
   },
-  padded: { padding: spacing.lg },
+  padded: { padding: 14 },
 });

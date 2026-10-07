@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.simplify-alert]
 verify_jwt = false
+
+[functions.shelter-proxy]
+verify_jwt = false

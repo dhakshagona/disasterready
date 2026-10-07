@@ -55,7 +55,7 @@ export function SecondaryButton({ children, loading, disabled, style, ...props }
 const styles = StyleSheet.create({
   base: {
     borderRadius: radii.md,
-    minHeight: 50,
+    minHeight: 46,
     paddingHorizontal: spacing.lg,
     justifyContent: 'center',
   },
@@ -64,5 +64,5 @@ const styles = StyleSheet.create({
   secondary: { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border },
   secondaryPressed: { backgroundColor: colors.primarySoft },
   disabled: { opacity: 0.5 },
-  content: { minHeight: 24, alignItems: 'center', justifyContent: 'center' },
+  content: { minHeight: 22, alignItems: 'center', justifyContent: 'center' },
 });

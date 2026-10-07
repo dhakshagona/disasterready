@@ -35,9 +35,10 @@ The test suite exercises:
 - notification permission and eligibility rules
 - platform map URLs
 - analytics queue retention and server allowlists
-- AI response extraction, exact schema, directive preservation, numeric preservation, and fallback reasons
+- public function authentication shape, actual byte limits, per-client and global budgets, and least-privilege database access
+- AI response extraction, exact schema, directive preservation, numeric-unit preservation, and fallback reasons
 - web single-page export configuration and direct-route rewrites
 
 ## Remaining production work
 
-Real-device network transitions, push delivery, production Edge Function rate limits, and representative AI evaluation require external accounts and test infrastructure. Those gaps are documented rather than simulated.
+Real-device network transitions, push delivery, hosted migration verification, provider quota and data-use controls, and representative AI evaluation require external accounts and test infrastructure. Those gaps are documented rather than simulated.

@@ -16,6 +16,7 @@ export type PlainLanguageFallbackReason =
   | 'unsupported'
   | 'timeout'
   | 'provider-error'
+  | 'rate-limited'
   | 'schema-invalid'
   | 'safety-invalid';
 
@@ -43,7 +44,8 @@ export class PlainLanguageService {
   }
 
   async simplify(alert: Alert): Promise<PlainLanguageResult> {
-    if (alert.isDemo || !alert.originalText.trim()) {
+    const officialSourceText = alert.instructionText?.trim() || alert.originalText.trim();
+    if (alert.isDemo || !officialSourceText) {
       return { summary: alert.summary, source: 'deterministic', reason: 'unsupported' };
     }
     if (!this.provider) {
@@ -54,7 +56,7 @@ export class PlainLanguageService {
     try {
       output = await this.provider.simplify({
         hazard: alert.hazard,
-        officialText: alert.originalText,
+        officialText: officialSourceText,
         deterministicSummary: alert.summary,
       });
     } catch (error) {
@@ -73,7 +75,7 @@ export class PlainLanguageService {
       return { summary: alert.summary, source: 'deterministic', reason: 'schema-invalid' };
     }
     const summary = parsedOutput.plainSummary;
-    if (!isSafetyPreserving(alert.originalText, summary)) {
+    if (!isSafetyPreserving(officialSourceText, summary)) {
       return { summary: alert.summary, source: 'deterministic', reason: 'safety-invalid' };
     }
     return { summary, source: 'ai' };

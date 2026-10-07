@@ -25,6 +25,7 @@ const fallbackReasons: PlainLanguageFallbackReason[] = [
   'unsupported',
   'timeout',
   'provider-error',
+  'rate-limited',
   'schema-invalid',
   'safety-invalid',
 ];
@@ -39,7 +40,7 @@ export class SupabasePlainLanguageProvider implements PlainLanguageProvider {
   private readonly fetcher: FetchLike;
   private readonly timeoutMs: number;
 
-  constructor({ projectUrl, publishableKey, fetcher = fetch, timeoutMs = 5_000 }: SupabasePlainLanguageProviderOptions) {
+  constructor({ projectUrl, publishableKey, fetcher = fetch, timeoutMs = 9_000 }: SupabasePlainLanguageProviderOptions) {
     this.endpoint = `${projectUrl.replace(/\/+$/, '')}/functions/v1/simplify-alert`;
     this.publishableKey = publishableKey;
     this.fetcher = fetcher;
@@ -54,7 +55,6 @@ export class SupabasePlainLanguageProvider implements PlainLanguageProvider {
         method: 'POST',
         headers: {
           apikey: this.publishableKey,
-          Authorization: `Bearer ${this.publishableKey}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(input),

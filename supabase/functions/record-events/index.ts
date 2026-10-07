@@ -1,40 +1,42 @@
 import { parseAnalyticsBatch } from '../_shared/analytics-contract.ts';
+import { corsHeaders, inputError, json, readBoundedJson } from '../_shared/http.ts';
+import { consumeRateLimits } from '../_shared/rate-limit.ts';
+import { getDatabaseSecretKey, getPublishableKeys, hasValidPublishableKey, secretKeyHeaders } from '../_shared/supabase-keys.ts';
 
-const corsHeaders = {
-  'Access-Control-Allow-Headers': 'authorization, apikey, content-type',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Origin': '*',
-};
-
-function json(body: unknown, status: number): Response {
-  return new Response(JSON.stringify(body), {
-    status,
-    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-  });
-}
+const readEnvironment = (name: string) => Deno.env.get(name);
 
 Deno.serve(async (request) => {
   if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: corsHeaders });
   if (request.method !== 'POST') return json({ error: 'Method not allowed' }, 405);
+  if (!getPublishableKeys(readEnvironment).length) return json({ error: 'Function authentication is not configured' }, 503);
+  if (!hasValidPublishableKey(request, readEnvironment)) return json({ error: 'Unauthorized' }, 401);
 
-  const expectedKey = Deno.env.get('SUPABASE_PUBLISHABLE_KEY') ?? Deno.env.get('SUPABASE_ANON_KEY');
-  if (!expectedKey) return json({ error: 'Function authentication is not configured' }, 503);
-  if (request.headers.get('apikey') !== expectedKey) return json({ error: 'Unauthorized' }, 401);
-
-  const contentLength = Number(request.headers.get('content-length') ?? 0);
-  if (contentLength > 65_536) return json({ error: 'Request is too large' }, 413);
+  const projectUrl = Deno.env.get('SUPABASE_URL');
+  const secretKey = getDatabaseSecretKey(readEnvironment);
+  const rateLimitSalt = Deno.env.get('RATE_LIMIT_SALT');
+  if (!projectUrl || !secretKey || !rateLimitSalt) return json({ error: 'Function storage or rate limiting is not configured' }, 503);
 
   let events;
   try {
-    const body = await request.json() as unknown;
-    events = parseAnalyticsBatch(body);
+    events = parseAnalyticsBatch(await readBoundedJson(request, 65_536), new Date());
   } catch (error) {
-    return json({ error: error instanceof Error ? error.message : 'Invalid request' }, 400);
+    return inputError(error);
   }
 
-  const projectUrl = Deno.env.get('SUPABASE_URL');
-  const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
-  if (!projectUrl || !serviceRoleKey) return json({ error: 'Database connection is not configured' }, 503);
+  const rateLimit = await consumeRateLimits({
+    request,
+    projectUrl,
+    secretKey,
+    salt: rateLimitSalt,
+    checks: [
+      { scope: 'record-events', limit: 10, windowSeconds: 60 },
+      { scope: 'record-events-client-daily', limit: 1_000, windowSeconds: 86_400, cost: events.length },
+      { scope: 'record-events-global', limit: 60, windowSeconds: 60, identity: 'global' },
+      { scope: 'record-events-daily', limit: 25_000, windowSeconds: 86_400, cost: events.length, identity: 'global' },
+    ],
+  });
+  if (rateLimit === 'limited') return json({ error: 'Rate limit exceeded' }, 429, { 'Retry-After': '60' });
+  if (rateLimit === 'unavailable') return json({ error: 'Rate limit check failed' }, 503);
 
   const rows = events.map((event) => ({
     id: event.id,
@@ -44,17 +46,23 @@ Deno.serve(async (request) => {
     mode: event.mode,
     properties: event.properties,
   }));
-  const response = await fetch(`${projectUrl}/rest/v1/analytics_events?on_conflict=id`, {
-    method: 'POST',
-    headers: {
-      apikey: serviceRoleKey,
-      Authorization: `Bearer ${serviceRoleKey}`,
-      'Content-Type': 'application/json',
-      Prefer: 'resolution=ignore-duplicates,return=minimal',
-    },
-    body: JSON.stringify(rows),
-  });
-
-  if (!response.ok) return json({ error: 'Analytics storage failed' }, 502);
-  return json({ accepted: events.length }, 202);
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 4_000);
+  try {
+    const response = await fetch(`${projectUrl}/rest/v1/rpc/ingest_analytics_events`, {
+      method: 'POST',
+      headers: {
+        ...secretKeyHeaders(secretKey),
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ p_events: rows }),
+      signal: controller.signal,
+    });
+    if (!response.ok) return json({ error: 'Analytics storage failed' }, 502);
+    return json({ processed: events.length }, 202);
+  } catch {
+    return json({ error: 'Analytics storage timed out or failed' }, 502);
+  } finally {
+    clearTimeout(timeout);
+  }
 });

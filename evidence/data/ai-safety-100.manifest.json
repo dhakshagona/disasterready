@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-07T01:11:42.725Z",
+  "sourceDataset": "evidence/data/nws-alerts-1000.jsonl.gz",
+  "sourceDatasetSha256": "f3823277203daa93728e7a8ba6e34de4f1b82bb9d133edf575bf9bebfb03a9e2",
+  "selection": "Deterministic round-robin selection across supported hazards after production normalization",
+  "eligibleRecords": 627,
+  "selectedRecords": 100,
+  "hazardCounts": {
+    "air-quality": 4,
+    "flood": 21,
+    "hurricane": 21,
+    "tornado": 16,
+    "wildfire": 17,
+    "winter-storm": 21
+  },
+  "datasetFile": "evidence/data/ai-safety-100.jsonl.gz",
+  "datasetSha256": "ced9972a700bda6ebe5dafb5b67e6301f26aac1a75bd376eedcff551cf1a727a"
+}
