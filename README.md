@@ -35,6 +35,7 @@ The NWS corpus, source manifest, SHA-256 digest, machine-readable results, failu
 - Clear current, cached, stale, offline, unavailable, active, and expired states
 - Reviewed FEMA and Ready.gov action-plan templates selected by deterministic rules
 - Checklist progress saved locally without requiring an account
+- Native PDF checklist export with a web print and save fallback
 - Live FEMA National Shelter System lookup with source, freshness, distance, and status disclosure
 - Optional rate-limited FEMA shelter proxy with direct official-source fallback
 - Apple Maps handoff on iOS, Google Maps handoff on Android, and a universal web fallback
@@ -45,7 +46,7 @@ The NWS corpus, source manifest, SHA-256 digest, machine-readable results, failu
 - Optional server-side plain-language simplification with strict schema and safety checks
 - Per-client and global budgets before database, FEMA proxy, or paid AI work
 - Deterministic fallback whenever AI is absent, slow, malformed, refused, or safety-invalid
-- Accessible labels, large touch targets, plain-language settings, and a centered mobile web shell
+- Accessible labels, large touch targets, app-wide larger text and high-contrast preferences, plain-language summaries, and a centered mobile web shell
 
 ## Quick start
 
@@ -157,7 +158,7 @@ The current repository is a ground-up flagship implementation based on that prod
 - AI simplification and remote analytics require Supabase deployment and server secrets.
 - Anonymous cloud telemetry is schema-validated and rate-limited, but it is not authenticated user evidence.
 - No real user-study results or production analytics exist yet.
-- The 100-case hosted Gemini evaluation is prepared but still requires the server-side free-tier key and completed model outputs.
+- The Gemini free-tier key is configured server-side. The full 100-case hosted evaluation still depends on daily free-tier quota availability and completed model outputs.
 - Independent expert review and the 30 to 50 participant usability study require real people and cannot be generated from code.
 - A public demo URL has not been provisioned.
 

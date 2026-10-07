@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams, type Href } from 'expo-router';
 import { useEffect, useRef } from 'react';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Linking, Pressable, StyleSheet, View } from 'react-native';
 
 import { useDisasterReady } from '@/application/app-context';
 import type { AlertFeed } from '@/application/alerts/live-alert-service';
@@ -112,7 +112,7 @@ export default function HomeScreen() {
       {showPreparedness ? (
         <View style={styles.section}>
           <Shortcut icon="checklist" title="Emergency Checklist" detail="Review quick emergency steps" onPress={() => router.push('/action-plan/demo-flood-001' as Href)} />
-          <Shortcut icon="menu_book" title="Stay prepared & up to date" detail="Review practical guidance before an emergency" tone="safe" />
+          <Shortcut icon="menu_book" title="Stay prepared & up to date" detail="Open official Ready.gov guidance" tone="safe" onPress={() => void Linking.openURL('https://www.ready.gov')} />
         </View>
       ) : null}
 

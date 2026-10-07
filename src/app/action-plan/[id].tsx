@@ -1,8 +1,11 @@
 import { useLocalSearchParams } from 'expo-router';
-import { Linking, Share, StyleSheet, View } from 'react-native';
+import * as Print from 'expo-print';
+import * as Sharing from 'expo-sharing';
+import { Linking, Platform, Share, StyleSheet, View } from 'react-native';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
 import { useDisasterReady } from '@/application/app-context';
+import { buildChecklistPdfHtml } from '@/application/checklists/checklist-pdf';
 import { ActionStepRow } from '@/components/ui/action-step-row';
 import { AppHeader } from '@/components/ui/app-header';
 import { AppText } from '@/components/ui/app-text';
@@ -22,6 +25,8 @@ export default function ActionPlanScreen() {
   const plan = useMemo(() => alert ? selectActionPlan(alert) : null, [alert]);
   const [completedIds, setCompletedIds] = useState<Set<string>>(new Set());
   const [loadedPlanId, setLoadedPlanId] = useState<string | null>(null);
+  const [isExportingPdf, setIsExportingPdf] = useState(false);
+  const [exportError, setExportError] = useState<string | null>(null);
   const openedPlanIdRef = useRef<string | null>(null);
   const checklistStartedRef = useRef(false);
   const checklistCompletedRef = useRef(false);
@@ -88,6 +93,29 @@ export default function ActionPlanScreen() {
     await Share.share({ message: `${plan!.isDemo ? 'DisasterReady DEMO' : 'DisasterReady'}: ${plan!.title}\n${completedCount}/${plan!.steps.length} complete\n${summary}` });
   }
 
+  async function exportPdf() {
+    setExportError(null);
+    setIsExportingPdf(true);
+    try {
+      const html = buildChecklistPdfHtml(plan!, completedIds);
+      if (Platform.OS === 'web') {
+        await Print.printToFileAsync({ html });
+        return;
+      }
+      const { uri } = await Print.printToFileAsync({ html });
+      if (!await Sharing.isAvailableAsync()) throw new Error('Sharing is unavailable');
+      await Sharing.shareAsync(uri, {
+        dialogTitle: 'Share DisasterReady checklist',
+        mimeType: 'application/pdf',
+        UTI: 'com.adobe.pdf',
+      });
+    } catch {
+      setExportError('The PDF could not be opened. Your checklist progress is still saved.');
+    } finally {
+      setIsExportingPdf(false);
+    }
+  }
+
   return (
     <Screen
       testID="action-plan-screen"
@@ -121,8 +149,10 @@ export default function ActionPlanScreen() {
 
       {!isProgressLoading ? (
         <View style={styles.secondaryActions}>
+          <SecondaryButton accessibilityLabel="Save or share checklist PDF" loading={isExportingPdf} onPress={() => void exportPdf()}>{Platform.OS === 'web' ? 'Save or print PDF' : 'Save or share PDF'}</SecondaryButton>
           <SecondaryButton accessibilityLabel="Share checklist summary" onPress={shareSummary}>Share progress</SecondaryButton>
           {completedCount > 0 ? <SecondaryButton accessibilityLabel="Reset all checklist progress" onPress={() => saveProgress(new Set())}>Reset checklist</SecondaryButton> : null}
+          {exportError ? <AppText variant="caption" color={colors.dangerStrong}>{exportError}</AppText> : null}
         </View>
       ) : null}
 

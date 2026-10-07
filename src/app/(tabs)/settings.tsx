@@ -1,5 +1,6 @@
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { useState } from 'react';
+import { router, type Href } from 'expo-router';
 
 import { useDisasterReady } from '@/application/app-context';
 import { AppHeader } from '@/components/ui/app-header';
@@ -14,12 +15,20 @@ import { StatusBadge } from '@/components/ui/status-badge';
 import { colors, radii, spacing } from '@/constants/tokens';
 import { hazardLabels } from '@/data/mock-repositories';
 
-function ValueRow({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
+function ValueRow({ accessibilityLabel, children, label, onPress }: { accessibilityLabel?: string; children: React.ReactNode; label: string; onPress?: () => void }) {
+  const row = (
     <Card style={styles.valueRow}>
       <AppText variant="bodyStrong" style={styles.flex}>{label}</AppText>
       <View style={styles.valueContent}>{children}</View>
+      {onPress ? <Icon name={{ ios: 'chevron.right', android: 'chevron_right', web: 'chevron_right' }} color={colors.inkSubtle} size={17} /> : null}
     </Card>
+  );
+
+  if (!onPress) return row;
+  return (
+    <Pressable accessibilityRole="button" accessibilityLabel={accessibilityLabel ?? label} onPress={onPress} style={({ pressed }) => pressed && styles.pressed}>
+      {row}
+    </Pressable>
   );
 }
 
@@ -32,6 +41,11 @@ export default function SettingsScreen() {
 
   const save = <Key extends keyof typeof preferences>(key: Key, value: (typeof preferences)[Key]) => {
     void updatePreferences({ ...preferences, [key]: value });
+  };
+
+  const cycleTextSize = () => {
+    const nextSize = preferences.textSize === 'standard' ? 'large' : preferences.textSize === 'large' ? 'extra-large' : 'standard';
+    save('textSize', nextSize);
   };
 
   const notificationStatus = {
@@ -55,21 +69,20 @@ export default function SettingsScreen() {
           <AppText variant="bodyStrong">Guest profile</AppText>
           <AppText variant="caption" color={colors.inkMuted}>Stored on this device</AppText>
         </View>
-        <Icon name={{ ios: 'pencil', android: 'edit', web: 'edit' }} color={colors.inkMuted} size={18} />
       </Card>
 
-      <ValueRow label="Hazards">
+      <ValueRow accessibilityLabel="Edit selected hazards" label="Hazards" onPress={() => router.push('/onboarding/hazards?returnTo=settings' as Href)}>
         <View style={styles.chips}>{preferences.hazards.slice(0, 2).map((hazard) => <StatusBadge key={hazard} label={hazardLabels[hazard]} tone="info" />)}{preferences.hazards.length > 2 ? <StatusBadge label={`+${preferences.hazards.length - 2}`} tone="info" /> : null}</View>
       </ValueRow>
       <ValueRow label="Location"><StatusBadge label={`${location.city}, ${location.region} ${location.postalCode}`} tone="info" /></ValueRow>
       <ValueRow label="Language"><StatusBadge label="English" tone="info" /></ValueRow>
-      <ValueRow label="Text size"><StatusBadge label={preferences.textSize === 'standard' ? 'Standard' : preferences.textSize === 'large' ? 'Large' : 'Extra large'} tone="info" /></ValueRow>
+      <ValueRow accessibilityLabel="Change text size" label="Text size" onPress={cycleTextSize}><StatusBadge label={preferences.textSize === 'standard' ? 'Standard' : preferences.textSize === 'large' ? 'Large' : 'Extra large'} tone="info" /></ValueRow>
 
       <Card style={styles.settingCard}>
         <SettingRow label="High contrast" value={preferences.highContrast} onValueChange={(value) => save('highContrast', value)} />
         <SettingRow accessibilityLabel="Plain language" label="Simple words" value={preferences.plainLanguage} onValueChange={(value) => save('plainLanguage', value)} />
         <SettingRow label="Larger text" value={preferences.textSize !== 'standard'} onValueChange={(value) => save('textSize', value ? 'large' : 'standard')} />
-        <SettingRow label="Reduced motion" value={preferences.reducedMotion} onValueChange={(value) => save('reducedMotion', value)} />
+        <SettingRow label="Reduced motion" detail={preferences.reducedMotion ? 'Nonessential motion stays off' : undefined} value={preferences.reducedMotion} onValueChange={(value) => save('reducedMotion', value)} />
         <SettingRow label="Preview offline state" value={offlinePreview} onValueChange={setOfflinePreview} />
       </Card>
 
@@ -98,6 +111,7 @@ export default function SettingsScreen() {
 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
+  pressed: { opacity: 0.68 },
   profileCard: { minHeight: 62, flexDirection: 'row', alignItems: 'center', gap: spacing.md },
   avatar: { width: 40, height: 40, borderRadius: radii.md, backgroundColor: colors.surfaceMuted, alignItems: 'center', justifyContent: 'center' },
   valueRow: { minHeight: 48, flexDirection: 'row', alignItems: 'center', gap: spacing.sm, paddingVertical: spacing.sm },

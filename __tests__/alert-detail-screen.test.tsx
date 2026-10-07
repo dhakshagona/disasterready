@@ -33,7 +33,8 @@ describe('alert detail screen', () => {
     const screen = await render(<DisasterReadyProvider runtime={runtime}><AlertDetailScreen /></DisasterReadyProvider>);
 
     await waitFor(() => expect(screen.getByText('Validated plain-language alert summary.')).toBeTruthy());
-    expect(screen.getByText('AI simplified')).toBeTruthy();
+    expect(screen.getByText('In simple words')).toBeTruthy();
+    expect(screen.getByText('Gemini simplified and safety checked')).toBeTruthy();
     expect(screen.getByText(demoFloodAlert.doNow[0]!.title)).toBeTruthy();
     expect(screen.getByText('Official National Weather Service alert text.')).toBeTruthy();
     expect(screen.getByText('Check FEMA-reported shelter availability and routing.')).toBeTruthy();

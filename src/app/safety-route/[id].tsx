@@ -1,6 +1,6 @@
 import { Image } from 'expo-image';
 import { router, useLocalSearchParams, type Href } from 'expo-router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { useDisasterReady } from '@/application/app-context';
@@ -31,6 +31,14 @@ const demoSafetyDestination: Shelter = {
   isVerified: false,
 };
 
+type RouteCategory = 'shelter' | 'higher-ground' | 'evacuation';
+
+const routeCategories: { label: string; value: RouteCategory }[] = [
+  { label: 'Shelter', value: 'shelter' },
+  { label: 'Higher ground', value: 'higher-ground' },
+  { label: 'Evacuation', value: 'evacuation' },
+];
+
 function RouteFooter({ destination, isDemo, onOpen }: { destination: Shelter; isDemo: boolean; onOpen(): void }) {
   return (
     <PrimaryButton accessibilityLabel={isDemo ? 'Open simulated safety route' : `Open route to ${destination.name}`} onPress={onOpen}>
@@ -42,10 +50,11 @@ function RouteFooter({ destination, isDemo, onOpen }: { destination: Shelter; is
 export default function SafetyRouteScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { getAlertById, isShelterLoading, loadSafetyResources, openShelterMap, shelterFeed } = useDisasterReady();
+  const [category, setCategory] = useState<RouteCategory>('shelter');
   const alert = id === demoFloodAlert.id ? demoFloodAlert : getAlertById(id);
   const isDemo = Boolean(alert?.isDemo);
   const verifiedShelters = shelterFeed?.shelters.filter((shelter) => shelter.isVerified && shelter.status === 'open') ?? [];
-  const destination = isDemo ? demoSafetyDestination : verifiedShelters[0];
+  const destination = category === 'shelter' ? isDemo ? demoSafetyDestination : verifiedShelters[0] : undefined;
 
   useEffect(() => {
     if (!isDemo && !shelterFeed) void loadSafetyResources();
@@ -69,22 +78,40 @@ export default function SafetyRouteScreen() {
       {!isDemo && shelterFeed?.source === 'cache' && shelterFeed.retrievedAt ? <OfflineBanner lastUpdated={new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit' }).format(new Date(shelterFeed.retrievedAt))} /> : null}
 
       <View accessibilityRole="tablist" style={styles.routeTabs}>
-        <View style={[styles.routeTab, styles.routeTabSelected]}><AppText variant="caption" color={colors.primary}>Shelter</AppText></View>
-        <View style={styles.routeTab}><AppText variant="caption" color={colors.inkMuted}>Higher ground</AppText></View>
-        <View style={styles.routeTab}><AppText variant="caption" color={colors.inkMuted}>Evacuation</AppText></View>
+        {routeCategories.map((item) => {
+          const selected = item.value === category;
+          return (
+            <Pressable
+              key={item.value}
+              accessibilityRole="tab"
+              accessibilityState={{ selected }}
+              onPress={() => setCategory(item.value)}
+              style={({ pressed }) => [styles.routeTab, selected && styles.routeTabSelected, pressed && styles.routeTabPressed]}>
+              <AppText variant="caption" color={selected ? colors.primary : colors.inkMuted}>{item.label}</AppText>
+            </Pressable>
+          );
+        })}
       </View>
 
-      {isDemo ? (
+      {category !== 'shelter' ? (
+        <Card style={styles.unavailableCategoryCard}>
+          <View style={styles.emptyIcon}><Icon name={{ ios: 'checkmark.shield.fill', android: 'verified_user', web: 'verified_user' }} color={colors.safe} size={28} /></View>
+          <AppText variant="heading" style={styles.center}>No verified {category === 'higher-ground' ? 'higher-ground' : 'evacuation'} destination source is connected</AppText>
+          <AppText variant="caption" color={colors.inkMuted} style={styles.center}>DisasterReady will not guess a destination. Use verified shelter results or follow directions from local emergency officials.</AppText>
+        </Card>
+      ) : null}
+
+      {isDemo && category === 'shelter' ? (
         <View style={styles.mapWrap}>
           <Image source={require('../../../assets/brand/safety-route-demo.png')} style={styles.map} contentFit="cover" />
           <View style={styles.mapLabel}><AppText variant="eyebrow" color={colors.demo}>Simulated route preview</AppText></View>
         </View>
       ) : null}
 
-      {!isDemo && (!shelterFeed || isShelterLoading) ? <LoadingState label="Checking verified shelter destinations..." /> : null}
-      {!isDemo && shelterFeed?.source === 'unavailable' && !isShelterLoading ? <ErrorState message="Verified FEMA shelter data is unavailable. No route destination will be shown." /> : null}
+      {!isDemo && category === 'shelter' && (!shelterFeed || isShelterLoading) ? <LoadingState label="Checking verified shelter destinations..." /> : null}
+      {!isDemo && category === 'shelter' && shelterFeed?.source === 'unavailable' && !isShelterLoading ? <ErrorState message="Verified FEMA shelter data is unavailable. No route destination will be shown." /> : null}
 
-      {!isDemo && shelterFeed?.source !== 'unavailable' && !isShelterLoading && !destination ? (
+      {!isDemo && category === 'shelter' && shelterFeed?.source !== 'unavailable' && !isShelterLoading && !destination ? (
         <Card style={styles.emptyCard}>
           <View style={styles.emptyIcon}><Icon name={{ ios: 'map.fill', android: 'map', web: 'map' }} color={colors.primary} size={28} /></View>
           <AppText variant="heading" style={styles.center}>No verified shelter destination is available right now</AppText>
@@ -115,7 +142,7 @@ export default function SafetyRouteScreen() {
         </Card>
       ) : null}
 
-      {!isDemo ? (
+      {!isDemo && category === 'shelter' ? (
         <Pressable accessibilityRole="button" onPress={() => router.push('/shelters' as Href)} style={styles.allSheltersLink}>
           <AppText variant="caption" color={colors.primary}>View all verified shelter results</AppText>
           <Icon name={{ ios: 'chevron.right', android: 'chevron_right', web: 'chevron_right' }} color={colors.primary} size={16} />
@@ -131,11 +158,13 @@ const styles = StyleSheet.create({
   routeTabs: { flexDirection: 'row', gap: 6, padding: 4, borderRadius: radii.md, backgroundColor: colors.surface },
   routeTab: { flex: 1, minHeight: 36, alignItems: 'center', justifyContent: 'center', borderRadius: radii.sm },
   routeTabSelected: { backgroundColor: colors.primarySoft },
+  routeTabPressed: { opacity: 0.68 },
   mapWrap: { height: 330, borderRadius: radii.xl, overflow: 'hidden', borderWidth: 1, borderColor: colors.border, backgroundColor: colors.surface },
   map: { width: '100%', height: '100%' },
   mapLabel: { position: 'absolute', top: spacing.sm, left: spacing.sm, paddingHorizontal: spacing.sm, paddingVertical: 6, borderRadius: radii.pill, backgroundColor: 'rgba(255,255,255,0.92)' },
   emptyCard: { minHeight: 300, alignItems: 'center', justifyContent: 'center', gap: spacing.md },
   emptyIcon: { width: 58, height: 58, borderRadius: 29, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.primarySoft },
+  unavailableCategoryCard: { minHeight: 300, alignItems: 'center', justifyContent: 'center', gap: spacing.md },
   destinationCard: { gap: spacing.md },
   destinationTop: { flexDirection: 'row', alignItems: 'flex-start', gap: spacing.md },
   destinationIcon: { width: 44, height: 44, borderRadius: radii.md, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.primarySoft },

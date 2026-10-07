@@ -55,7 +55,8 @@ This roadmap separates verified implementation from credential-gated and researc
 - [ ] Run the full native accessibility and reduced-motion audit on devices
 - [ ] Conduct 30 to 50 real usability sessions and record only observed findings
 - [ ] Complete two to three independent expert reviews and implement the accepted high-priority findings
-- [ ] Create a Gemini API free-tier key and complete the 100-alert hosted model evaluation
+- [x] Create a Gemini API free-tier key and store it only as an Edge Function secret
+- [ ] Complete the 100-alert hosted model evaluation within free-tier quota limits
 - [ ] Create the Vercel project and publish the public demo URL
 - [ ] Configure EAS and remote push delivery
 - [ ] Final GitHub and deployment approval

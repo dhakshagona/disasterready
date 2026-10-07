@@ -17,3 +17,12 @@ jest.mock('expo-image', () => {
     Image: (props: object) => React.createElement(View, props),
   };
 });
+
+jest.mock('expo-print', () => ({
+  printToFileAsync: jest.fn(async () => ({ numberOfPages: 1, uri: 'file:///checklist.pdf' })),
+}));
+
+jest.mock('expo-sharing', () => ({
+  isAvailableAsync: jest.fn(async () => true),
+  shareAsync: jest.fn(async () => undefined),
+}));

@@ -1,4 +1,4 @@
-import { fireEvent, render, waitFor } from '@testing-library/react-native';
+import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
 import { describe, expect, it, jest } from '@jest/globals';
 
 import { DisasterReadyProvider, type AppRuntime } from '@/application/app-context';
@@ -38,6 +38,18 @@ describe('Safety Route screen', () => {
     fireEvent.press(screen.getByRole('button', { name: 'Open simulated safety route' }));
 
     expect(openDestination).toHaveBeenCalledWith({ label: 'Simulated safety destination', latitude: 30.2816, longitude: -97.7323 });
+  });
+
+  it('makes route categories interactive without inventing unsupported destinations', async () => {
+    mockAlertId = 'demo-flood-001';
+    const screen = await render(<DisasterReadyProvider runtime={runtimeFor({ shelters: [], source: 'live', isOffline: false, isStale: false, retrievedAt: null, radiusMiles: 100 })}><SafetyRouteScreen /></DisasterReadyProvider>);
+
+    await act(async () => {
+      fireEvent.press(screen.getByRole('tab', { name: 'Higher ground' }));
+    });
+
+    await waitFor(() => expect(screen.getByText('No verified higher-ground destination source is connected')).toBeTruthy());
+    expect(screen.queryByRole('button', { name: 'Open simulated safety route' })).toBeNull();
   });
 
   it('does not offer a fabricated destination when no verified shelter is available', async () => {

@@ -5,6 +5,7 @@ import type { AnalyticsEventName, AnalyticsService, AnalyticsTrackOptions } from
 import type { NotificationPermissionService, NotificationPermissionState } from '@/application/notifications/notification-permission-service';
 import type { PlainLanguageResult, PlainLanguageService } from '@/application/plain-language/plain-language-service';
 import type { ShelterFeed } from '@/application/safety-resources/safety-resource-service';
+import { AccessibilityPreferencesProvider } from '@/components/accessibility/accessibility-preferences';
 import { defaultPreferences } from '@/data/mock-repositories';
 import type { Alert, Shelter, UserPreferences } from '@/domain/models';
 
@@ -218,7 +219,13 @@ export function DisasterReadyProvider({ children, runtime }: PropsWithChildren<{
     checklistRepository: runtime.checklistRepository,
   }), [feed, isLoading, isNotificationPermissionLoading, isRefreshing, isShelterLoading, loadPlainLanguageSummary, loadSafetyResources, notificationPermissionState, openShelterMap, plainLanguageResults, preferences, refreshAlerts, requestNotificationPermission, runtime.checklistRepository, shelterFeed, trackEvent, updatePreferences]);
 
-  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
+  return (
+    <AppContext.Provider value={value}>
+      <AccessibilityPreferencesProvider preferences={preferences}>
+        {children}
+      </AccessibilityPreferencesProvider>
+    </AppContext.Provider>
+  );
 }
 
 export function useDisasterReady(): AppContextValue {

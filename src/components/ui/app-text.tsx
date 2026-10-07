@@ -1,6 +1,7 @@
 import type { PropsWithChildren } from 'react';
 import { StyleSheet, Text, type TextProps } from 'react-native';
 
+import { useAccessibilityPreferences } from '@/components/accessibility/accessibility-preferences';
 import { colors, type } from '@/constants/tokens';
 
 type Variant = 'display' | 'title' | 'heading' | 'body' | 'bodyStrong' | 'caption' | 'eyebrow';
@@ -11,10 +12,19 @@ type AppTextProps = PropsWithChildren<TextProps> & {
 };
 
 export function AppText({ children, variant = 'body', color = colors.ink, style, ...props }: AppTextProps) {
+  const { highContrast, textSize } = useAccessibilityPreferences();
+  const scale = textSize === 'extra-large' ? 1.25 : textSize === 'large' ? 1.12 : 1;
+  const baseStyle = styles[variant];
+  const accessibleColor = highContrast && (color === colors.inkMuted || color === colors.inkSubtle) ? colors.ink : color;
+  const scaledStyle = scale === 1 ? undefined : {
+    fontSize: Math.round(baseStyle.fontSize * scale),
+    lineHeight: Math.round(baseStyle.lineHeight * scale),
+  };
+
   return (
     <Text
       maxFontSizeMultiplier={2}
-      style={[styles.base, styles[variant], { color }, style]}
+      style={[styles.base, baseStyle, scaledStyle, { color: accessibleColor }, style]}
       {...props}>
       {children}
     </Text>

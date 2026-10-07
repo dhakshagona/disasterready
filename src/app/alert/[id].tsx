@@ -40,6 +40,7 @@ export default function AlertDetailScreen() {
   const { getAlertById, isLoading, loadPlainLanguageSummary, plainLanguageResults, preferences } = useDisasterReady();
   const alert = [demoFloodAlert, demoExpiredAlert].find((item) => item.id === id) ?? getAlertById(id);
   const plainLanguageResult = alert ? plainLanguageResults[alert.id] : undefined;
+  const plainLanguageSummary = alert && preferences.plainLanguage ? plainLanguageResult?.summary ?? alert.summary : null;
 
   useEffect(() => {
     if (alert && !alert.isDemo && preferences.plainLanguage) void loadPlainLanguageSummary(alert);
@@ -90,10 +91,11 @@ export default function AlertDetailScreen() {
       <Card style={styles.officialCard}>
         <AppText variant="bodyStrong">Official text ({alert.isDemo ? 'simulated NWS' : 'NWS'})</AppText>
         <AppText variant="caption" color={colors.inkMuted}>{alert.originalText}</AppText>
-        {plainLanguageResult?.source === 'ai' ? (
+        {plainLanguageSummary ? (
           <View style={styles.simpleCopy}>
-            <AppText variant="eyebrow" color={colors.primary}>AI simplified</AppText>
-            <AppText variant="caption">{plainLanguageResult.summary}</AppText>
+            <AppText variant="eyebrow" color={colors.primary}>In simple words</AppText>
+            <AppText variant="caption">{plainLanguageSummary}</AppText>
+            <AppText variant="eyebrow" color={colors.inkMuted}>{plainLanguageResult?.source === 'ai' ? 'Gemini simplified and safety checked' : 'Reviewed fallback summary'}</AppText>
           </View>
         ) : null}
         {alert.sourceUrl ? <SecondaryButton accessibilityLabel="Open original National Weather Service alert" onPress={() => Linking.openURL(alert.sourceUrl!)}>Open original NWS alert</SecondaryButton> : null}
